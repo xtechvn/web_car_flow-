@@ -189,21 +189,23 @@ namespace XTECH_FRONTEND.Repositories
         private string GenerateRegistrationMessage(RegistrationRecord record, ZaloUserData userDetail)
         {
             var message = $"🎉 XIN CHÀO {userDetail.display_name.ToUpper()}!\n\n" +
-                         $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
-                         $"📱 Số điện thoại: {record.PhoneNumber}\n" +
-                         $"🚗 Biển số xe: {record.PlateNumber}\n" +
-                         $"🎫 Số thứ tự của bạn: {record.QueueNumber:D3}\n" +
-                         $"⏰ Thời gian đăng ký: {record.RegistrationTime:dd/MM/yyyy HH:mm}\n\n" +
-                         $"📍 VUI LÒNG:\n" +
-                         $"• Chuẩn bị đầy đủ giấy tờ xe\n" +
-                         $"• Có mặt đúng giờ theo thứ tự\n" +
-                         $"• Theo dõi cập nhật qua Zalo\n\n" +
-                         $"💡 Ước tính thời gian chờ: {record.QueueNumber * 5} phút\n" +
-                         $"🔔 Chúng tôi sẽ thông báo khi đến lượt bạn!\n\n" +
-                         $"📞 Hotline hỗ trợ: 1900-1234\n" +
-                         $"🌐 Website: https://x-tech.vn\n\n" +
-                         $"Cảm ơn bạn đã sử dụng dịch vụ! 🙏";
-
+                $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
+                $"🙏 Tên khách hàng: {record.Name}\n" +
+                $"📱 Số điện thoại: {record.PhoneNumber}\n" +
+                $"🚗 Biển số xe: {record.PlateNumber}\n" +
+                $"🚗 Trọng tải xe: {record.Referee}\n" +
+                $"🎫 Số GPLX(3 số cuối giấy phép lái xe): {record.GPLX}\n" +
+                $"🎫 Số thứ tự của bạn: {record.QueueNumber:D3}\n" +
+                $"⏰ Thời gian đăng ký: {record.RegistrationTime:dd/MM/yyyy HH:mm}\n\n" +
+                $"📍 VUI LÒNG:\n" +
+                $"• Chuẩn bị đầy đủ giấy tờ xe\n" +
+                $"• Có mặt đúng giờ theo thứ tự\n" +
+                $"• Theo dõi cập nhật qua Zalo\n\n" +
+                $"💡 Ước tính thời gian chờ: {record.QueueNumber * 5} phút\n" +
+                $"🔔 Chúng tôi sẽ thông báo khi đến lượt bạn!\n\n" +
+                $"📞 Hotline hỗ trợ: 1900-1234\n" +
+                $"🌐 Website: https://x-tech.vn\n\n" +
+                $"Cảm ơn bạn đã sử dụng dịch vụ! 🙏";
             return message;
         }
     }

@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -18,10 +19,9 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .container {
@@ -31,30 +31,33 @@
             overflow: hidden;
             max-width: 900px;
             width: 100%;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            min-height: 600px;
+            min-height: calc(100vh - 20px);
         }
 
         .input-section {
-            padding: 40px;
+            padding: 25px 20px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow-y: auto;
         }
 
         .output-section {
-            padding: 40px;
+            padding: 25px 20px;
             background: #f8f9ff;
             border-left: 3px solid #667eea;
+            overflow-y: auto;
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #333;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .input-icon {
@@ -82,57 +85,59 @@
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #555;
+            font-size: 14px;
         }
 
         input[type="text"], input[type="tel"] {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             transition: all 0.3s ease;
             background: white;
+            box-sizing: border-box;
         }
 
-            input[type="text"]:focus, input[type="tel"]:focus {
-                outline: none;
-                border-color: #667eea;
-                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            }
+        input[type="text"]:focus, input[type="tel"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
         .submit-btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
-            .submit-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
 
-            .submit-btn:disabled {
-                background: #ccc;
-                cursor: not-allowed;
-                transform: none;
-                box-shadow: none;
-            }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
         .output-box {
             background: white;
@@ -168,36 +173,36 @@
         }
 
         .queue-number {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: bold;
             color: #667eea;
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .info-item {
             background: #f8f9ff;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             border: 1px solid #e1e5e9;
         }
 
         .info-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .info-value {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #333;
         }
@@ -222,17 +227,126 @@
             color: #dc3545;
         }
 
-        media (max-width: 768px) {
-            .container
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
 
-        {
-            grid-template-columns: 1fr;
-            max-width: 500px;
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+                min-height: calc(100vh - 10px);
+                border-radius: 15px;
+                margin: 0;
+            }
+
+            .input-section, .output-section {
+                padding: 20px 15px;
+                border-left: none;
+            }
+
+            .output-section {
+                border-top: 3px solid #667eea;
+            }
+
+            .section-title {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+
+            .input-icon, .output-icon {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .queue-number {
+                font-size: 28px;
+                margin: 10px 0;
+            }
+
+            .timer {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .timer-countdown {
+                font-size: 20px;
+            }
+
+            input[type="text"], input[type="tel"] {
+                padding: 14px 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .submit-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .status-message {
+                padding: 12px;
+                font-size: 14px;
+            }
         }
 
-        .input-section, .output-section {
-            padding: 30px 20px;
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 10px;
+            }
+
+            .input-section, .output-section {
+                padding: 15px 12px;
+            }
+
+            .section-title {
+                font-size: 16px;
+                gap: 6px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .queue-number {
+                font-size: 24px;
+            }
+
+            .info-item {
+                padding: 10px;
+            }
+
+            .info-label {
+                font-size: 10px;
+            }
+
+            .info-value {
+                font-size: 13px;
+            }
         }
+
+        /* Fix for mobile viewport */
+        @media screen and (max-height: 600px) {
+            .container {
+                min-height: auto;
+            }
+
+            .input-section, .output-section {
+                min-height: auto;
+            }
+        }
+
+        /* Prevent horizontal scroll on mobile */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -248,24 +362,23 @@
             <form id="carRegistrationForm">
                 <div class="form-group">
                     <label for="name">Tên khách hàng(Trại hoặc đại lý)<span style="color:red">*</span></label>
-                    <input type="text" id="name" name="plateNumber"
+                    <input type="text" id="name" name="name"
                            placeholder="Nhập câu trả lời của bạn" required>
                 </div>
                 <div class="form-group">
                     <label for="plateNumber">Biển số xe đăng ký <span style="color:red">*</span></label>
                     <input type="text" id="plateNumber" name="plateNumber"
                            placeholder="VD: 30A-12345"
-                           pattern="[0-9]{2}[A-Z]{1}-[0-9]{4,5}"
                            required>
                 </div>
                 <div class="form-group">
                     <label for="GPLX">Số GPLX(3 số cuối giấy phép lái xe) <span style="color:red">*</span></label>
-                    <input type="text" id="GPLX" name="plateNumber"
+                    <input type="text" id="GPLX" name="GPLX"
                            placeholder="Nhập câu trả lời của bạn" required>
                 </div>
                 <div class="form-group">
                     <label for="referee">Trọng tải xe(CCD: 6500 Kg) <span style="color:red">*</span></label>
-                    <input type="text" id="referee" name="plateNumber"
+                    <input type="text" id="referee" name="referee"
                            placeholder="Nhập câu trả lời của bạn" required>
                 </div>
                 <div class="form-group">
@@ -418,7 +531,7 @@
         }
 
         async function getQueueStatus() {
-            return await makeAPICall(ENDPOINTS.QUEUE_STATUS);
+            //return await makeAPICall(ENDPOINTS.QUEUE_STATUS);
         }
 
         // UI Update Functions
@@ -488,7 +601,6 @@
             const referee = document.getElementById('referee').value.trim();
             const GPLX = document.getElementById('GPLX').value.trim();
             const name = document.getElementById('name').value.trim();
-
 
             // Basic validation
             if (!plateNumber || !phoneNumber || !referee || !GPLX || !name) {
@@ -594,9 +706,12 @@
             // Format input as user types
             document.getElementById('plateNumber').addEventListener('input', function () {
                 // Auto format plate number: 30a12345 -> 30A-12345
-                let value = this.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-                if (value.length >= 3) {
-                    value = value.substring(0, 2) + value.substring(2, 3) + '-' + value.substring(3, 8);
+                let value = this.value.replace(/[^0-9A-Za-z\-]/g, '').toUpperCase(); // <-- Đã thêm '\-' vào regex
+
+                // Logic định dạng tự động
+                if (value.length > 3 && value[3] !== '-' && value.includes('-') == false) {
+                    // Tự động thêm '-' nếu nó chưa có ở vị trí thứ 3 và độ dài lớn hơn 3
+                    value = value.substring(0, 3) + '-' + value.substring(3);
                 }
                 this.value = value;
             });
