@@ -190,7 +190,7 @@ namespace XTECH_FRONTEND.Repositories
         {
             var message = $"🎉 XIN CHÀO {userDetail.display_name.ToUpper()}!\n\n" +
                 $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
-                $"🙏 Tên khách hàng: {record.Name}\n" +
+                $" Tên khách hàng: {record.Name}\n" +
                 $"📱 Số điện thoại: {record.PhoneNumber}\n" +
                 $"🚗 Biển số xe: {record.PlateNumber}\n" +
                 $"🚗 Trọng tải xe: {record.Referee}\n" +
