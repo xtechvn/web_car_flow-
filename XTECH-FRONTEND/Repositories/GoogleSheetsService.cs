@@ -90,6 +90,7 @@ namespace XTECH_FRONTEND.Repositories
                 }
 
                 var todayStart = DateTime.Today;
+
                 var range = $"{_sheetName}!A:H"; // Updated to include Zalo Status column
                 var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
 
@@ -107,7 +108,7 @@ namespace XTECH_FRONTEND.Repositories
                 for (int i = 1; i < values.Count; i++)
                 {
                     var row = values[i];
-                    if (row.Count >= 4 && !string.IsNullOrEmpty(row[3]?.ToString()))
+                    if (row.Count >= 6 && !string.IsNullOrEmpty(row[6]?.ToString()))
                     {
                         if (DateTime.TryParse(row[6].ToString(), out DateTime registrationDate))
                         {
@@ -157,7 +158,8 @@ namespace XTECH_FRONTEND.Repositories
                         record.PhoneNumber,
                         record.QueueNumber,
                         record.RegistrationTime.ToString("yyyy-MM-dd HH:mm:ss"),
-                        record.ZaloStatus
+                        record.ZaloStatus,
+                        record.Camp
                     }
                 };
 
@@ -178,7 +180,7 @@ namespace XTECH_FRONTEND.Repositories
 
                 if (appendResponse.Updates.UpdatedRows.HasValue && appendResponse.Updates.UpdatedRows.Value > 0)
                 {
-                    _logger.LogInformation($"Successfully saved registration to Google Sheets: {record.PhoneNumber} - {record.PlateNumber} - Queue: {record.QueueNumber} - Zalo: {record.ZaloStatus}");
+                    _logger.LogInformation($"Successfully saved registration to Google Sheets: {record.PhoneNumber} - {record.PlateNumber} - Queue: {record.QueueNumber} - Zalo: {record.ZaloStatus}- Camp: {record.Camp}");
 
                     var today = DateTime.Today.ToString("yyyy-MM-dd");
                     var cacheKey = $"daily_count_{today}";
@@ -228,11 +230,11 @@ namespace XTECH_FRONTEND.Repositories
                 {
                     var row = values[i];
 
-                    if (row.Count >= 4 &&
+                    if (row.Count >= 6 &&
                         row[0]?.ToString() == phoneNumber &&
-                        !string.IsNullOrEmpty(row[3]?.ToString()))
+                        !string.IsNullOrEmpty(row[6]?.ToString()))
                     {
-                        if (DateTime.TryParse(row[3].ToString(), out DateTime submissionTime))
+                        if (DateTime.TryParse(row[6].ToString(), out DateTime submissionTime))
                         {
                             lastSubmission = submissionTime;
                             break;
@@ -285,7 +287,7 @@ namespace XTECH_FRONTEND.Repositories
                 {
                     var headers = new List<IList<object>>
                     {
-                        new List<object> { "Tên khách hàng(Trại hoặc đại lý)", "Biển số xe đăng ký", "Số GPLX(3 số cuối giấy phép lái xe)", "Trọng tải xe", "Số điện thoại tài xế", "Số thứ tự", "Ngày giờ đăng ký", "Trạng thái gửi Zalo" }
+                        new List<object> { "Tên khách hàng(Trại hoặc đại lý)", "Biển số xe đăng ký", "Số GPLX(3 số cuối giấy phép lái xe)", "Trọng tải xe", "Số điện thoại tài xế", "Số thứ tự", "Ngày giờ đăng ký", "Trạng thái gửi Zalo", "Hoàn hảo/Trại" }
                     };
 
                     var valueRange = new ValueRange { Values = headers };
