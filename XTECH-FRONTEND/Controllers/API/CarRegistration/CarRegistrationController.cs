@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Services;
 
 
 namespace XTECH_FRONTEND.Controllers.CarRegistration
@@ -14,19 +16,20 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly IGoogleFormsService _googleFormsService;
         private readonly IZaloService _zaloService;
         private readonly ILogger<CarRegistrationController> _logger;
-
+        private readonly WorkQueueClient _workQueueClient;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
             IGoogleFormsService googleFormsService,
             IZaloService zaloService,
-            ILogger<CarRegistrationController> logger)
+            ILogger<CarRegistrationController> logger, IConfiguration configuration)
         {
             _validationService = validationService;
             _googleSheetsService = googleSheetsService;
             _googleFormsService = googleFormsService;
             _zaloService = zaloService;
             _logger = logger;
+            _workQueueClient = new WorkQueueClient(configuration);
         }
         [HttpPost("register")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
@@ -34,7 +37,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             try
             {
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
-
+            
                 // Step 1: Validate input data
                 var validationResult = _validationService.ValidateCarRegistration(request);
                 if (!validationResult.IsValid)
@@ -57,6 +60,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         RemainingTimeMinutes = timeRestriction.RemainingMinutes
                     });
                 }
+                _workQueueClient.SyncES(request);
 
                 // Step 3: Get current daily queue count
                 var dailyCount = await _googleSheetsService.GetDailyQueueCountAsync();
