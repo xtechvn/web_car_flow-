@@ -409,7 +409,7 @@ namespace XTECH_FRONTEND.Repositories
                 DateTime now = DateTime.Now; // Sử dụng giờ hệ thống (giả định đã cấu hình đúng timezone)
                 DateTime effectiveDate = now.Hour < 18 ? now.Date.AddDays(-1) : now.Date;
 
-                string key = $"counter:daily_count_:{effectiveDate:yyyyMMdd}";
+                string key = $"counter:daily_car_count_:{effectiveDate:yyyyMMdd}";
                 long nextNumber = db.StringIncrement(key);
 
                 // Đặt TTL nếu là lần đầu tăng
