@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Caching.Memory;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Repositories;
+using XTECH_FRONTEND.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.AddSingleton<IGoogleFormsService, GoogleFormsService>();
 builder.Services.AddSingleton<IValidationService, ValidationService>();
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
 builder.Services.AddSingleton<IZaloService, ZaloOfficialAccountService>();
+builder.Services.AddSingleton<IMongoService, MongoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

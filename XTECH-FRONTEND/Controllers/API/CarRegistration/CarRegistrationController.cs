@@ -66,8 +66,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 }
 
                 // Step 3: Get current daily queue count
-                var dailyCount = await _googleSheetsService.GetDailyQueueCountAsync();
-                var queueNumber = dailyCount + 1;
+                var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
 
                 // Step 4: Create registration record with initial Zalo status
                 var registrationRecord = new RegistrationRecord
@@ -96,7 +95,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-               await _mongoService.Insert(registrationRecord);
+                await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
                 var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
                 if (!sheetsSuccess)
@@ -111,7 +110,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 // Step 8: Update last submission time
                 await _googleSheetsService.UpdateLastSubmissionTimeAsync(request.PlateNumber, DateTime.Now);
 
-                // Return success response
+             
                 return Ok(new CarRegistrationResponse
                 {
                     Success = true,

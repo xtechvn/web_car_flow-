@@ -99,15 +99,15 @@
                 </div>
             </div>
             <div class="">
-                <h5 style="margin-bottom: 15px; color: #333;">Quết Qr code để nhận tin nhắn Zalo</h5>
+                <h5 style="margin-bottom: 15px; color: #333;">Quét Qr code để nhận tin nhắn Zalo</h5>
                 <img src="~/images/graphics/qrcode.jpg" />
             </div>
         </div>
     </div>
-
+    <script type="text/javascript" src="~/libs/jquery/jquery-3.6.0.min.js"></script>
     <script>
         // API Configuration
-        const API_BASE_URL = 'https://x-tech.vn/api'; // Change to your API URL
+        const API_BASE_URL = 'https://localhost:61449/api'; // Change to your API URL
         const ENDPOINTS = {
             REGISTER: '/carregistration/register',
             CHECK_RESTRICTION: '/carregistration/check-restriction',
@@ -244,7 +244,7 @@
                 }
 
                 countdown.textContent = formatTime(remaining);
-                remaining -= 1/60; // Decrease by 1 second (1/60 minute)
+                remaining -= 1 / 60; // Decrease by 1 second (1/60 minute)
             };
 
             updateCountdown(); // Initial call
@@ -273,14 +273,31 @@
             const Camp = document.getElementById('Camp').value.trim();
 
             // Basic validation
-            if (!plateNumber || !phoneNumber || !referee || !GPLX || !name ) {
+            if (!plateNumber || !phoneNumber || !referee || !GPLX || !name) {
                 showError('Vui lòng nhập đầy đủ thông tin!');
                 return;
             }
 
             try {
-                showLoading(true);
 
+
+                showLoading(true);
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                // Kiểm tra khoảng 17:55 đến 18:00
+                if ((hours === 17 && minutes >= 55 )|| (hours === 18 && minutes === 0)) {
+                    e.preventDefault(); // Ngăn hành động mặc định
+                    e.stopPropagation(); // Ngăn sự kiện lan truyền
+                    var time_load = 60 - minutes;
+                    errorMessage = 'Bạn vui lòng đợi ' + time_load + ' phút!';
+                    setTimeout(() => {
+                        startCountdown17_18();
+                    }, 1000);
+
+                    return;
+                }
                 // Call API to register car
                 const response = await registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp);
 
@@ -363,7 +380,7 @@
         }
 
         // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize app
             initializeApp();
 
@@ -371,10 +388,10 @@
             document.getElementById('carRegistrationForm').addEventListener('submit', handleFormSubmit);
 
             // Phone number blur event
-            document.getElementById('phoneNumber').addEventListener('blur', handlePhoneBlur);
+            //document.getElementById('phoneNumber').addEventListener('blur', handlePhoneBlur);
 
             // Format input as user types
-            document.getElementById('plateNumber').addEventListener('input', function() {
+            document.getElementById('plateNumber').addEventListener('input', function () {
                 // Auto format plate number: 30a12345 -> 30A-12345
                 let value = this.value.replace(/[^0-9A-Za-z\-]/g, '').toUpperCase(); // <-- Đã thêm '\-' vào regex
 
@@ -386,14 +403,14 @@
                 this.value = value;
             });
 
-            document.getElementById('phoneNumber').addEventListener('input', function() {
+            document.getElementById('phoneNumber').addEventListener('input', function () {
                 // Only allow numbers
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
         });
 
         // Handle page visibility change to refresh countdown
-        document.addEventListener('visibilitychange', function() {
+        document.addEventListener('visibilitychange', function () {
             if (!document.hidden && countdownTimer) {
                 // Page became visible, refresh countdown status
                 const phoneNumber = document.getElementById('phoneNumber').value.trim();
@@ -409,6 +426,60 @@
                 }
             }
         });
+        function startCountdown17_18() {
+            const timerSection = document.getElementById('timerSection');
+            const countdown = document.getElementById('countdown');
+            const submitBtn = document.getElementById('submitBtn');
+
+            timerSection.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'VUI LÒNG ĐỢI...';
+            const now = new Date();
+            let target = new Date();
+            target.setHours(18, 0, 0, 0);
+            let remaining = Math.floor((target - now) / 1000);
+
+            const updateCountdown = () => {
+                if (remaining <= 0) {
+                    clearInterval(countdownTimer);
+                    timerSection.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'GỬI ĐĂNG KÝ';
+                    return;
+                }
+
+                countdown.textContent = formatTime2(remaining);
+                remaining -= 1; // Decrease by 1 second (1/60 minute)
+            };
+
+            updateCountdown(); // Initial call
+            countdownTimer = setInterval(updateCountdown, 1000);
+        }
+        function formatTime2(diff) {
+            const mins = Math.floor(diff / 60);
+            const secs = diff % 60;
+            console.log(diff)
+            console.log(mins)
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        $(document).ready(function () {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            console.log('Current time:', hours, minutes);
+            // Kiểm tra khoảng 17:55 đến 18:00
+            if ((hours === 17 && minutes >= 55 )|| (hours === 18 && minutes === 0)) {
+
+                var time_load = 60 - minutes;
+                errorMessage = 'Bạn vui lòng đợi ' + time_load + ' phút!';
+                setTimeout(() => {
+                    startCountdown17_18();
+                }, 1000);
+
+                return;
+            }
+        });
     </script>
+
 </body>
 </html>
