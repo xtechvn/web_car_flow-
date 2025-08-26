@@ -23,7 +23,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             IGoogleSheetsService googleSheetsService,
             IGoogleFormsService googleFormsService,
             IZaloService zaloService,
-            ILogger<CarRegistrationController> logger, 
+            ILogger<CarRegistrationController> logger,
             IConfiguration configuration,
             IMongoService mongoService)
         {
@@ -41,7 +41,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             try
             {
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
-            
+
                 // Step 1: Validate input data
                 var validationResult = _validationService.ValidateCarRegistration(request);
                 if (!validationResult.IsValid)
@@ -54,14 +54,14 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 }
 
                 // Step 2: Check time restriction (15 minutes rule)
-                var timeRestriction = _validationService.CheckTimeRestriction(request.PlateNumber);
-                if (!timeRestriction.CanSubmit)
+                var timeRestriction =await _mongoService.CheckPlateNumber(request.PlateNumber);
+                if (timeRestriction > 0)
                 {
                     return BadRequest(new CarRegistrationResponse
                     {
                         Success = false,
-                        Message = $"Vui lòng đợi {timeRestriction.RemainingMinutes} phút trước khi gửi lại",
-                        RemainingTimeMinutes = timeRestriction.RemainingMinutes
+                        Message = $"Vui lòng đợi 15 phút trước khi gửi lại",
+                        RemainingTimeMinutes = 15
                     });
                 }
 
@@ -82,7 +82,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Camp = request.Camp
                 };
                 // gui que
-                _workQueueClient.SyncQueue(registrationRecord);
+
                 // Step 5: Submit to Google Form
                 var formSubmissionSuccess = await _googleFormsService.SubmitToGoogleFormAsync(registrationRecord);
                 if (!formSubmissionSuccess)
@@ -95,22 +95,23 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-                await _mongoService.Insert(registrationRecord);
+                _workQueueClient.SyncQueue(registrationRecord);
+                //await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
-                var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
-                if (!sheetsSuccess)
-                {
-                    return StatusCode(500, new CarRegistrationResponse
-                    {
-                        Success = false,
-                        Message = "Lỗi hệ thống, vui lòng thử lại sau"
-                    });
-                }
+                //var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
+                //if (!sheetsSuccess)
+                //{
+                //    return StatusCode(500, new CarRegistrationResponse
+                //    {
+                //        Success = false,
+                //        Message = "Lỗi hệ thống, vui lòng thử lại sau"
+                //    });
+                //}
 
                 // Step 8: Update last submission time
-                await _googleSheetsService.UpdateLastSubmissionTimeAsync(request.PlateNumber, DateTime.Now);
+                // await _googleSheetsService.UpdateLastSubmissionTimeAsync(request.PlateNumber, DateTime.Now);
 
-             
+
                 return Ok(new CarRegistrationResponse
                 {
                     Success = true,

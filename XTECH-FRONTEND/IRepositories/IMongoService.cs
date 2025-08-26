@@ -5,5 +5,6 @@ namespace XTECH_FRONTEND.IRepositories
     public interface IMongoService
     {
         Task<long> Insert(RegistrationRecord model);
+        Task<int> CheckPlateNumber(string PlateNumber);
     }
 }
