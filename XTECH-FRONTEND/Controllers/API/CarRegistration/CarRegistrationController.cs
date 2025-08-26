@@ -16,13 +16,16 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly IGoogleFormsService _googleFormsService;
         private readonly IZaloService _zaloService;
         private readonly ILogger<CarRegistrationController> _logger;
+        private readonly IMongoService _mongoService;
         private readonly WorkQueueClient _workQueueClient;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
             IGoogleFormsService googleFormsService,
             IZaloService zaloService,
-            ILogger<CarRegistrationController> logger, IConfiguration configuration)
+            ILogger<CarRegistrationController> logger, 
+            IConfiguration configuration,
+            IMongoService mongoService)
         {
             _validationService = validationService;
             _googleSheetsService = googleSheetsService;
@@ -30,6 +33,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             _zaloService = zaloService;
             _logger = logger;
             _workQueueClient = new WorkQueueClient(configuration);
+            _mongoService = mongoService;
         }
         [HttpPost("register")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
@@ -60,7 +64,6 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         RemainingTimeMinutes = timeRestriction.RemainingMinutes
                     });
                 }
-                _workQueueClient.SyncES(request);
 
                 // Step 3: Get current daily queue count
                 var dailyCount = await _googleSheetsService.GetDailyQueueCountAsync();
@@ -79,7 +82,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp
                 };
-
+                // gui que
+                _workQueueClient.SyncQueue(registrationRecord);
                 // Step 5: Submit to Google Form
                 var formSubmissionSuccess = await _googleFormsService.SubmitToGoogleFormAsync(registrationRecord);
                 if (!formSubmissionSuccess)
@@ -92,7 +96,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-
+               await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
                 var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
                 if (!sheetsSuccess)

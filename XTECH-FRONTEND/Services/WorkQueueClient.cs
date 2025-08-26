@@ -32,7 +32,7 @@ namespace XTECH_FRONTEND.Services
                 Port = Protocols.DefaultProtocol.DefaultPort
             };
         }
-        public bool SyncES(CarRegistrationRequest model)
+        public bool SyncQueue(RegistrationRecord model)
         {
             try
             {
