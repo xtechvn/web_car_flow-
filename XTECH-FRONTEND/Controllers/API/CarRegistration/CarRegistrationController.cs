@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Configuration;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.Services;
+using XTECH_FRONTEND.Services.RedisWorker;
 
 
 namespace XTECH_FRONTEND.Controllers.CarRegistration
@@ -18,6 +21,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly ILogger<CarRegistrationController> _logger;
         private readonly IMongoService _mongoService;
         private readonly WorkQueueClient _workQueueClient;
+        private readonly RedisConn redisService;
+        private readonly IConfiguration _configuration;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
@@ -34,6 +39,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             _logger = logger;
             _workQueueClient = new WorkQueueClient(configuration);
             _mongoService = mongoService;
+            redisService = new RedisConn(configuration);
+            redisService.Connect();
+            _configuration = configuration;
         }
         [HttpPost("register")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
@@ -53,9 +61,10 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     });
                 }
 
-                // Step 2: Check time restriction (15 minutes rule)
-                var timeRestriction =await _mongoService.CheckPlateNumber(request.PlateNumber);
-                if (timeRestriction > 0)
+                // Step 2: Check redis time restriction (15 minutes rule)
+                string cache_name= "PlateNumber_"+request.PlateNumber.Replace("-", "_");
+               var data = redisService.Get(cache_name,Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                if (data != null && data.Trim() != "")
                 {
                     return BadRequest(new CarRegistrationResponse
                     {
@@ -64,7 +73,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         RemainingTimeMinutes = 15
                     });
                 }
-
+                redisService.Set(cache_name, JsonConvert.SerializeObject(request),DateTime.Now.AddMinutes(15), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 // Step 3: Get current daily queue count
                 var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
 
@@ -95,7 +104,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-                _workQueueClient.SyncQueue(registrationRecord);
+                 _workQueueClient.SyncQueue(registrationRecord);
+                
                 //await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
                 //var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
