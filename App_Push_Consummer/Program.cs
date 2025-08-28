@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using App_Push_Consummer.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 using App_Push_Consummer.Engines;
+using App_Push_Consummer.Google;
+using App_Push_Consummer.Interfaces;
 
 namespace App_Push_Consummer
 {
@@ -62,9 +64,13 @@ namespace App_Push_Consummer
 
                                 var body = ea.Body.ToArray();
                                 var message = Encoding.UTF8.GetString(body);
-
+                            
                                 var serviceProvider = new ServiceCollection();
+                                serviceProvider.AddMemoryCache();
+                                serviceProvider.AddScoped<GoogleSheetsService>();
                                 serviceProvider.AddSingleton<IFactory, Factory>();
+                                serviceProvider.AddSingleton<IGoogleFormsService, GoogleFormsService>();
+                                serviceProvider.AddSingleton<IGoogleSheetsService, GoogleSheetsService>();
                           
 
                                 var Service_Provider = serviceProvider.BuildServiceProvider();
