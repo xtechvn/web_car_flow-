@@ -3,6 +3,7 @@ using App_Push_Consummer.Common;
 using App_Push_Consummer.Engines;
 using App_Push_Consummer.GoogleSheets;
 using App_Push_Consummer.Interfaces;
+using App_Push_Consummer.Mongo;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -70,6 +71,7 @@ namespace App_Push_Consummer
                                                    
                                 serviceProvider.AddSingleton<IFactory, Factory>();
                                 serviceProvider.AddSingleton<IGoogleSheetsService, GoogleSheetsService>();
+                                serviceProvider.AddSingleton<IMongoService, MongoService>();
                               
 
                                 var Service_Provider = serviceProvider.BuildServiceProvider();

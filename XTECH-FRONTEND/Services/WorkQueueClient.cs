@@ -90,7 +90,7 @@ namespace XTECH_FRONTEND.Services
                 try
                 {
                     channel.QueueDeclare(queue: queueName,
-                                     durable: true,
+                                     durable: false,
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);

@@ -64,19 +64,19 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 // Step 2: Check redis time restriction (15 minutes rule)
                 string cache_name= "PlateNumber_"+request.PlateNumber.Replace("-", "_");
                var data = redisService.Get(cache_name,Convert.ToInt32(_configuration["Redis:Database:db_common"]));
-                if (data != null && data.Trim() != "")
-                {
-                    return BadRequest(new CarRegistrationResponse
-                    {
-                        Success = false,
-                        Message = $"Vui lòng đợi 15 phút trước khi gửi lại",
-                        RemainingTimeMinutes = 15
-                    });
-                }
+                //if (data != null && data.Trim() != "")
+                //{
+                //    return BadRequest(new CarRegistrationResponse
+                //    {
+                //        Success = false,
+                //        Message = $"Vui lòng đợi 15 phút trước khi gửi lại",
+                //        RemainingTimeMinutes = 15
+                //    });
+                //}
                 redisService.Set(cache_name, JsonConvert.SerializeObject(request),DateTime.Now.AddMinutes(15), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 // Step 3: Get current daily queue count
-                var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-
+                // var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
+                var queueNumber = 0;
                 // Step 4: Create registration record with initial Zalo status
                 var registrationRecord = new RegistrationRecord
                 {
@@ -104,8 +104,29 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-                 _workQueueClient.SyncQueue(registrationRecord);
-                
+                 
+                _workQueueClient.SyncQueue(registrationRecord);
+
+                while (queueNumber <= 0 )
+                {
+                    var data_Redis = redisService.Get(
+                        cache_name,
+                        Convert.ToInt32(_configuration["Redis:Database:db_common"])
+                    );
+
+                    if (!string.IsNullOrEmpty(data_Redis))
+                    {
+                        var data_detail = JsonConvert.DeserializeObject<RegistrationRecord>(data_Redis);
+
+                        if (data_detail?.QueueNumber > 0)
+                        {
+                            queueNumber = data_detail.QueueNumber;
+                            break; // đã có, thoát loop
+                        }
+                    }
+                    Thread.Sleep(2000); // nghỉ 200ms rồi thử lại
+                }
+
                 //await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
                 //var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);

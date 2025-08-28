@@ -37,12 +37,13 @@ namespace App_Push_Consummer.Engines
                     string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
                     queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
                     var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
+                    Console.WriteLine($"lưu thành công: {sheetsSuccess}");
                     if (!sheetsSuccess)
                     {
                         ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
                         
                     }
-                    redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
+                     redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
                     _mongoService.Insert(queue_info);
                 }
 
