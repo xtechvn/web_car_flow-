@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace App_Push_Consummer.Behaviors
+﻿namespace App_Push_Consummer.Behaviors
 {
     public interface IFactory
     {

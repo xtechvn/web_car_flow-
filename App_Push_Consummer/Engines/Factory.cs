@@ -2,13 +2,11 @@
 using App_Push_Consummer.Common;
 using App_Push_Consummer.Interfaces;
 using App_Push_Consummer.Model;
+using App_Push_Consummer.Redis;
+using Google.Apis.Sheets.v4.Data;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App_Push_Consummer.Engines
 {
@@ -16,12 +14,17 @@ namespace App_Push_Consummer.Engines
     {
         public static string tele_token = ConfigurationManager.AppSettings["tele_token"];
         public static string tele_group_id = ConfigurationManager.AppSettings["tele_group_id"];
-
         private readonly IGoogleSheetsService _googleSheetsService;
+        private readonly RedisConn redisService;
+        private readonly IMongoService _mongoService;
 
-        public Factory(IGoogleSheetsService googleSheetsService)
+
+        public Factory(IGoogleSheetsService googleSheetsService, IMongoService mongoService)
         {
             _googleSheetsService = googleSheetsService;
+            redisService = new RedisConn();
+            redisService.Connect();
+            _mongoService = mongoService;
         }
 
         public async void DoSomeRealWork(string data_queue)
@@ -31,18 +34,18 @@ namespace App_Push_Consummer.Engines
                 var queue_info = JsonConvert.DeserializeObject<RegistrationRecord>(data_queue);
                 if (queue_info != null)
                 {
+                    string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
+                    queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
                     var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
                     if (!sheetsSuccess)
                     {
-                        ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "lỗi SaveRegistrationAsync = " + queue_info.ToString());
+                        ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
+                        
                     }
+                    redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
+                    _mongoService.Insert(queue_info);
                 }
-                else
-                {
-                    ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "lỗi DeserializeObject = " + data_queue);
-                    
 
-                }
             }
             catch (Exception ex)
             {

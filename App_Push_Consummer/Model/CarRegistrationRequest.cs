@@ -22,11 +22,11 @@ namespace App_Push_Consummer.Model
         public string Message { get; set; } = string.Empty;
         public int? QueueNumber { get; set; }
         public DateTime? RegistrationTime { get; set; }
-        public string PlateNumber { get; set; }
-        public string PhoneNumber { get; set; }
+        public string? PlateNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         public int? RemainingTimeMinutes { get; set; }
-        public string ZaloStatus { get; set; }
-        public string Camp { get; set; }
+        public string? ZaloStatus { get; set; }
+        public string? Camp { get; set; }
     }
 
     public class RegistrationRecord
@@ -46,7 +46,7 @@ namespace App_Push_Consummer.Model
     public class ValidationResult
     {
         public bool IsValid { get; set; }
-        public List<string> Errors { get; set; } 
+        public List<string> Errors { get; set; } = new();
     }
 
     public class TimeRestrictionResult

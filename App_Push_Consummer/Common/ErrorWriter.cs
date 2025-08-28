@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 
 namespace App_Push_Consummer.Common
@@ -17,7 +12,7 @@ namespace App_Push_Consummer.Common
             try
             {
                 TelegramBotClient alertMsgBot = new TelegramBotClient(bot_token);
-                var rs_push = alertMsgBot.SendTextMessageAsync(id_group, message).Result;
+                //var rs_push = alertMsgBot.SendTextMessageAsync(id_group, message).Result;
             }
             catch (Exception ex)
             {

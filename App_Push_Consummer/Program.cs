@@ -1,20 +1,20 @@
-﻿using App_Push_Consummer.Common;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App_Push_Consummer.Behaviors;
-using Microsoft.Extensions.DependencyInjection;
+﻿using App_Push_Consummer.Behaviors;
+using App_Push_Consummer.Common;
 using App_Push_Consummer.Engines;
-using App_Push_Consummer.Google;
+using App_Push_Consummer.GoogleSheets;
 using App_Push_Consummer.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Configuration;
+using System.Text;
 
 namespace App_Push_Consummer
 {
+    /// <summary>
+    /// App: Xử lý các tiến trình được push về từ FRONT END.
+    /// /// </summary>
+    
     class Program
     {
         private static string queue_checkout_order = ConfigurationManager.AppSettings["queue_name"];
@@ -64,14 +64,13 @@ namespace App_Push_Consummer
 
                                 var body = ea.Body.ToArray();
                                 var message = Encoding.UTF8.GetString(body);
-                            
+
                                 var serviceProvider = new ServiceCollection();
-                                serviceProvider.AddMemoryCache();
-                                serviceProvider.AddScoped<GoogleSheetsService>();
+
+                                                   
                                 serviceProvider.AddSingleton<IFactory, Factory>();
-                                serviceProvider.AddSingleton<IGoogleFormsService, GoogleFormsService>();
                                 serviceProvider.AddSingleton<IGoogleSheetsService, GoogleSheetsService>();
-                          
+                              
 
                                 var Service_Provider = serviceProvider.BuildServiceProvider();
 
@@ -84,7 +83,7 @@ namespace App_Push_Consummer
                             catch (Exception ex)
                             {
                                 Console.WriteLine("error queue: " + ex.ToString());
-                                ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "error queue = " + ex.ToString());
+                                ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id,"error queue = " + ex.ToString());
                             }
                         };
 
