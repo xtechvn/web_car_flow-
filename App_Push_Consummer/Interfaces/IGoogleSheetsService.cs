@@ -11,5 +11,6 @@ namespace App_Push_Consummer.Interfaces
     {
         Task<bool> SaveRegistrationAsync(RegistrationRecord record);
         Task<int> GetDailyQueueCountRedis();
+        Task<bool> SaveRegistrationEX(List<RegistrationRecordMongo> record);
     }
 }

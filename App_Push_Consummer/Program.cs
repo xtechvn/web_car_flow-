@@ -15,7 +15,7 @@ namespace App_Push_Consummer
     /// <summary>
     /// App: Xử lý các tiến trình được push về từ FRONT END.
     /// /// </summary>
-    
+
     class Program
     {
         private static string queue_checkout_order = ConfigurationManager.AppSettings["queue_name"];
@@ -66,30 +66,63 @@ namespace App_Push_Consummer
                                 var body = ea.Body.ToArray();
                                 var message = Encoding.UTF8.GetString(body);
 
-                                var serviceProvider = new ServiceCollection();
-
-                                                   
-                                serviceProvider.AddSingleton<IFactory, Factory>();
-                                serviceProvider.AddSingleton<IGoogleSheetsService, GoogleSheetsService>();
-                                serviceProvider.AddSingleton<IMongoService, MongoService>();
-                              
-
-                                var Service_Provider = serviceProvider.BuildServiceProvider();
-
-                                var factory = Service_Provider.GetService<IFactory>();
-
-                                factory.DoSomeRealWork(message);
+                                using (var serviceProvider = new ServiceCollection()
+                                   .AddSingleton<IFactory, Factory>()
+                                   .AddSingleton<IGoogleSheetsService, GoogleSheetsService>()
+                                   .AddSingleton<IMongoService, MongoService>()
+                                   .BuildServiceProvider())
+                                {
+                                    var _factory = serviceProvider.GetService<IFactory>();
+                                    _factory.DoSomeRealWork(message);
+                                }
 
                                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine("error queue: " + ex.ToString());
-                                ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id,"error queue = " + ex.ToString());
+                                ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "error queue = " + ex.ToString());
                             }
                         };
 
                         channel.BasicConsume(queue: queue_checkout_order, autoAck: false, consumer: consumer);
+
+                        // ========== Background Task chạy CheckEx() lúc 18:00 ==========
+                        Task.Run(async () =>
+                        {
+                            while (true)
+                            {
+                                var now = DateTime.Now;
+
+                                if (now.Hour == 18 && now.Minute == 30)
+                                {
+                                    try
+                                    {
+                                        using (var serviceProvider = new ServiceCollection()
+                                          .AddSingleton<IFactory, Factory>()
+                                          .AddSingleton<IGoogleSheetsService, GoogleSheetsService>()
+                                          .AddSingleton<IMongoService, MongoService>()
+                                          .BuildServiceProvider())
+                                        {
+                                            var _factory = serviceProvider.GetService<IFactory>();
+                                            _factory.UpdateEx();
+                                        }
+                                        Console.WriteLine($"[+] factory.CheckEx() executed at {now:HH:mm:ss}");
+                                        await Task.Delay(TimeSpan.FromSeconds(61));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"Error running factory.CheckEx: {ex}");
+                                        ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "error CheckEx = " + ex.ToString());
+                                    }
+
+                                    // Chờ thêm 1 phút để tránh bị gọi lại nhiều lần trong 1 phút
+                                }
+                                Console.WriteLine($"check time: {DateTime.Now:HH:mm:ss}");
+                                await Task.Delay(TimeSpan.FromSeconds(30)); // check lại mỗi 30s
+                            }
+                        });
+                        // ===============================================================
 
                         Console.ReadLine();
 

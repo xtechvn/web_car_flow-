@@ -36,21 +36,45 @@ namespace App_Push_Consummer.Engines
                 {
                     string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
                     queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-                    var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
-                    Console.WriteLine($"lưu thành công: {sheetsSuccess}");
-                    if (!sheetsSuccess)
+                    redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
+                    _mongoService.Insert(queue_info);
+                    DateTime now = DateTime.Now;
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
+                    int hours = now.Hour;
+                    int Minute = now.Minute;
+                    if (hours == 18 && Minute < 30)
                     {
-                        ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
                         
                     }
-                     redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
-                    _mongoService.Insert(queue_info);
+                    else
+                    {
+                        var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
+                        Console.WriteLine($"lưu thành công: {sheetsSuccess}");
+                        if (!sheetsSuccess)
+                        {
+
+                            ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
+                            _googleSheetsService.SaveRegistrationAsync(queue_info);
+                        }
+                    }
                 }
 
             }
             catch (Exception ex)
             {
                 ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "DoSomeRealWork = " + ex.ToString());
+            }
+        }
+        public async void UpdateEx()
+        {
+            try
+            {
+                var data = _mongoService.GetList();
+                _googleSheetsService.SaveRegistrationEX(data);
+            }
+            catch (Exception ex)
+            {
+                ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "UpdateEx = " + ex.ToString());
             }
         }
     }

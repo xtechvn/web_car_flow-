@@ -7,12 +7,14 @@ using StackExchange.Redis;
 using System.Text.RegularExpressions;
 using System.Configuration;
 using App_Push_Consummer.Interfaces;
+using System.Linq;
+using DnsClient.Protocol;
 
 namespace App_Push_Consummer.GoogleSheets
 {
-    public class GoogleSheetsService: IGoogleSheetsService
+    public class GoogleSheetsService : IGoogleSheetsService
     {
- 
+
         private readonly SheetsService _sheetsService;
 
         private readonly string _spreadsheetId;
@@ -21,7 +23,7 @@ namespace App_Push_Consummer.GoogleSheets
         public GoogleSheetsService()
         {
             // Get configuration
-            _spreadsheetId =  ConfigurationManager.AppSettings["SpreadsheetId"]
+            _spreadsheetId = ConfigurationManager.AppSettings["SpreadsheetId"]
                 ?? "1mocqFI7Gue7E47K3LjhPTCYbEt7Rl-Gw1MrchDHk_dA";
             _sheetName = ConfigurationManager.AppSettings["SheetName"] ?? "Sheet1";
 
@@ -63,7 +65,7 @@ namespace App_Push_Consummer.GoogleSheets
             }
             catch (Exception ex)
             {
-               
+
                 throw;
             }
 
@@ -106,61 +108,61 @@ namespace App_Push_Consummer.GoogleSheets
 
 
                 // 2. Lấy dòng vừa chèn
-                var updatedRange = appendResponse.Updates.UpdatedRange; // ví dụ: "Sheet1!A10:E10"
-                var startRow = int.Parse(Regex.Match(updatedRange, @"[A-Z]+(\d+)").Groups[1].Value) - 1;
+                //var updatedRange = appendResponse.Updates.UpdatedRange; // ví dụ: "Sheet1!A10:E10"
+                //var startRow = int.Parse(Regex.Match(updatedRange, @"[A-Z]+(\d+)").Groups[1].Value) - 1;
 
-                // 3. Lấy SheetId (không phải tên)
-                var spreadsheet = await _sheetsService.Spreadsheets.Get(_spreadsheetId).ExecuteAsync();
-                var sheet = spreadsheet.Sheets.FirstOrDefault(s => s.Properties.Title == _sheetName);
-                var sheetId = sheet?.Properties.SheetId;
+                //// 3. Lấy SheetId (không phải tên)
+                //var spreadsheet = await _sheetsService.Spreadsheets.Get(_spreadsheetId).ExecuteAsync();
+                //var sheet = spreadsheet.Sheets.FirstOrDefault(s => s.Properties.Title == _sheetName);
+                //var sheetId = sheet?.Properties.SheetId;
 
-                if (sheetId == null)
-                {
-                    throw new Exception("Không tìm thấy SheetId.");
-                }
-                // 4. Gửi BatchUpdate để định dạng dòng
-                var formatRequest = new BatchUpdateSpreadsheetRequest
-                {
-                    Requests = new List<Request>
-                    {
-                        new Request
-                        {
-                            RepeatCell = new RepeatCellRequest
-                            {
-                                Range = new GridRange
-                                {
-                                    SheetId = sheetId,
-                                    StartRowIndex = startRow,
-                                    EndRowIndex = startRow + 1,
-                                    StartColumnIndex = 0,
-                                    EndColumnIndex = 9 // Cột A đến I (0 đến 8)
-                                },
-                                Cell = new CellData
-                                {
-                                    UserEnteredFormat = new CellFormat
-                                    {
-                                        BackgroundColor = new Color
-                                        {
-                                            Red = 1.0f, Green = 1.0f, Blue = 1.0f // Trắng
-                                        },
-                                        TextFormat = new TextFormat
-                                        {
-                                            ForegroundColor = new Color
-                                            {
-                                               Red = 0.0f, Green = 0.0f, Blue = 0.0f // Đen
-                                            },
-                                            Bold = true
-                                        }
-                                    }
-                                },
-                                Fields = "userEnteredFormat(backgroundColor,textFormat)"
-                            }
-                        }
-                    }
-                };
+                //if (sheetId == null)
+                //{
+                //    throw new Exception("Không tìm thấy SheetId.");
+                //}
+                //// 4. Gửi BatchUpdate để định dạng dòng
+                //var formatRequest = new BatchUpdateSpreadsheetRequest
+                //{
+                //    Requests = new List<Request>
+                //    {
+                //        new Request
+                //        {
+                //            RepeatCell = new RepeatCellRequest
+                //            {
+                //                Range = new GridRange
+                //                {
+                //                    SheetId = sheetId,
+                //                    StartRowIndex = startRow,
+                //                    EndRowIndex = startRow + 1,
+                //                    StartColumnIndex = 0,
+                //                    EndColumnIndex = 9 // Cột A đến I (0 đến 8)
+                //                },
+                //                Cell = new CellData
+                //                {
+                //                    UserEnteredFormat = new CellFormat
+                //                    {
+                //                        BackgroundColor = new Color
+                //                        {
+                //                            Red = 1.0f, Green = 1.0f, Blue = 1.0f // Trắng
+                //                        },
+                //                        TextFormat = new TextFormat
+                //                        {
+                //                            ForegroundColor = new Color
+                //                            {
+                //                               Red = 0.0f, Green = 0.0f, Blue = 0.0f // Đen
+                //                            },
+                //                            Bold = true
+                //                        }
+                //                    }
+                //                },
+                //                Fields = "userEnteredFormat(backgroundColor,textFormat)"
+                //            }
+                //        }
+                //    }
+                //};
 
-                var batchRequest = _sheetsService.Spreadsheets.BatchUpdate(formatRequest, _spreadsheetId);
-                await batchRequest.ExecuteAsync();
+                //var batchRequest = _sheetsService.Spreadsheets.BatchUpdate(formatRequest, _spreadsheetId);
+                //await batchRequest.ExecuteAsync();
                 if (appendResponse.Updates.UpdatedRows.HasValue && appendResponse.Updates.UpdatedRows.Value > 0)
                 {
                     //_logger.LogInformation($"Successfully saved registration to Google Sheets: {record.PhoneNumber} - {record.PlateNumber} - Queue: {record.QueueNumber} - Zalo: {record.ZaloStatus}- Camp: {record.Camp}");
@@ -200,7 +202,7 @@ namespace App_Push_Consummer.GoogleSheets
                 if (nextNumber == 1)
                 {
                     // Mục tiêu: 18 hôm nay
-                    DateTime expireAt = now.Date.AddHours(18);
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
 
                     // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
                     if (now > expireAt)
@@ -212,14 +214,66 @@ namespace App_Push_Consummer.GoogleSheets
                     db.KeyExpire(key, ttl);
                 }
 
+
                 Console.WriteLine($"Số thứ tự tiếp theo: {nextNumber}");
                 return (int)nextNumber;
             }
             catch (Exception ex)
             {
-               // _logger.LogError(ex, "Error getting daily queue count from Google Sheets");
+                // _logger.LogError(ex, "Error getting daily queue count from Google Sheets");
 
                 throw;
+            }
+        }
+        public async Task<bool> SaveRegistrationEX(List<RegistrationRecordMongo> record)
+        {
+            try
+            {
+
+                // Updated to include Zalo Status column
+                var values = new List<IList<object>>();
+                foreach (var item in record)
+                {
+                    values.Add(new List<object>
+                    {
+                        item.Name,
+                        item.PlateNumber,
+                        item.GPLX,
+                        item.Referee,
+                        item.PhoneNumber,
+                        item.QueueNumber,
+                        item.CreatedTime,
+                        item.ZaloStatus,
+                        item.Camp
+                    });
+                }
+                var valueRange = new ValueRange
+                {
+                    Values = values
+                };
+
+                var appendRequest = _sheetsService.Spreadsheets.Values.Append(
+                    valueRange,
+                    _spreadsheetId,
+                    $"{_sheetName}!A:E");
+
+                appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
+                appendRequest.InsertDataOption = SpreadsheetsResource.ValuesResource.AppendRequest.InsertDataOptionEnum.INSERTROWS;
+
+                var appendResponse = await appendRequest.ExecuteAsync();
+
+                if (appendResponse.Updates.UpdatedRows.HasValue && appendResponse.Updates.UpdatedRows.Value > 0)
+                {
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
             }
         }
     }
