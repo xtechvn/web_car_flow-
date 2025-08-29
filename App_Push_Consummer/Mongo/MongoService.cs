@@ -69,7 +69,7 @@ namespace App_Push_Consummer.Mongo
 
                 var now = DateTime.Now;
                 var DateTime_Lte = new DateTime(now.Year, now.Month, now.Day, 18, 29, 59);
-                var DateTime_Gte = new DateTime(now.Year, now.Month, now.Day, 17, 0, 0);
+                var DateTime_Gte = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
                 var filter = Builders<RegistrationRecordMongo>.Filter.Empty;
             
                     filter &= Builders<RegistrationRecordMongo>.Filter.Gte("RegistrationTime", DateTime_Gte);
