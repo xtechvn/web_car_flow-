@@ -34,15 +34,22 @@ namespace App_Push_Consummer.Engines
                 var queue_info = JsonConvert.DeserializeObject<RegistrationRecord>(data_queue);
                 if (queue_info != null)
                 {
-                    string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
-                    queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-                    redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
-                    _mongoService.Insert(queue_info);
                     DateTime now = DateTime.Now;
+                    string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
+                    string cache_name2 = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_")+now.ToString("dd_MM_yyyy");
+                    queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
+                    redisService.Set(cache_name2, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddDays(1), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
+                    redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
+                   var insertResult =await _mongoService.Insert(queue_info);
+                    if (insertResult == 0)
+                    {
+                        insertResult = await _mongoService.Insert(queue_info);
+                    }
+                    
                     DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
                     int hours = now.Hour;
                     int Minute = now.Minute;
-                    if (hours == 18 && Minute < 30)
+                    if (hours == 20 && Minute < 30)
                     {
                         
                     }
@@ -54,7 +61,7 @@ namespace App_Push_Consummer.Engines
                         {
 
                             ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
-                            _googleSheetsService.SaveRegistrationAsync(queue_info);
+                            sheetsSuccess=await _googleSheetsService.SaveRegistrationAsync(queue_info);
                         }
                     }
                 }
@@ -70,7 +77,11 @@ namespace App_Push_Consummer.Engines
             try
             {
                 var data = _mongoService.GetList();
-                _googleSheetsService.SaveRegistrationEX(data);
+              var SaveRegistration=await  _googleSheetsService.SaveRegistrationEX(data);
+                if (SaveRegistration == false)
+                {
+                    SaveRegistration = await _googleSheetsService.SaveRegistrationEX(data);
+                }
             }
             catch (Exception ex)
             {
