@@ -117,8 +117,9 @@ namespace App_Push_Consummer
                                     }
 
                                     // Chờ thêm 1 phút để tránh bị gọi lại nhiều lần trong 1 phút
+                                    await Task.Delay(TimeSpan.FromSeconds(61));
                                 }
-                                Console.WriteLine($"check time: {DateTime.Now:HH:mm:ss}");
+                                //Console.WriteLine($"check time: {DateTime.Now:HH:mm:ss}");
                                 await Task.Delay(TimeSpan.FromSeconds(30)); // check lại mỗi 30s
                             }
                         });

@@ -202,7 +202,7 @@ namespace App_Push_Consummer.GoogleSheets
                 if (nextNumber == 1)
                 {
                     // Mục tiêu: 18 hôm nay
-                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 19, 59, 0);
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 59, 0);
 
                     // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
                     if (now > expireAt)
