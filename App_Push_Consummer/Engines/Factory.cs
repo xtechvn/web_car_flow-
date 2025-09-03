@@ -36,7 +36,7 @@ namespace App_Push_Consummer.Engines
                 {
                     DateTime now = DateTime.Now;
                     string cache_name = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_");
-                    string cache_name2 = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_")+now.ToString("dd_MM_yyyy");
+                    string cache_name2 = "PlateNumber_" + queue_info.PlateNumber.Replace("-", "_")+"_"+now.ToString("dd_MM_yyyy");
                     queue_info.QueueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
                     redisService.Set(cache_name2, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddDays(1), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
                     redisService.Set(cache_name, JsonConvert.SerializeObject(queue_info), DateTime.Now.AddMinutes(15), Convert.ToInt32(ConfigurationManager.AppSettings["Redis_db_common"]));
@@ -46,10 +46,9 @@ namespace App_Push_Consummer.Engines
                         insertResult = await _mongoService.Insert(queue_info);
                     }
                     
-                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
                     int hours = now.Hour;
                     int Minute = now.Minute;
-                    if (hours == 20 && Minute < 30)
+                    if (hours == 18 && Minute < 30)
                     {
                         
                     }

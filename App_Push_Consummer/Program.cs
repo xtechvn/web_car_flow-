@@ -94,7 +94,7 @@ namespace App_Push_Consummer
                             {
                                 var now = DateTime.Now;
 
-                                if (now.Hour == 20 && now.Minute == 30)
+                                if (now.Hour == 18 && now.Minute == 30)
                                 {
                                     try
                                     {
