@@ -60,6 +60,7 @@ namespace App_Push_Consummer.Engines
                         sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
                     }
 
+                    Console.WriteLine("Thành công."+ queue_info.QueueNumber);
                 }
 
             }
