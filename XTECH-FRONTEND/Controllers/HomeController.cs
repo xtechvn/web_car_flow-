@@ -1,15 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
 using System.Xml.Linq;
+using XTECH_FRONTEND.IRepositories;
 
 namespace XTECH_FRONTEND.Controllers
 {
     public class HomeController : Controller
-    {       
+    {
+        private readonly IMongoService _mongoService;
+        public HomeController(IMongoService mongoService)
+        {
+            _mongoService = mongoService;
+        }
         // GET: /home/
         public IActionResult Index()
         {
            return View();           
+        }
+        public IActionResult ListData()
+        {
+
+            var data = _mongoService.GetList();
+            ViewBag.Data = data;
+            return View();
         }
         //home/welcome?a=hello&b=2
         public string Welcome(string a,int  b=1)

@@ -108,5 +108,37 @@ namespace XTECH_FRONTEND.Services
             var db = client.GetDatabase(catalog_log);
             return db;
         }
+        public List<RegistrationRecordMongo> GetList()
+        {
+            var list = new List<RegistrationRecordMongo>();
+            try
+            {
+                var now = DateTime.Now;
+                var expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
+
+                var db = GetDatabase();
+                var collection = db.GetCollection<RegistrationRecordMongo>(_configuration["MongoServer:Data_Car"]);
+                var filter = Builders<RegistrationRecordMongo>.Filter.Empty;
+                if (now >= expireAt)
+                {
+                    filter &= Builders<RegistrationRecordMongo>.Filter.Gte("RegistrationTime", expireAt);
+                }
+                else
+                {
+                    filter &= Builders<RegistrationRecordMongo>.Filter.Gte("RegistrationTime", expireAt.AddDays(-1));
+                }
+
+                var S = Builders<RegistrationRecordMongo>.Sort.Ascending("QueueNumber");
+                list = collection.Find(filter).Sort(S).ToList();
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+
+                //LogHelper.InsertLogTelegram("SearchTransactionSMs - TransferSmsService. " + JsonConvert.SerializeObject(ex));
+            }
+            return list;
+        }
     }
 }

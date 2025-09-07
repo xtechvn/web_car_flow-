@@ -6,5 +6,6 @@ namespace XTECH_FRONTEND.IRepositories
     {
         Task<long> Insert(RegistrationRecord model);
         Task<int> CheckPlateNumber(string PlateNumber);
+        List<RegistrationRecordMongo> GetList();
     }
 }
