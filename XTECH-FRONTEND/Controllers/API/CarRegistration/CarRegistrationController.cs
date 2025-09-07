@@ -43,11 +43,15 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             redisService.Connect();
             _configuration = configuration;
         }
-        [HttpPost("register")]
+        [HttpPost("register-V1")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
         {
             try
             {
+                var now = DateTime.Now;
+                var hours = now.Hour;
+                var minutes = now.Minute;
+
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
 
                 // Step 1: Validate input data
@@ -61,22 +65,22 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     });
                 }
 
-                // Step 2: Check redis time restriction (15 minutes rule)
-                string cache_name= "PlateNumber_"+request.PlateNumber.Replace("-", "_");
-               var data = redisService.Get(cache_name,Convert.ToInt32(_configuration["Redis:Database:db_common"]));
-                //if (data != null && data.Trim() != "")
-                //{
-                //    return BadRequest(new CarRegistrationResponse
-                //    {
-                //        Success = false,
-                //        Message = $"Vui lòng đợi 15 phút trước khi gửi lại",
-                //        RemainingTimeMinutes = 15
-                //    });
-                //}
-                redisService.Set(cache_name, JsonConvert.SerializeObject(request),DateTime.Now.AddMinutes(15), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                // Step 2: Check time restriction (15 minutes rule)
+                var timeRestriction = _validationService.CheckTimeRestriction(request.PlateNumber);
+                if (!timeRestriction.CanSubmit)
+                {
+                    return BadRequest(new CarRegistrationResponse
+                    {
+                        Success = false,
+                        Message = $"Vui lòng đợi {timeRestriction.RemainingMinutes} phút trước khi gửi lại",
+                        RemainingTimeMinutes = timeRestriction.RemainingMinutes
+                    });
+                }
+
                 // Step 3: Get current daily queue count
-                // var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-                var queueNumber = 0;
+                var dailyCount = await _googleSheetsService.GetDailyQueueCountAsync();
+                var queueNumber = dailyCount + 1;
+
                 // Step 4: Create registration record with initial Zalo status
                 var registrationRecord = new RegistrationRecord
                 {
@@ -90,7 +94,6 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp
                 };
-                // gui que
 
                 // Step 5: Submit to Google Form
                 var formSubmissionSuccess = await _googleFormsService.SubmitToGoogleFormAsync(registrationRecord);
@@ -104,45 +107,24 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
-                 
-                _workQueueClient.SyncQueue(registrationRecord);
 
-                while (queueNumber <= 0 )
+                // Step 7: Save to mogoDB
+                await _mongoService.Insert(registrationRecord);
+                // Step 7: Save to Google Sheets with Zalo status
+                var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
+                if (!sheetsSuccess)
                 {
-                    var data_Redis = redisService.Get(
-                        cache_name,
-                        Convert.ToInt32(_configuration["Redis:Database:db_common"])
-                    );
-
-                    if (!string.IsNullOrEmpty(data_Redis))
+                    return StatusCode(500, new CarRegistrationResponse
                     {
-                        var data_detail = JsonConvert.DeserializeObject<RegistrationRecord>(data_Redis);
-
-                        if (data_detail?.QueueNumber > 0)
-                        {
-                            queueNumber = data_detail.QueueNumber;
-                            break; // đã có, thoát loop
-                        }
-                    }
-                    Thread.Sleep(2000); // nghỉ 200ms rồi thử lại
+                        Success = false,
+                        Message = "Lỗi hệ thống, vui lòng thử lại sau"
+                    });
                 }
 
-                //await _mongoService.Insert(registrationRecord);
-                // Step 7: Save to Google Sheets with Zalo status
-                //var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
-                //if (!sheetsSuccess)
-                //{
-                //    return StatusCode(500, new CarRegistrationResponse
-                //    {
-                //        Success = false,
-                //        Message = "Lỗi hệ thống, vui lòng thử lại sau"
-                //    });
-                //}
-
                 // Step 8: Update last submission time
-                // await _googleSheetsService.UpdateLastSubmissionTimeAsync(request.PlateNumber, DateTime.Now);
+                await _googleSheetsService.UpdateLastSubmissionTimeAsync(request.PlateNumber, DateTime.Now);
 
-
+                // Return success response
                 return Ok(new CarRegistrationResponse
                 {
                     Success = true,
@@ -230,6 +212,110 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             {
                 _logger.LogError(ex, $"Error checking Zalo user for {phoneNumber}");
                 return StatusCode(500, new { message = "Lỗi hệ thống" });
+            }
+        }
+        [HttpPost("registerV2")]
+        public async Task<ActionResult<CarRegistrationResponse>> RegisterCarV2([FromBody] CarRegistrationRequest request)
+        {
+            try
+            {
+                var now = DateTime.Now;
+                var hours = now.Hour;
+                var minutes = now.Minute;
+
+                // Kiểm tra khoảng 17:55 đến 18:00
+
+                _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
+
+                // Step 1: Validate input data
+                var validationResult = _validationService.ValidateCarRegistration(request);
+                if (!validationResult.IsValid)
+                {
+                    return BadRequest(new CarRegistrationResponse
+                    {
+                        Success = false,
+                        Message = string.Join(", ", validationResult.Errors)
+                    });
+                }
+
+                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_");
+
+                var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
+
+
+                // Step 4: Create registration record with initial Zalo status
+                var registrationRecord = new RegistrationRecord
+                {
+                    PhoneNumber = request.PhoneNumber,
+                    PlateNumber = request.PlateNumber.ToUpper(),
+                    Name = request.Name.ToUpper(),
+                    Referee = request.Referee.ToUpper(),
+                    GPLX = request.GPLX.ToUpper(),
+                    QueueNumber = queueNumber,
+                    RegistrationTime = DateTime.Now,
+                    ZaloStatus = "Đang xử lý...",
+                    Camp = request.Camp
+                };
+
+
+                if ((hours == 20 && minutes < 30) || (hours == 19 && minutes >= 58))
+                {
+                    var Insert = await _mongoService.Insert(registrationRecord);
+                    if (Insert <= 0)
+                    {
+                        Insert = await _mongoService.Insert(registrationRecord);
+                    }
+                }
+                else
+                {
+                    var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                    if (SyncQueue == false)
+                    {
+                        SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                    }
+                }
+
+                // Return success response
+                return Ok(new CarRegistrationResponse
+                {
+                    Success = true,
+                    Message = "Đăng ký thành công!",
+                    QueueNumber = queueNumber,
+                    RegistrationTime = registrationRecord.RegistrationTime,
+                    PlateNumber = registrationRecord.PlateNumber,
+                    PhoneNumber = registrationRecord.PhoneNumber,
+                    ZaloStatus = "Đang xử lý...",
+
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing car registration");
+                return StatusCode(500, new CarRegistrationResponse
+                {
+                    Success = false,
+                    Message = "Lỗi hệ thống, vui lòng thử lại sau"
+                });
+            }
+        }
+        
+        [HttpGet("get-time")]
+        public async Task<ActionResult<object>> GetTime()
+        {
+            try
+            {
+                var Time = DateTime.Now.ToString("HH:mm:ss");
+                return Ok(new
+                {
+                    CurrentQueueNumber = 0,
+                    NextQueueNumber = 0,
+                    Date = Time,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting queue status");
+                return StatusCode(500, "Lỗi hệ thống");
             }
         }
     }

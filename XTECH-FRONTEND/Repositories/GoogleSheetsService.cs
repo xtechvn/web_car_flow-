@@ -407,16 +407,15 @@ namespace XTECH_FRONTEND.Repositories
                 var db = redis.GetDatabase();
                 // Tính effective date dựa trên giờ địa phương (UTC+7)
                 DateTime now = DateTime.Now; // Sử dụng giờ hệ thống (giả định đã cấu hình đúng timezone)
-                DateTime effectiveDate = now.Hour < 18 ? now.Date.AddDays(-1) : now.Date;
+                string key = $"counter:daily_car_count";
 
-                string key = $"counter:daily_car_count_:{effectiveDate:yyyyMMdd}";
                 long nextNumber = db.StringIncrement(key);
 
                 // Đặt TTL nếu là lần đầu tăng
                 if (nextNumber == 1)
                 {
                     // Mục tiêu: 18 hôm nay
-                    DateTime expireAt = now.Date.AddHours(18);
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 58, 30);
 
                     // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
                     if (now > expireAt)
@@ -427,7 +426,6 @@ namespace XTECH_FRONTEND.Repositories
                     TimeSpan ttl = expireAt - now;
                     db.KeyExpire(key, ttl);
                 }
-
                 Console.WriteLine($"Số thứ tự tiếp theo: {nextNumber}");
                 return (int)nextNumber;
             }
