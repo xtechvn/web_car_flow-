@@ -46,6 +46,10 @@ app.MapControllerRoute(
     name: "home",
     pattern: "/",
     defaults: new { controller = "Home", action = "Index" });
+app.MapControllerRoute(
+    name: "home",
+    pattern: "/ListData",
+    defaults: new { controller = "Home", action = "ListData" });
 
 
 app.UseCors("AllowAll");
