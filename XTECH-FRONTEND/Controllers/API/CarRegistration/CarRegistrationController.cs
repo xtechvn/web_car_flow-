@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿using DnsClient;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Configuration;
+using System.Diagnostics;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.Services;
@@ -219,6 +221,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         {
             try
             {
+                var stopwatch = Stopwatch.StartNew();
                 var now = DateTime.Now;
                 var hours = now.Hour;
                 var minutes = now.Minute;
@@ -274,7 +277,19 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
                     }
                 }
+                stopwatch.Stop(); // Dừng đo thời gian
 
+                if (stopwatch.ElapsedMilliseconds > 1000)
+                {
+                    var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+                    if (!Directory.Exists(logDirectory))
+                    {
+                        Directory.CreateDirectory(logDirectory);
+                    }
+                    var logPath = Path.Combine(logDirectory, "slow_requests.log");
+                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";
+                    await System.IO.File.AppendAllTextAsync(logPath, logMessage + Environment.NewLine);
+                }
                 // Return success response
                 return Ok(new CarRegistrationResponse
                 {
