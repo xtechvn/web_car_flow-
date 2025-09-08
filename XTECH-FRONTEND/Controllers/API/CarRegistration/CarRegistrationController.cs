@@ -8,6 +8,7 @@ using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.Services;
 using XTECH_FRONTEND.Services.RedisWorker;
+using XTECH_FRONTEND.Utilities;
 
 
 namespace XTECH_FRONTEND.Controllers.CarRegistration
@@ -140,6 +141,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - RegisterCar: " + ex.Message);
                 _logger.LogError(ex, "Error processing car registration");
                 return StatusCode(500, new CarRegistrationResponse
                 {
@@ -159,6 +161,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - CheckTimeRestriction: " + ex.Message);
                 _logger.LogError(ex, $"Error checking time restriction for {PlateNumber}");
                 return StatusCode(500, "Lỗi hệ thống");
             }
@@ -179,6 +182,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - GetQueueStatus: " + ex.Message);
                 _logger.LogError(ex, "Error getting queue status");
                 return StatusCode(500, "Lỗi hệ thống");
             }
@@ -212,6 +216,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - CheckZaloUser: " + ex.Message);
                 _logger.LogError(ex, $"Error checking Zalo user for {phoneNumber}");
                 return StatusCode(500, new { message = "Lỗi hệ thống" });
             }
@@ -305,6 +310,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - RegisterCarV2: " + ex.Message);
                 _logger.LogError(ex, "Error processing car registration");
                 return StatusCode(500, new CarRegistrationResponse
                 {
@@ -314,24 +320,6 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
         }
         
-        [HttpGet("get-time")]
-        public async Task<ActionResult<object>> GetTime()
-        {
-            try
-            {
-                var Time = DateTime.Now.ToString("HH:mm:ss");
-                return Ok(new
-                {
-                    CurrentQueueNumber = 0,
-                    NextQueueNumber = 0,
-                    Date = Time,
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting queue status");
-                return StatusCode(500, "Lỗi hệ thống");
-            }
-        }
+       
     }
 }
