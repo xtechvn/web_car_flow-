@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Repositories
 {
@@ -29,6 +30,7 @@ namespace XTECH_FRONTEND.Repositories
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("SubmitToGoogleFormAsync - GoogleFormsService. " + ex);
                 _logger.LogError(ex, "Error submitting to Google Form");
                 return false;
             }

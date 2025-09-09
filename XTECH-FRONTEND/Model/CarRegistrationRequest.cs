@@ -1,4 +1,7 @@
-﻿namespace XTECH_FRONTEND.Model
+﻿using MongoDB.Bson.Serialization.Attributes;
+using XTECH_FRONTEND.Utilities;
+
+namespace XTECH_FRONTEND.Model
 {
     public class CarRegistrationRequest
     {
@@ -25,6 +28,7 @@
 
     public class RegistrationRecord
     {
+        public string _id { get; set; }
         public string PhoneNumber { get; set; } = string.Empty;
         public string PlateNumber { get; set; } = string.Empty;
         public string Referee { get; set; } = string.Empty;
@@ -47,5 +51,31 @@
         public bool CanSubmit { get; set; }
         public int RemainingMinutes { get; set; }
         public DateTime? LastSubmission { get; set; }
+    }
+    public class RegistrationRecordMongo
+    {
+        public string _id { get; set; }
+        public string PhoneNumber { get; set; }
+        public string PlateNumber { get; set; }
+        public string Referee { get; set; }
+        public string GPLX { get; set; }
+        public string Name { get; set; }
+        public int QueueNumber { get; set; }
+
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)] public DateTime? RegistrationTime { get; set; }
+        [BsonIgnore]
+        public string CreatedTime
+        {
+            get
+            {
+                return DateUtil.DateTimeToString(RegistrationTime);
+            }
+            set
+            {
+                RegistrationTime = DateUtil.StringToDateTime(value);
+            }
+        }
+        public string ZaloStatus { get; set; }
+        public string Camp { get; set; }
     }
 }

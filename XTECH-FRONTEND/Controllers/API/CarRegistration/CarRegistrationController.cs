@@ -1,6 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DnsClient;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Configuration;
+using System.Diagnostics;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Services;
+using XTECH_FRONTEND.Services.RedisWorker;
+using XTECH_FRONTEND.Utilities;
 
 
 namespace XTECH_FRONTEND.Controllers.CarRegistration
@@ -14,25 +22,39 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly IGoogleFormsService _googleFormsService;
         private readonly IZaloService _zaloService;
         private readonly ILogger<CarRegistrationController> _logger;
-
+        private readonly IMongoService _mongoService;
+        private readonly WorkQueueClient _workQueueClient;
+        private readonly RedisConn redisService;
+        private readonly IConfiguration _configuration;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
             IGoogleFormsService googleFormsService,
             IZaloService zaloService,
-            ILogger<CarRegistrationController> logger)
+            ILogger<CarRegistrationController> logger,
+            IConfiguration configuration,
+            IMongoService mongoService)
         {
             _validationService = validationService;
             _googleSheetsService = googleSheetsService;
             _googleFormsService = googleFormsService;
             _zaloService = zaloService;
             _logger = logger;
+            _workQueueClient = new WorkQueueClient(configuration);
+            _mongoService = mongoService;
+            redisService = new RedisConn(configuration);
+            redisService.Connect();
+            _configuration = configuration;
         }
-        [HttpPost("register")]
+        [HttpPost("register-V1")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
         {
             try
             {
+                var now = DateTime.Now;
+                var hours = now.Hour;
+                var minutes = now.Minute;
+
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
 
                 // Step 1: Validate input data
@@ -89,6 +111,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 // Update registration record with Zalo status
                 registrationRecord.ZaloStatus = zaloStatus;
 
+                // Step 7: Save to mogoDB
+                await _mongoService.Insert(registrationRecord);
                 // Step 7: Save to Google Sheets with Zalo status
                 var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(registrationRecord);
                 if (!sheetsSuccess)
@@ -117,6 +141,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - RegisterCar: " + ex.Message);
                 _logger.LogError(ex, "Error processing car registration");
                 return StatusCode(500, new CarRegistrationResponse
                 {
@@ -136,6 +161,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - CheckTimeRestriction: " + ex.Message);
                 _logger.LogError(ex, $"Error checking time restriction for {PlateNumber}");
                 return StatusCode(500, "Lỗi hệ thống");
             }
@@ -156,6 +182,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - GetQueueStatus: " + ex.Message);
                 _logger.LogError(ex, "Error getting queue status");
                 return StatusCode(500, "Lỗi hệ thống");
             }
@@ -189,9 +216,111 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("CarRegistrationController - CheckZaloUser: " + ex.Message);
                 _logger.LogError(ex, $"Error checking Zalo user for {phoneNumber}");
                 return StatusCode(500, new { message = "Lỗi hệ thống" });
             }
         }
+        [HttpPost("registerV2")]
+        public async Task<ActionResult<CarRegistrationResponse>> RegisterCarV2([FromBody] CarRegistrationRequest request)
+        {
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
+                var now = DateTime.Now;
+                var hours = now.Hour;
+                var minutes = now.Minute;
+
+                // Kiểm tra khoảng 17:55 đến 18:00
+
+                _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
+
+                // Step 1: Validate input data
+                var validationResult = _validationService.ValidateCarRegistration(request);
+                if (!validationResult.IsValid)
+                {
+                    return BadRequest(new CarRegistrationResponse
+                    {
+                        Success = false,
+                        Message = string.Join(", ", validationResult.Errors)
+                    });
+                }
+
+                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_");
+
+                var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
+
+
+                // Step 4: Create registration record with initial Zalo status
+                var registrationRecord = new RegistrationRecord
+                {
+                    PhoneNumber = request.PhoneNumber,
+                    PlateNumber = request.PlateNumber.ToUpper(),
+                    Name = request.Name.ToUpper(),
+                    Referee = request.Referee.ToUpper(),
+                    GPLX = request.GPLX.ToUpper(),
+                    QueueNumber = queueNumber,
+                    RegistrationTime = DateTime.Now,
+                    ZaloStatus = "Đang xử lý...",
+                    Camp = request.Camp
+                };
+
+
+                if ((hours == 18 && minutes < 30) || (hours == 17 && minutes >= 58))
+                {
+                    var Insert = await _mongoService.Insert(registrationRecord);
+                    if (Insert <= 0)
+                    {
+                        Insert = await _mongoService.Insert(registrationRecord);
+                    }
+                }
+                else
+                {
+                    var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                    if (SyncQueue == false)
+                    {
+                        SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                    }
+                }
+                stopwatch.Stop(); // Dừng đo thời gian
+                
+                if (stopwatch.ElapsedMilliseconds > 1000)
+                {
+                    LogHelper.InsertLogTelegram("TG sử lý " + request.PlateNumber + ": " + stopwatch.ElapsedMilliseconds);
+                    var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+                    if (!Directory.Exists(logDirectory))
+                    {
+                        Directory.CreateDirectory(logDirectory);
+                    }
+                    var logPath = Path.Combine(logDirectory, "slow_requests.log");
+                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";
+                    await System.IO.File.AppendAllTextAsync(logPath, logMessage + Environment.NewLine);
+                }
+                // Return success response
+                return Ok(new CarRegistrationResponse
+                {
+                    Success = true,
+                    Message = "Đăng ký thành công!",
+                    QueueNumber = queueNumber,
+                    RegistrationTime = registrationRecord.RegistrationTime,
+                    PlateNumber = registrationRecord.PlateNumber,
+                    PhoneNumber = registrationRecord.PhoneNumber,
+                    ZaloStatus = "Đang xử lý...",
+
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CarRegistrationController - RegisterCarV2: " + ex.Message);
+                _logger.LogError(ex, "Error processing car registration");
+                return StatusCode(500, new CarRegistrationResponse
+                {
+                    Success = false,
+                    Message = "Lỗi hệ thống, vui lòng thử lại sau"
+                });
+            }
+        }
+        
+       
     }
 }

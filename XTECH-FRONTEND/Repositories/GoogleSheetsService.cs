@@ -3,6 +3,8 @@ using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Microsoft.Extensions.Caching.Memory;
+using StackExchange.Redis;
+using System.Text.RegularExpressions;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
 
@@ -80,17 +82,15 @@ namespace XTECH_FRONTEND.Repositories
         {
             try
             {
-                var today = DateTime.Today.ToString("yyyy-MM-dd");
+                var today = DateTime.Today.ToString("yyyy-MM");
                 var cacheKey = $"daily_count_{today}";
-
-                if (_cache.TryGetValue(cacheKey, out int cachedCount))
-                {
-                    _logger.LogInformation($"Retrieved daily queue count from cache: {cachedCount}");
-                    return cachedCount;
-                }
-
                 var todayStart = DateTime.Today;
-
+                var cutoffTime = todayStart.AddHours(18); // 18:00 hôm nay
+                var tomorrowStart = todayStart.AddDays(1);
+                if (DateTime.Now >= cutoffTime)
+                {
+                    _cache.Remove(cacheKey);
+                }
                 var range = $"{_sheetName}!A:H"; // Updated to include Zalo Status column
                 var request = _sheetsService.Spreadsheets.Values.Get(_spreadsheetId, range);
 
@@ -100,8 +100,18 @@ namespace XTECH_FRONTEND.Repositories
                 if (values == null || values.Count <= 1)
                 {
                     _logger.LogInformation("No registration data found for today");
-                    _cache.Set(cacheKey, 0, TimeSpan.FromHours(1));
+                    _cache.Set(cacheKey, 1);
                     return 0;
+                }
+                if (values.Count == 2)
+                {
+                    _cache.Remove(cacheKey);
+                }
+                if (_cache.TryGetValue(cacheKey, out int cachedCount))
+                {
+                    _logger.LogInformation($"Retrieved daily queue count from cache: {cachedCount}");
+                    _cache.Set(cacheKey, cachedCount + 1);
+                    return cachedCount;
                 }
 
                 var count = 0;
@@ -112,7 +122,7 @@ namespace XTECH_FRONTEND.Repositories
                     {
                         if (DateTime.TryParse(row[6].ToString(), out DateTime registrationDate))
                         {
-                            if (registrationDate.Date == todayStart.Date)
+                            if (registrationDate.Date.AddDays(1) >= todayStart.Date)
                             {
                                 count++;
                             }
@@ -121,7 +131,15 @@ namespace XTECH_FRONTEND.Repositories
                 }
 
                 _logger.LogInformation($"Retrieved daily queue count from Google Sheets: {count}");
-                _cache.Set(cacheKey, count, TimeSpan.FromMinutes(5));
+                if (count == 0)
+                {
+                    _cache.Set(cacheKey, 1);
+                }
+                else
+                {
+                    _cache.Set(cacheKey, count + 1);
+                }
+
 
                 return count;
             }
@@ -129,7 +147,7 @@ namespace XTECH_FRONTEND.Repositories
             {
                 _logger.LogError(ex, "Error getting daily queue count from Google Sheets");
 
-                var today = DateTime.Today.ToString("yyyy-MM-dd");
+                var today = DateTime.Today.ToString("yyyy-MM");
                 var cacheKey = $"daily_count_{today}";
 
                 if (_cache.TryGetValue(cacheKey, out int cachedCount))
@@ -157,7 +175,7 @@ namespace XTECH_FRONTEND.Repositories
                         record.Referee,
                         record.PhoneNumber,
                         record.QueueNumber,
-                        record.RegistrationTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        record.RegistrationTime.ToString("yyyy-MM-dd HH:mm:ss").ToString(),
                         record.ZaloStatus,
                         record.Camp
                     }
@@ -178,20 +196,76 @@ namespace XTECH_FRONTEND.Repositories
 
                 var appendResponse = await appendRequest.ExecuteAsync();
 
+
+                // 2. Lấy dòng vừa chèn
+                var updatedRange = appendResponse.Updates.UpdatedRange; // ví dụ: "Sheet1!A10:E10"
+                var startRow = int.Parse(Regex.Match(updatedRange, @"[A-Z]+(\d+)").Groups[1].Value) - 1;
+
+                // 3. Lấy SheetId (không phải tên)
+                var spreadsheet = await _sheetsService.Spreadsheets.Get(_spreadsheetId).ExecuteAsync();
+                var sheet = spreadsheet.Sheets.FirstOrDefault(s => s.Properties.Title == _sheetName);
+                var sheetId = sheet?.Properties.SheetId;
+
+                if (sheetId == null)
+                {
+                    throw new Exception("Không tìm thấy SheetId.");
+                }
+                // 4. Gửi BatchUpdate để định dạng dòng
+                var formatRequest = new BatchUpdateSpreadsheetRequest
+                {
+                    Requests = new List<Request>
+                    {
+                        new Request
+                        {
+                            RepeatCell = new RepeatCellRequest
+                            {
+                                Range = new GridRange
+                                {
+                                    SheetId = sheetId,
+                                    StartRowIndex = startRow,
+                                    EndRowIndex = startRow + 1,
+                                    StartColumnIndex = 0,
+                                    EndColumnIndex = 9 // Cột A đến I (0 đến 8)
+                                },
+                                Cell = new CellData
+                                {
+                                    UserEnteredFormat = new CellFormat
+                                    {
+                                        BackgroundColor = new Color
+                                        {
+                                            Red = 1.0f, Green = 1.0f, Blue = 1.0f // Trắng
+                                        },
+                                        TextFormat = new TextFormat
+                                        {
+                                            ForegroundColor = new Color
+                                            {
+                                               Red = 0.0f, Green = 0.0f, Blue = 0.0f // Đen
+                                            },
+                                            Bold = true
+                                        }
+                                    }
+                                },
+                                Fields = "userEnteredFormat(backgroundColor,textFormat)"
+                            }
+                        }
+                    }
+                };
+
+                var batchRequest = _sheetsService.Spreadsheets.BatchUpdate(formatRequest, _spreadsheetId);
+                await batchRequest.ExecuteAsync();
                 if (appendResponse.Updates.UpdatedRows.HasValue && appendResponse.Updates.UpdatedRows.Value > 0)
                 {
                     _logger.LogInformation($"Successfully saved registration to Google Sheets: {record.PhoneNumber} - {record.PlateNumber} - Queue: {record.QueueNumber} - Zalo: {record.ZaloStatus}- Camp: {record.Camp}");
 
-                    var today = DateTime.Today.ToString("yyyy-MM-dd");
-                    var cacheKey = $"daily_count_{today}";
-                    if (_cache.TryGetValue(cacheKey, out int currentCount))
-                    {
-                        _cache.Set(cacheKey, currentCount + 1, TimeSpan.FromMinutes(5));
-                    }
+                    //var today = DateTime.Today.ToString("yyyy-MM");
+                    //var cacheKey = $"daily_count_{today}";
+                    //if (_cache.TryGetValue(cacheKey, out int currentCount))
+                    //{
+                    //    _cache.Set(cacheKey, currentCount + 1);
+                    //}
 
                     return true;
                 }
-
                 _logger.LogWarning("No rows were updated when saving to Google Sheets");
                 return false;
             }
@@ -324,6 +398,43 @@ namespace XTECH_FRONTEND.Repositories
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+        public async Task<int> GetDailyQueueCountRedis()
+        {
+            try
+            {
+                var redis = ConnectionMultiplexer.Connect(_configuration["Redis:Host"] +":"+_configuration["Redis:Port"]);
+                var db = redis.GetDatabase();
+                // Tính effective date dựa trên giờ địa phương (UTC+7)
+                DateTime now = DateTime.Now; // Sử dụng giờ hệ thống (giả định đã cấu hình đúng timezone)
+                string key = $"counter:daily_car_count";
+
+                long nextNumber = db.StringIncrement(key);
+
+                // Đặt TTL nếu là lần đầu tăng
+                if (nextNumber == 1)
+                {
+                    // Mục tiêu: 18 hôm nay
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 58, 30);
+
+                    // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
+                    if (now > expireAt)
+                    {
+                        expireAt = expireAt.AddDays(1);
+                    }
+
+                    TimeSpan ttl = expireAt - now;
+                    db.KeyExpire(key, ttl);
+                }
+                Console.WriteLine($"Số thứ tự tiếp theo: {nextNumber}");
+                return (int)nextNumber;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting daily queue count from Google Sheets");
+
+                throw;
+            }
         }
     }
 }

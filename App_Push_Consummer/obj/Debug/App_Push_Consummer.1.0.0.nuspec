@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>App_Push_Consummer</id>
+    <version>1.0.0</version>
+    <authors>App_Push_Consummer</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="01aa2713e6cb93644c607bd6b3ec9e5372ce309b" />
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="Utilities" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="MongoDB.Driver" version="2.28.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
+        <dependency id="RabbitMQ.Client" version="6.8.1" exclude="Build,Analyzers" />
+        <dependency id="System.Configuration.ConfigurationManager" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.SqlClient" version="4.8.6" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="I:\HuloToys\Services\App_Push_Consummer\bin\Debug\net7.0\App_Push_Consummer.runtimeconfig.json" target="lib\net7.0\App_Push_Consummer.runtimeconfig.json" />
+    <file src="I:\HuloToys\Services\App_Push_Consummer\bin\Debug\net7.0\App_Push_Consummer.dll" target="lib\net7.0\App_Push_Consummer.dll" />
+  </files>
+</package>
