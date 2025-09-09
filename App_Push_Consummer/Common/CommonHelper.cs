@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using App_Push_Consummer.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace App_Push_Consummer.Common
 {
@@ -16,7 +17,7 @@ namespace App_Push_Consummer.Common
             }
             catch (Exception ex)
             {
-
+                LogHelper.InsertLogTelegram("Decode - CommonHelper: " + ex.Message);
                 return strString;
             }
         }
@@ -31,6 +32,7 @@ namespace App_Push_Consummer.Common
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("Encode - CommonHelper: " + ex.Message);
                 return string.Empty;
             }
 

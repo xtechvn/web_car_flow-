@@ -12,6 +12,7 @@ using App_Push_Consummer.Interfaces;
 using System.Configuration;
 using MongoDB.Driver.Core.Events;
 using Newtonsoft.Json;
+using App_Push_Consummer.Utilities;
 
 namespace App_Push_Consummer.Mongo
 {
@@ -53,7 +54,7 @@ namespace App_Push_Consummer.Mongo
             }
             catch (Exception ex)
             {
-                //LogHelper.InsertLogTelegram("PushLog - LogActionMongoService: " + ex.Message);
+                LogHelper.InsertLogTelegram("Insert - MongoService: " + ex.Message);
             }
             return 0;
         }
@@ -88,7 +89,7 @@ namespace App_Push_Consummer.Mongo
             catch (Exception ex)
             {
 
-                //LogHelper.InsertLogTelegram("SearchTransactionSMs - TransferSmsService. " + JsonConvert.SerializeObject(ex));
+                LogHelper.InsertLogTelegram("GetList - MongoService: " + ex.Message);
             }
             return list;
         }

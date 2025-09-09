@@ -9,6 +9,7 @@ using System.Configuration;
 using App_Push_Consummer.Interfaces;
 using System.Linq;
 using DnsClient.Protocol;
+using App_Push_Consummer.Utilities;
 
 namespace App_Push_Consummer.GoogleSheets
 {
@@ -65,7 +66,7 @@ namespace App_Push_Consummer.GoogleSheets
             }
             catch (Exception ex)
             {
-
+                LogHelper.InsertLogTelegram("InitializeSheetsService - GoogleSheetsService: " + ex.Message);
                 throw;
             }
 
@@ -181,6 +182,7 @@ namespace App_Push_Consummer.GoogleSheets
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("SaveRegistrationAsync - GoogleSheetsService: " + ex.Message);
                 //_logger.LogError(ex, "Error saving registration to Google Sheets");
                 return false;
             }
@@ -220,6 +222,7 @@ namespace App_Push_Consummer.GoogleSheets
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("GetDailyQueueCountRedis - GoogleSheetsService: " + ex.Message);
                 // _logger.LogError(ex, "Error getting daily queue count from Google Sheets");
 
                 throw;
@@ -271,7 +274,7 @@ namespace App_Push_Consummer.GoogleSheets
             }
             catch (Exception ex)
             {
-
+                LogHelper.InsertLogTelegram("SaveRegistrationEX - GoogleSheetsService: " + ex.Message);
                 return false;
             }
         }

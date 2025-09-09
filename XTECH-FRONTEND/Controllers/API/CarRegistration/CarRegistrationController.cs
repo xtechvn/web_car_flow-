@@ -283,9 +283,10 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     }
                 }
                 stopwatch.Stop(); // Dừng đo thời gian
-
+                
                 if (stopwatch.ElapsedMilliseconds > 1000)
                 {
+                    LogHelper.InsertLogTelegram("TG sử lý " + request.PlateNumber + ": " + stopwatch.ElapsedMilliseconds);
                     var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
                     if (!Directory.Exists(logDirectory))
                     {

@@ -184,6 +184,7 @@ namespace XTECH_FRONTEND.Repositories
             }
             catch (Exception ex)
             {
+
                 LogHelper.InsertLogTelegram("SendMessageToUserAsync - ZaloOfficialAccountService. " + ex);
                 var errorMsg = $"Exception sending message: {ex.Message}";
                 _logger.LogError(ex, errorMsg);

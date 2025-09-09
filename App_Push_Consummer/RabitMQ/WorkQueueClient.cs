@@ -1,5 +1,6 @@
 ﻿
 using App_Push_Consummer.Common;
+using App_Push_Consummer.Utilities;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Configuration;
@@ -56,8 +57,9 @@ namespace App_Push_Consummer.RabitMQ
             }
             catch(Exception ex)
             {
-
-            }return false;
+                LogHelper.InsertLogTelegram("SyncES - WorkQueueClient: " + ex.Message);
+            }
+            return false;
         }
         public bool InsertQueueSimple(string message, string queueName)
         {            
@@ -84,6 +86,7 @@ namespace App_Push_Consummer.RabitMQ
                 }
                 catch (Exception ex)
                 {
+                    LogHelper.InsertLogTelegram("InsertQueueSimple - WorkQueueClient: " + ex.Message);
                     ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "WorkQueueClient - InsertQueueSimple[" + message + "][" + queueName + "]: " + ex.ToString());
                     return false;
                 }
@@ -114,6 +117,7 @@ namespace App_Push_Consummer.RabitMQ
                 }
                 catch (Exception ex)
                 {
+                    LogHelper.InsertLogTelegram("InsertQueueSimpleDurable - WorkQueueClient: " + ex.Message);
                     string error_msg = Assembly.GetExecutingAssembly().GetName().Name + "->" + MethodBase.GetCurrentMethod().Name + "=>" + ex.ToString();
                     ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "WorkQueueClient - InsertQueueSimpleDurable[" + message + "][" + queueName + "]: " + ex.ToString());
                     return false;

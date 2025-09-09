@@ -3,6 +3,7 @@ using App_Push_Consummer.Common;
 using App_Push_Consummer.Interfaces;
 using App_Push_Consummer.Model;
 using App_Push_Consummer.Redis;
+using App_Push_Consummer.Utilities;
 using Google.Apis.Sheets.v4.Data;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -66,6 +67,7 @@ namespace App_Push_Consummer.Engines
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("DoSomeRealWork - Factory. " + ex);
                 ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "DoSomeRealWork = " + ex.ToString());
             }
         }
@@ -82,6 +84,7 @@ namespace App_Push_Consummer.Engines
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("UpdateEx - Factory. " + ex);
                 ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "UpdateEx = " + ex.ToString());
             }
         }
