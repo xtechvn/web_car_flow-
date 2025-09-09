@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.IRepositories;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Repositories
 {
@@ -82,6 +83,8 @@ namespace XTECH_FRONTEND.Repositories
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("SendRegistrationNotificationAsync - ZaloOfficialAccountService. " + ex);
+
                 var status = $"Lỗi hệ thống Zalo: {ex.Message}";
                 _logger.LogError(ex, $"Error in Zalo notification process for {record.PhoneNumber}");
                 return (false, status);
@@ -127,6 +130,7 @@ namespace XTECH_FRONTEND.Repositories
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("GetUserDetailByPhoneAsync - ZaloOfficialAccountService. " + ex);
                 _logger.LogError(ex, $"Exception getting user detail for phone {phoneNumber}");
                 return null;
             }
@@ -180,6 +184,7 @@ namespace XTECH_FRONTEND.Repositories
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram("SendMessageToUserAsync - ZaloOfficialAccountService. " + ex);
                 var errorMsg = $"Exception sending message: {ex.Message}";
                 _logger.LogError(ex, errorMsg);
                 return (false, errorMsg);

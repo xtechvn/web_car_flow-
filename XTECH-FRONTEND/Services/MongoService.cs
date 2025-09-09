@@ -6,6 +6,7 @@ using MongoDB.Driver.Core.Events;
 using Newtonsoft.Json;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Services
 {
@@ -46,7 +47,7 @@ namespace XTECH_FRONTEND.Services
             }
             catch (Exception ex)
             {
-                //LogHelper.InsertLogTelegram("PushLog - LogActionMongoService: " + ex.Message);
+                LogHelper.InsertLogTelegram("Insert - MongoService: " + ex.Message);
             }
             return 0;
         }
@@ -73,7 +74,7 @@ namespace XTECH_FRONTEND.Services
             }
             catch (Exception ex)
             {
-                //LogHelper.InsertLogTelegram("GetListLogActions - CommentClientMongoService. " + JsonConvert.SerializeObject(ex));
+                LogHelper.InsertLogTelegram("CheckPlateNumber - MongoService. " + JsonConvert.SerializeObject(ex));
             }
             return 0;
         }
@@ -136,7 +137,7 @@ namespace XTECH_FRONTEND.Services
             catch (Exception ex)
             {
 
-                //LogHelper.InsertLogTelegram("SearchTransactionSMs - TransferSmsService. " + JsonConvert.SerializeObject(ex));
+                LogHelper.InsertLogTelegram("GetList - MongoService. " + JsonConvert.SerializeObject(ex));
             }
             return list;
         }

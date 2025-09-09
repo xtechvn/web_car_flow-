@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Services
 {
@@ -45,8 +46,8 @@ namespace XTECH_FRONTEND.Services
             }
             catch (Exception ex)
             {
-                
 
+                LogHelper.InsertLogTelegram("SyncQueue - WorkQueueClient. " + JsonConvert.SerializeObject(ex));
             }
             return false;
         }
@@ -75,7 +76,7 @@ namespace XTECH_FRONTEND.Services
                 }
                 catch (Exception ex)
                 {
-
+                    LogHelper.InsertLogTelegram("InsertQueueSimple - WorkQueueClient. " + JsonConvert.SerializeObject(ex));
 
                     return false;
                 }
@@ -106,7 +107,7 @@ namespace XTECH_FRONTEND.Services
                 }
                 catch (Exception ex)
                 {
-
+                    LogHelper.InsertLogTelegram("InsertQueueSimpleDurable - WorkQueueClient. " + JsonConvert.SerializeObject(ex));
                     return false;
                 }
             }

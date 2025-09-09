@@ -1,5 +1,6 @@
 ﻿using StackExchange.Redis;
 using XTECH_FRONTEND.IRepositories;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Services.RedisWorker
 {
@@ -27,7 +28,7 @@ namespace XTECH_FRONTEND.Services.RedisWorker
             }
             catch (RedisConnectionException err)
             {
-
+                LogHelper.InsertLogTelegram("Redis Connection Error: " + err.Message);
                 // throw err;
             }
             // Log.Debug("Connected to Redis");
