@@ -19,7 +19,6 @@ namespace XTECH_FRONTEND.Controllers
         }
         public IActionResult ListData()
         {
-
             var data = _mongoService.GetList();
             ViewBag.Data = data;
             return View();
