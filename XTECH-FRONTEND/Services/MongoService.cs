@@ -92,7 +92,7 @@ namespace XTECH_FRONTEND.Services
                 string url = "mongodb://" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
                 var client = new MongoClient(url);
                 IMongoDatabase db = client.GetDatabase(_configuration["MongoServer:catalog_log"]);
-      
+                LogHelper.InsertLogTelegram("GetList - MongoService. " + url);
                 var collection = db.GetCollection<RegistrationRecordMongo>(_configuration["MongoServer:Data_Car"]);
                 var filter = Builders<RegistrationRecordMongo>.Filter.Empty;
                 if (now >= expireAt)
