@@ -23,8 +23,7 @@ namespace XTECH_FRONTEND.Services
         {
             try
             {
-                //string url = "mongodb://" + _configuration["MongoServer:user"] + ":" + _configuration["MongoServer:pwd"] + "@" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
-                string url = "mongodb://" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
+                string url = "mongodb://" + _configuration["MongoServer:user"] + ":" + _configuration["MongoServer:pwd"] + "@" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] ;
                 var client = new MongoClient(url);
 
                 IMongoDatabase db = client.GetDatabase(_configuration["MongoServer:catalog_log"]);
@@ -57,7 +56,7 @@ namespace XTECH_FRONTEND.Services
             var list_data = new List<RegistrationRecord>();
             try
             {
-                string url = "mongodb://" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
+                string url = "mongodb://" + _configuration["MongoServer:user"] + ":" + _configuration["MongoServer:pwd"] + "@" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
                 var client = new MongoClient(url);
 
                 IMongoDatabase db = client.GetDatabase(_configuration["MongoServer:catalog_log"]);
@@ -89,10 +88,10 @@ namespace XTECH_FRONTEND.Services
             {
                 var now = DateTime.Now;
                 var expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
-                string url = "mongodb://" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] + "/" + _configuration["MongoServer:catalog_log"];
+                string url = "mongodb://" + _configuration["MongoServer:user"] + ":" + _configuration["MongoServer:pwd"] + "@" + _configuration["MongoServer:Host"] + ":" + _configuration["MongoServer:Port"] ;
                 var client = new MongoClient(url);
                 IMongoDatabase db = client.GetDatabase(_configuration["MongoServer:catalog_log"]);
-                LogHelper.InsertLogTelegram("GetList - MongoService. " + url);
+      
                 var collection = db.GetCollection<RegistrationRecordMongo>(_configuration["MongoServer:Data_Car"]);
                 var filter = Builders<RegistrationRecordMongo>.Filter.Empty;
                 if (now >= expireAt)
