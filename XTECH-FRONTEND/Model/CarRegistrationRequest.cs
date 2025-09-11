@@ -38,7 +38,6 @@ namespace XTECH_FRONTEND.Model
         public DateTime RegistrationTime { get; set; }
         public string ZaloStatus { get; set; } = string.Empty;
         public string Camp { get; set; } = string.Empty;
-        public string createdTime { get; set; } = string.Empty;
     }
 
     public class ValidationResult

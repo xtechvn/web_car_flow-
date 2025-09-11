@@ -275,7 +275,6 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Insert = await _mongoService.Insert(registrationRecord);
                 }
                 // đẩy realtime đến tất cả client
-                registrationRecord.createdTime = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"); 
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
                 //if ((hours == 18 && minutes < 30) || (hours == 17 && minutes >= 55))
                 //{
