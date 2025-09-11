@@ -4,11 +4,8 @@ using App_Push_Consummer.Interfaces;
 using App_Push_Consummer.Model;
 using App_Push_Consummer.Redis;
 using App_Push_Consummer.Utilities;
-using Google.Apis.Sheets.v4.Data;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Configuration;
-using System.Diagnostics;
 
 namespace App_Push_Consummer.Engines
 {
