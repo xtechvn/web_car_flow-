@@ -1,18 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Bson.Serialization.Conventions;
+﻿using App_Push_Consummer.Interfaces;
+using App_Push_Consummer.Model;
+using App_Push_Consummer.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using App_Push_Consummer.Model;
-using App_Push_Consummer.Interfaces;
 using System.Configuration;
-using MongoDB.Driver.Core.Events;
-using Newtonsoft.Json;
-using App_Push_Consummer.Utilities;
 
 namespace App_Push_Consummer.Mongo
 {
@@ -28,8 +19,7 @@ namespace App_Push_Consummer.Mongo
         {
             try
             {
-                //string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] + "/" + ConfigurationManager.AppSettings["MongoServer_catalog_log"];
-                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] + "/" + ConfigurationManager.AppSettings["MongoServer_catalog_log"];
+                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] ;
 
                 var client = new MongoClient(url);
 
@@ -65,8 +55,7 @@ namespace App_Push_Consummer.Mongo
             try
             {
 
-                //string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] + "/" + ConfigurationManager.AppSettings["MongoServer_catalog_log"];
-                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] + "/" + ConfigurationManager.AppSettings["MongoServer_catalog_log"];
+                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] ;
 
                 var client = new MongoClient(url);
                 var db = client.GetDatabase(ConfigurationManager.AppSettings["MongoServer_catalog_log"]);
