@@ -284,17 +284,15 @@
                 const minutes = now.getMinutes();
 
                 // Kiểm tra khoảng 17:55 đến 18:00
-                //if ((hours === 17 && minutes >= 55)) {
-                //    e.preventDefault(); // Ngăn hành động mặc định
-                //    e.stopPropagation(); // Ngăn sự kiện lan truyền
-                //    var time_load = 60 - minutes;
-                //    errorMessage = 'Bạn vui lòng đợi ' + time_load + ' phút!';
-                //    setTimeout(() => {
-                //        startCountdown17_18();
-                //    }, 1000);
+                if ((hours === 18 && minutes >= 25 && minutes <=30)) {
+                    e.preventDefault(); // Ngăn hành động mặc định
+                    e.stopPropagation(); // Ngăn sự kiện lan truyền
+                    setTimeout(() => {
+                        startCountdown17_18();
+                    }, 1000);
 
-                //    return;
-                //}
+                    return;
+                }
                 // Call API to register car
                 const response = await registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp);
 
@@ -416,7 +414,7 @@
             submitBtn.textContent = 'VUI LÒNG ĐỢI...';
             const now = new Date();
             let target = new Date();
-            target.setHours(20, 0, 0, 0);
+            target.setHours(15, 00, 0, 0);
             let remaining = Math.floor((target - now) / 1000);
 
             const updateCountdown = () => {
@@ -442,39 +440,22 @@
             console.log(mins)
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
+        $(document).ready(function () {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            console.log('Current time:', hours, minutes);
+            // Kiểm tra khoảng 17:55 đến 18:00
+            if (hours === 14 && minutes >= 30 && minutes<=60) {
 
-        async function fetchServerTime() {
-            try {
+                setTimeout(() => {
+                    startCountdown17_18();
+                }, 1000);
 
-                const response = await makeAPICall("/carregistration/get-time");
-
-                const data = response.date;
-                updateClock(data);
-            } catch (error) {
-                console.error("Lỗi khi lấy thời gian từ server:", error);
+                return;
             }
-        }
-        function updateClock(data) {
-            // Lấy giờ local của trình duyệt
-            const nowLocal = new Date();
-            const localTime = nowLocal.toLocaleString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false
-            });
-
-            const serverTime = data;
-
-            // Hiển thị lên DOM
-            const element = document.getElementById("current-time");
-            //element.innerHTML = `🕒 Giờ local: ${localTime} <br> 🖥️ Giờ server: ${serverTime}`;
-            element.innerHTML = `🕒 Giờ server: ${serverTime}`;
-
-            // Nếu muốn log so sánh
-            console.log("Local time:", nowLocal.toString());
-            console.log("Server time:", serverTime);
-        }
+        });
+      
    
   
     </script>
