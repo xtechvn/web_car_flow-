@@ -1,0 +1,70 @@
+﻿@using Entities.ViewModels.Car;
+@{
+    Layout = null;
+}
+@model List<CartoFactoryModel>
+@if (Model != null && Model.Count > 0)
+{
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Giờ đăng ký online</th>
+                <th>Tên khách hàng (Trại, đại lý)</th>
+                <th>Tên lái xe</th>
+                <th>Số điện thoại</th>
+                <th>Biển số xe</th>
+                <th>Địa chỉ (tỉnh)</th>
+                <th>Số GPLX (3 số cuối)</th>
+                <th>Tải trọng xe (kg)</th>
+                <th>Tình trạng xe</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>08:30</td>
+                <td>Nguyễn Văn Cường</td>
+                <td>Nguyễn Văn A</td>
+                <td>0123 456 789</td>
+                <td>17L1-4466</td>
+                <td>Hà Nam</td>
+                <td>123</td>
+                <td>15,000</td>
+                <td>
+                    <div class="status-dropdown">
+                        <button class="dropdown-toggle" data-options="[
+                        {&quot;text&quot;:&quot;Đã đến nhà máy&quot;,&quot;class&quot;:&quot;status-arrived&quot;},
+                        {&quot;text&quot;:&quot;Blank&quot;,&quot;class&quot;:&quot;status-blank&quot;}
+                        ]">
+                            Đã đến nhà máy
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Giờ đăng ký online</th>
+                <th>Tên khách hàng (Trại, đại lý)</th>
+                <th>Tên lái xe</th>
+                <th>Số điện thoại</th>
+                <th>Biển số xe</th>
+                <th>Địa chỉ (tỉnh)</th>
+                <th>Số GPLX (3 số cuối)</th>
+                <th>Tải trọng xe (kg)</th>
+                <th>Tình trạng xe</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+}
+

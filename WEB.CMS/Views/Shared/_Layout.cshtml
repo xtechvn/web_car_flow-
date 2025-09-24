@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title> @ViewData["Title"] </title>
+    <link type="image/x-icon" href="~/images/graphics/logo.svg" rel="shortcut icon" />
+    <link rel="stylesheet" href="~/css/theme.css">
+
+    <!-- build:head -->
+</head>
+
+<body class="homepage">
+
+    <section class="section-main clearfix">
+        <!--await Component.InvokeAsync("Menu")-->
+        <!--HEADER-->
+        <header class="header">
+            <div class="header__logo">
+                <img src="/images/graphics/logo.svg" alt="Cargill">
+            </div>
+            <div class="header__right">
+                <div class="header-actions">
+                    <a href="" class="action-btn menu-btn">
+                        <img src="/images/icons/menu.svg" alt="Menu">
+                    </a>
+
+                    <a href="" class="action-btn">
+                        <img src="/images/icons/settings.svg" alt="Cài đặt">
+                    </a>
+
+                    <a href="" class="action-btn">
+                        <img src="/images/icons/bell.svg" alt="Thông báo">
+                        <span class="badge">00+</span>
+
+                    </a>
+                    <div class="user-box">
+                        <img src="/images/icons/user.svg" alt="">
+                        <span>Chào, BinhDT</span>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+        <!--END HEADER-->
+
+        @RenderBody()
+
+    
+    </section>
+
+
+
+
+    <!--end popup-->
+    <!--Jquery lib-->
+    <script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.magnific-popup.min.js"></script>
+    <script type="text/javascript" src="~/js/simple-scrollbar.min.js"></script>
+    <script type="text/javascript" src="~/js/common.js"></script>
+
+    <!-- build:script -->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
