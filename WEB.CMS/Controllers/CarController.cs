@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using Repositories.IRepositories;
 using Repositories.Repositories;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Utilities;
 using Utilities.Contants;
@@ -115,6 +116,10 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.LOADINGSTATUS);
+                ViewBag.AllCode = AllCode;
+                var AllCode2 = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                ViewBag.AllCode2 = AllCode2;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -140,6 +145,8 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
+                ViewBag.AllCode = AllCode;
                 ViewBag.type = SearchModel.type;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
@@ -166,6 +173,8 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE );
+                ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 if (data != null)
                 {
@@ -179,53 +188,115 @@ namespace WEB.CMS.Controllers
             }
             return PartialView();
         }
-        public async Task<IActionResult> UpdateStatus(int id,int status, int type)
+        public async Task<IActionResult> UpdateStatus(int id, int status, int type)
         {
             try
             {
+                var _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                var UpdateCar = 0;
                 ViewBag.Id = id;
                 ViewBag.StatusCar = 0;
-                var data = new List<AllCode>();
+                var model = new VehicleInspectionUpdateModel();
                 var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(id);
+                model.Id = detail.Id;
+                model.RecordNumber = detail.RecordNumber;
+                model.CustomerName = detail.CustomerName;
+                model.VehicleNumber = detail.VehicleNumber;
+                model.RegisterDateOnline = detail.RegisterDateOnline;
+                model.DriverName = detail.DriverName;
+                model.LicenseNumber = detail.LicenseNumber;
+                model.PhoneNumber = detail.PhoneNumber;
+                model.VehicleLoad = detail.VehicleLoad;
+                model.VehicleStatus = detail.VehicleStatus;
+                model.LoadType = detail.LoadType;
+                model.IssueCreateDate = detail.IssueCreateDate;
+                model.IssueUpdatedDate = detail.IssueUpdatedDate;
+                model.VehicleWeighingType = detail.VehicleWeighingType;
+                model.VehicleWeighingTimeComeIn = detail.VehicleWeighingTimeComeIn;
+                model.VehicleWeighingTimeComeOut = detail.VehicleWeighingTimeComeOut;
+                model.VehicleWeighingTimeComplete = detail.VehicleWeighingTimeComplete;
+                model.TroughType = detail.TroughType;
+                model.VehicleTroughTimeComeIn = detail.VehicleTroughTimeComeIn;
+                model.VehicleTroughTimeComeOut = detail.VehicleTroughTimeComeOut;
+                model.VehicleTroughWeight = detail.VehicleTroughWeight;
+                model.VehicleTroughStatus = detail.VehicleTroughStatus;
+                model.LoadingStatus = detail.LoadingStatus;
+                model.UpdatedBy = _UserId;
                 switch (type)
                 {
                     case 1:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
-                        ViewBag.StatusCar = detail.VehicleStatus;
+                        {
+                            model.VehicleStatus = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 2:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
-                        ViewBag.StatusCar = detail.LoadType;
+                        {
+                            model.LoadType = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 3:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
-                        ViewBag.StatusCar = detail.VehicleWeighingType;
+                        {
+                          
+                            model.VehicleWeighingType = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 4:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
-                        ViewBag.StatusCar = detail.TroughType;
+                        {
+                            model.TroughType = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 5:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUG_HWEIGHT);
-                        ViewBag.StatusCar = detail.VehicleTroughWeight;
+                        {
+                           
+                            model.VehicleTroughWeight = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 6:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
-                        ViewBag.StatusCar = detail.VehicleTroughStatus;
+                        {
+                           
+                            model.VehicleTroughStatus = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                     case 7:
-                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
-                        ViewBag.StatusCar = detail.VehicleWeighingStatus;
+                        {
+                            
+                            model.VehicleWeighingType = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
+                        break; 
+                    case 8:
+                        {
+                            model.LoadingStatus = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                        }
                         break;
                 }
-                ViewBag.Status = data;
-
+                if (UpdateCar > 0)
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        msg = "cập nhật thành công"
+                    });
             }
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("OpenPopup - CarController: " + ex);
             }
-            return PartialView();
+            return Ok(new
+            {
+                status = (int)ResponseType.SUCCESS,
+                msg = "cập nhật không thành công"
+            });
         }
     }
 }

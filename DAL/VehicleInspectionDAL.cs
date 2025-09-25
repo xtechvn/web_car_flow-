@@ -83,7 +83,7 @@ namespace DAL
                 };
 
                 // Gọi SP
-                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.sp_UpdateVehicleInspection, objParam);
+                var dt = _DbWorker.ExecuteNonQuery(StoreProcedureConstant.sp_UpdateVehicleInspection, objParam);
 
                 // Lấy giá trị Identity OUT
                 int identity = (int)objParam.Last().Value;

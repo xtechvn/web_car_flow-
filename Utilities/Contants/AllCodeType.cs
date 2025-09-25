@@ -9,6 +9,7 @@
         public static string VEHICLETROUG_HWEIGHT = "VEHICLETROUG_HWEIGHT";//5
         public static string VEHICLETROUGH_STATUS = "VEHICLETROUGH_STATUS";//6
         public static string VEHICLEWEIGHINGSTATUS = "VEHICLEWEIGHINGSTATUS";//7
+        public static string LOADINGSTATUS = "LOADINGSTATUS";//8
 
 
     }

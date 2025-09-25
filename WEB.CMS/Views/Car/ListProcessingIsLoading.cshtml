@@ -1,6 +1,9 @@
 ﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
 @{
     Layout = null;
+    var AllCode = (List<AllCode>)ViewBag.AllCode;
+    var AllCode2 = (List<AllCode>)ViewBag.AllCode2;
 }
 @model List<CartoFactoryModel>
 @if (Model != null && Model.Count > 0)
@@ -23,7 +26,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr class="CartoFactory_@item.Id">
+                <tr class="CartoFactory_@item.Id" >
                     <td>@item.RecordNumber</td>
                     <td>@item.RegisterDateOnline</td>
                     <td>@item.CustomerName</td>
@@ -32,11 +35,33 @@
                     <td>@item.VehicleNumber</td>
                     <td>@item.VehicleLoad</td>
                     <td>@item.VehicleStatusName</td>
-                    <td>@item.LoadTypeName</td>
                     <td>
-                        <div class="status-dropdown dropdown-toggle">
-                            @item.LoadingStatusName
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle status-perfect Vehicle-Status" data-value="1" data-options='[
+                            @foreach (var allcode in AllCode2)
+                            {
+
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+
+                            }
+                                                        ]'>
+                                @item.LoadTypeName
+                            </button>
                         </div>
+                        </td>
+                    <td>
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle status-perfect" data-options='[
+                            @foreach (var allcode in AllCode)
+                            {
+
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+
+                            }
+                                                ]'>
+                                @item.LoadingStatusName
+                            </button>
+                        </div>                   
                     </td>
                 </tr>
             }

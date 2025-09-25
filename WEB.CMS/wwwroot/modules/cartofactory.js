@@ -124,7 +124,7 @@
                     }) // xoá các class status- cũ
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
-                _cartofactory.UpdateStatu(id_row, val_TT, 1);
+                _cartofactory.UpdateStatus(id_row, val_TT, 1);
             }
         }
         closeMenu();
@@ -167,7 +167,7 @@ ListCartoFactory: function () {
         data: { SearchModel: model },
         success: function (result) {
             $('#imgLoading').hide();
-            //$('#data_chua_xu_ly').html(result);
+            $('#data_chua_xu_ly').html(result);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             console.log("Status: " + textStatus);
@@ -215,8 +215,12 @@ OpenPopup: function (id) {
             type: "post",
             data: { id: id, status: status, type: type },
             success: function (result) {
-                $('#imgLoading').hide();
-                $('#data_da_xu_ly').html(result);
+                if (result.status == 0) {
+                    _msgalert.success(result.msg)
+                    $.magnificPopup.close();
+                } else {
+                    _msgalert.error(result.msg)
+                }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
