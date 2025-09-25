@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    _cartofactory.init();
+    _listVehicles.init();
     var input_chua_xu_ly = document.getElementById("input_chua_xu_ly");
     input_chua_xu_ly.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -7,7 +7,7 @@
             // Cancel the default action, if needed
             event.preventDefault();
             // Trigger the button element with a click
-            _cartofactory.ListCartoFactory();
+            _listVehicles.ListCartoFactory();
         }
     });
     var input_da_xu_ly = document.getElementById("input_da_xu_ly");
@@ -17,14 +17,14 @@
             // Cancel the default action, if needed
             event.preventDefault();
             // Trigger the button element with a click
-            _cartofactory.ListCartoFactory_Da_SL();
+            _listVehicles.ListCartoFactory_Da_SL();
         }
     });
 });
-var _cartofactory = {
+var _listVehicles = {
     init: function () {
-        _cartofactory.ListCartoFactory();
-        _cartofactory.ListCartoFactory_Da_SL();
+        _listVehicles.ListCartoFactory();
+        _listVehicles.ListCartoFactory_Da_SL();
     },
     ListCartoFactory: function () {
         var model = {
