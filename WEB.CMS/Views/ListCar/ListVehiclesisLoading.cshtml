@@ -1,6 +1,8 @@
 ﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
 @{
     Layout = null;
+    var AllCode = (List<AllCode>)ViewBag.AllCode;
 }
 @model List<CartoFactoryModel>
 @if (Model != null && Model.Count > 0)
@@ -28,11 +30,14 @@
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle status-perfect" data-options='[
-                                        {"text":"Máng xuất 1","class":"status-perfect"},
-                                        {"text":"Máng xuất 2","class":"status-green"},
-                                        {"text":"Máng xuất 3","class":"status-normal"}
-                                        ]'>
-                                Máng xuất 1
+                            @foreach (var allcode in AllCode)
+                            {
+
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+
+                            }
+                                                                ]'>
+                                @item.VehicleWeighingStatusName
                             </button>
                         </div>
                     </td>

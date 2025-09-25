@@ -1,6 +1,9 @@
 ﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
 @{
     Layout = null;
+    var AllCode = (List<AllCode>)ViewBag.AllCode;
+    var AllCode2 = (List<AllCode>)ViewBag.AllCode2;
 }
 @model List<CartoFactoryModel>
 @if (Model != null && Model.Count > 0)
@@ -30,12 +33,15 @@
 
                     <td>
                         <div class="status-dropdown">
-                            <button class="dropdown-toggle status-perfect" data-options='[
-                                {"text":"Máng xuất 1","class":"status-perfect"},
-                                {"text":"Máng xuất 2","class":"status-green"},
-                                {"text":"Máng xuất 3","class":"status-normal"}
-                                ]'>
-                                Máng xuất 1
+                            <button class="dropdown-toggle status-perfect" data-type="1" data-options='[
+                            @foreach (var allcode in AllCode2)
+                            {
+
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+
+                            }
+                                                                ]'>
+                                @item.TroughTypeName
                             </button>
                         </div>
                     </td>
@@ -43,10 +49,14 @@
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle" data-options='[
-                                {"text":"Hoàn thành","class":"status-arrived"},
-                                {"text":"Blank","class":"status-blank"}
-                                ]'>
-                                Hoàn thành
+                            @foreach (var allcode in AllCode)
+                            {
+
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+
+                            }
+                                                        ]'>
+                                @item.VehicleTroughStatusName
                             </button>
                         </div>
                     </td>

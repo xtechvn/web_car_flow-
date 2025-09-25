@@ -122,8 +122,8 @@
                         return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
                     }) // xoá các class status- cũ
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                var type = $row.find('button.Vehicle-Status').attr('data-value');
-                if (type == 1) {
+                var type = $currentBtn.attr('data-type');
+                if (type == '1') {
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 2);
                 } else {
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 8);

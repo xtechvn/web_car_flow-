@@ -32,6 +32,7 @@ namespace Entities.ViewModels.Car
         public int? VehicleTroughStatus { get; set; }
         public int? UpdatedBy { get; set; }
         public int? LoadingStatus { get; set; }
+        public int? VehicleWeighingStatus { get; set; }
     }
 
 }

@@ -270,7 +270,7 @@ namespace WEB.CMS.Controllers
                     case 7:
                         {
                             
-                            model.VehicleWeighingType = status;
+                            model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                         }
                         break; 

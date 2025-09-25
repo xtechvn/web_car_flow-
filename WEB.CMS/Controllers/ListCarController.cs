@@ -52,6 +52,10 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
+                ViewBag.AllCode = AllCode;
+                var AllCode2 = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
+                ViewBag.AllCode2 = AllCode2;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -65,6 +69,8 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
+                ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
