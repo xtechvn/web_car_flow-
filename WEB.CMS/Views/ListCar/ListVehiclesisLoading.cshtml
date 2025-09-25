@@ -1,0 +1,63 @@
+﻿@using Entities.ViewModels.Car;
+@{
+    Layout = null;
+}
+@model List<CartoFactoryModel>
+@if (Model != null && Model.Count > 0)
+{
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên KH (Trại, đại lý)</th>
+                <th>Tên lái xe</th>
+                <th>Biển số xe</th>
+                <th>Giờ vào cân</th>
+                <th>Tình Trạng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="CartoFactory_@item.Id">
+                    <td>@item.RecordNumber</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.DriverName</td>
+                    <td>@item.VehicleNumber</td>
+                    <td>@item.VehicleWeighingTimeComeIn</td>
+                    <td>
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle status-perfect" data-options='[
+                                        {"text":"Máng xuất 1","class":"status-perfect"},
+                                        {"text":"Máng xuất 2","class":"status-green"},
+                                        {"text":"Máng xuất 3","class":"status-normal"}
+                                        ]'>
+                                Máng xuất 1
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên KH (Trại, đại lý)</th>
+                <th>Tên lái xe</th>
+                <th>Biển số xe</th>
+                <th>Giờ vào cân</th>
+                <th>Tình Trạng</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+}
+
+
