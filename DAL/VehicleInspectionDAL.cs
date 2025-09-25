@@ -11,6 +11,7 @@ using Utilities.Contants;
 using Utilities;
 using Entities.ViewModels.Car;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 
 namespace DAL
@@ -49,6 +50,52 @@ namespace DAL
             }
             return null;
         }
+        public async Task<int> UpdateVehicleInspection(VehicleInspectionUpdateModel model)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+            new SqlParameter("@Id", model.Id),
+            new SqlParameter("@RecordNumber", (object?)model.RecordNumber ?? DBNull.Value),
+            new SqlParameter("@CustomerName", (object?)model.CustomerName ?? DBNull.Value),
+            new SqlParameter("@VehicleNumber", (object?)model.VehicleNumber ?? DBNull.Value),
+            new SqlParameter("@RegisterDateOnline", (object?)model.RegisterDateOnline ?? DBNull.Value),
+            new SqlParameter("@DriverName", (object?)model.DriverName ?? DBNull.Value),
+            new SqlParameter("@LicenseNumber", (object?)model.LicenseNumber ?? DBNull.Value),
+            new SqlParameter("@PhoneNumber", (object?)model.PhoneNumber ?? DBNull.Value),
+            new SqlParameter("@VehicleLoad", (object?)model.VehicleLoad ?? DBNull.Value),
+            new SqlParameter("@VehicleStatus", (object?)model.VehicleStatus ?? DBNull.Value),
+            new SqlParameter("@LoadType", (object?)model.LoadType ?? DBNull.Value),
+            new SqlParameter("@IssueCreateDate", (object?)model.IssueCreateDate ?? DBNull.Value),
+            new SqlParameter("@IssueUpdatedDate", (object?)model.IssueUpdatedDate ?? DBNull.Value),
+            new SqlParameter("@VehicleWeighingType", (object?)model.VehicleWeighingType ?? DBNull.Value),
+            new SqlParameter("@VehicleWeighingTimeComeIn", (object?)model.VehicleWeighingTimeComeIn ?? DBNull.Value),
+            new SqlParameter("@VehicleWeighingTimeComeOut", (object?)model.VehicleWeighingTimeComeOut ?? DBNull.Value),
+            new SqlParameter("@VehicleWeighingTimeComplete", (object?)model.VehicleWeighingTimeComplete ?? DBNull.Value),
+            new SqlParameter("@TroughType", (object?)model.TroughType ?? DBNull.Value),
+            new SqlParameter("@VehicleTroughTimeComeIn", (object?)model.VehicleTroughTimeComeIn ?? DBNull.Value),
+            new SqlParameter("@VehicleTroughTimeComeOut", (object?)model.VehicleTroughTimeComeOut ?? DBNull.Value),
+            new SqlParameter("@VehicleTroughWeight", (object?)model.VehicleTroughWeight ?? DBNull.Value),
+            new SqlParameter("@VehicleTroughStatus", (object?)model.VehicleTroughStatus ?? DBNull.Value),
+            new SqlParameter("@UpdatedBy", (object?)model.UpdatedBy ?? DBNull.Value),
+           
+                };
+
+                // Gọi SP
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.sp_UpdateVehicleInspection, objParam);
+
+                // Lấy giá trị Identity OUT
+                int identity = (int)objParam.Last().Value;
+                return identity;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateVehicleInspection - VehicleInspectionDAL: " + ex);
+                return -1;
+            }
+        }
+
         public async Task<CartoFactoryModel> GetDetailtVehicleInspection(int id)
         {
             try
