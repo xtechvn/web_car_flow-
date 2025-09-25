@@ -30,7 +30,20 @@ namespace Repositories.Repositories
                 LogHelper.InsertLogTelegram("GetListCartoFactory - VehicleInspectionRepository: " + ex);
             }
             return null;
-        }  
+        }
+        public async Task<int> UpdateCar(VehicleInspectionUpdateModel model)
+        {
+            try
+            {
+                return await _VehicleInspectionDAL.UpdateVehicleInspection(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateVehicleInspection - VehicleInspectionRepository: " + ex);
+                return -1;
+            }
+        }
+
         public async Task<CartoFactoryModel> GetDetailtVehicleInspection(int id)
         {
             try

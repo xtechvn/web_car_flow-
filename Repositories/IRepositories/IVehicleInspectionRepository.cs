@@ -11,5 +11,7 @@ namespace Repositories.IRepositories
     {
         Task<List<CartoFactoryModel>> GetListCartoFactory(CartoFactorySearchModel searchModel);
         Task<CartoFactoryModel> GetDetailtVehicleInspection(int id);
+        Task<int> UpdateCar(VehicleInspectionUpdateModel model);
+
     }
 }

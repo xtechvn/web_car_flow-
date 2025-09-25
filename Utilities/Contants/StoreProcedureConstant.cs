@@ -8,6 +8,8 @@ namespace Utilities.Contants
     {
         public static string GetClientByID = "SP_GetClientByID";
         public static string SP_GetListVehicleInspection = "SP_GetListVehicleInspection";
+        public static string sp_UpdateVehicleInspection = "sp_UpdateVehicleInspection";
+
         public static string SP_GetListRolePermissionByUserAndRole = "SP_GetListRolePermissionByUserAndRole";
         public static string SP_GetManagerByUserId = "SP_GetManagerByUserId";
         public static string Sp_GetLeaderByUserId = "Sp_GetLeaderByUserId";
