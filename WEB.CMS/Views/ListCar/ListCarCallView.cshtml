@@ -23,12 +23,11 @@
             {
                 <tr class="CartoFactory_@item.Id">
                     <td>@item.RecordNumber</td>
-                    <td>@item.RegisterDateOnline</td>
                     <td>@item.CustomerName</td>
                     <td>@item.DriverName</td>
-                    <td>@item.PhoneNumber</td>
                     <td>@item.VehicleNumber</td>
-                    <td>@item.VehicleLoad</td>
+                    <td>@item.VehicleWeighingTimeComplete</td>
+
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle status-perfect" data-options='[
@@ -37,6 +36,17 @@
                                 {"text":"Máng xuất 3","class":"status-normal"}
                                 ]'>
                                 Máng xuất 1
+                            </button>
+                        </div>
+                    </td>
+                    <td>@item.VehicleLoad</td>
+                    <td>
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle" data-options='[
+                                {"text":"Hoàn thành","class":"status-arrived"},
+                                {"text":"Blank","class":"status-blank"}
+                                ]'>
+                                Hoàn thành
                             </button>
                         </div>
                     </td>
