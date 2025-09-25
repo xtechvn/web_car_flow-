@@ -14,8 +14,8 @@
                 <th>Tên lái xe</th>
                 <th>Số điện thoại</th>
                 <th>Biển số xe</th>
-                <th>Tải trọng xe (kg)</th>
-                <th>Tình trạng xe</th>
+                <th>Nhóm tài</th>
+                <th>Tình trạng </th>
             </tr>
         </thead>
         <tbody>
@@ -28,10 +28,10 @@
                     <td>@item.DriverName</td>
                     <td>@item.PhoneNumber</td>
                     <td>@item.VehicleNumber</td>
-                    <td>@item.VehicleLoad</td>
+                    <td>@item.LoadTypeName</td>
                     <td>
-                        <div onclick="_cartofactory.OpenPopup(@item.Id)" class="status-dropdown dropdown-toggle">
-                            @item.VehicleStatusName
+                        <div class="status-dropdown dropdown-toggle">
+                            @item.VehicleWeighingTypeName
                         </div>
                     </td>
                 </tr>
@@ -58,7 +58,6 @@ else
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
 }

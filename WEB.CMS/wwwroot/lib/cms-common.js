@@ -185,36 +185,36 @@ $(document).ready(function () {
         }
     }).removeAttr('readonly');
     */
-    $('.datetimepicker-input').daterangepicker({
-        singleDatePicker: true,
-        timePicker: true,
-        minYear: 1901,
-        startDate: moment().startOf('hour'),
-        endDate: moment().startOf('hour').add(32, 'hour'),
-        locale: {
-            format: 'M/DD hh:mm A'
-        }
-    }, function (start, end, label) {
-        $(this).val(start.format('MM/DD/YYYY HH:mm:ss'));
-        $(this).change();
+    //$('.datetimepicker-input').daterangepicker({
+    //    singleDatePicker: true,
+    //    timePicker: true,
+    //    minYear: 1901,
+    //    startDate: moment().startOf('hour'),
+    //    endDate: moment().startOf('hour').add(32, 'hour'),
+    //    locale: {
+    //        format: 'M/DD hh:mm A'
+    //    }
+    //}, function (start, end, label) {
+    //    $(this).val(start.format('MM/DD/YYYY HH:mm:ss'));
+    //    $(this).change();
 
-    });
+    //});
 
-    $('.datepicker-input').daterangepicker({
-        singleDatePicker: true,
-        showDropdowns: true,
-        minYear: 1901,
-        maxYear: parseInt(moment().format('YYYY'), 10),
-        locale: {
-            format: 'DD/M/YYYY'
-        }
-    }, function (start, end, label) {
-        $(this).val(start.format('MM/DD/YYYY'));
-        $(this).change();
+    //$('.datepicker-input').daterangepicker({
+    //    singleDatePicker: true,
+    //    showDropdowns: true,
+    //    minYear: 1901,
+    //    maxYear: parseInt(moment().format('YYYY'), 10),
+    //    locale: {
+    //        format: 'DD/M/YYYY'
+    //    }
+    //}, function (start, end, label) {
+    //    $(this).val(start.format('MM/DD/YYYY'));
+    //    $(this).change();
 
-    });
+    //});
 
-    $('.select2').select2();
+    //$('.select2').select2();
 
     //var path = window.location.pathname;
     //var a_filter = ' li > a[href$="' + path + '"]';

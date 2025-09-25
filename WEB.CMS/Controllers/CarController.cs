@@ -18,7 +18,7 @@ namespace WEB.CMS.Controllers
     {
         private readonly IVehicleInspectionRepository _vehicleInspectionRepository;
         private readonly IAllCodeRepository _allCodeRepository;
-      
+
         public CarController(IVehicleInspectionRepository vehicleInspectionRepository, IAllCodeRepository allCodeRepository)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
@@ -35,7 +35,7 @@ namespace WEB.CMS.Controllers
                 LogHelper.InsertLogTelegram("CartoFactory - CarController: " + ex);
             }
             return View();
-        } 
+        }
         public async Task<IActionResult> ListCartoFactory(CartoFactorySearchModel SearchModel)
         {
             try
@@ -43,42 +43,49 @@ namespace WEB.CMS.Controllers
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("ListCartoFactory - CarController: " + ex);
             }
             return PartialView();
         }
-        public async Task<IActionResult> OpenPopup(int id, int type,int status)
+        public async Task<IActionResult> OpenPopup(int id, int type)
         {
             try
             {
                 ViewBag.Id = id;
-                ViewBag.StatusCar = status;
+                ViewBag.StatusCar = 0;
                 var data = new List<AllCode>();
                 var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(id);
                 switch (type)
                 {
                     case 1:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                        ViewBag.StatusCar = detail.VehicleStatus;
                         break;
                     case 2:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                        ViewBag.StatusCar = detail.LoadType;
                         break;
                     case 3:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
+                        ViewBag.StatusCar = detail.VehicleWeighingType;
                         break;
                     case 4:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
+                        ViewBag.StatusCar = detail.TroughType;
                         break;
                     case 5:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUG_HWEIGHT);
+                        ViewBag.StatusCar = detail.VehicleTroughWeight;
                         break;
                     case 6:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
+                        ViewBag.StatusCar = detail.VehicleTroughStatus;
                         break;
                     case 7:
                         data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
+                        ViewBag.StatusCar = detail.VehicleWeighingStatus;
                         break;
                 }
                 ViewBag.Status = data;
@@ -131,6 +138,7 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                ViewBag.type = SearchModel.type;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -157,6 +165,10 @@ namespace WEB.CMS.Controllers
             try
             {
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
+                if (data != null)
+                {
+                    data = data.OrderBy(s => s.LoadType).ToList();
+                }
                 return PartialView(data);
             }
             catch (Exception ex)
