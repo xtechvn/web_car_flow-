@@ -40,6 +40,8 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -174,6 +176,54 @@ namespace WEB.CMS.Controllers
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("ListWeighedInput - CarController: " + ex);
+            }
+            return PartialView();
+        }
+        public async Task<IActionResult> UpdateStatus(int id,int status, int type)
+        {
+            try
+            {
+                ViewBag.Id = id;
+                ViewBag.StatusCar = 0;
+                var data = new List<AllCode>();
+                var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(id);
+                switch (type)
+                {
+                    case 1:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                        ViewBag.StatusCar = detail.VehicleStatus;
+                        break;
+                    case 2:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                        ViewBag.StatusCar = detail.LoadType;
+                        break;
+                    case 3:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
+                        ViewBag.StatusCar = detail.VehicleWeighingType;
+                        break;
+                    case 4:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
+                        ViewBag.StatusCar = detail.TroughType;
+                        break;
+                    case 5:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUG_HWEIGHT);
+                        ViewBag.StatusCar = detail.VehicleTroughWeight;
+                        break;
+                    case 6:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
+                        ViewBag.StatusCar = detail.VehicleTroughStatus;
+                        break;
+                    case 7:
+                        data = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
+                        ViewBag.StatusCar = detail.VehicleWeighingStatus;
+                        break;
+                }
+                ViewBag.Status = data;
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("OpenPopup - CarController: " + ex);
             }
             return PartialView();
         }

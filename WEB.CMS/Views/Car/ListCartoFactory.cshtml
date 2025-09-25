@@ -1,6 +1,8 @@
 ﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
 @{
     Layout = null;
+    var AllCode = (List<AllCode>)ViewBag.AllCode;
 }
 @model List<CartoFactoryModel>
 @if (Model != null && Model.Count > 0)
@@ -30,15 +32,28 @@
                     <td>@item.VehicleNumber</td>
                     <td>@item.VehicleLoad</td>
                     <td>
-                        <div onclick="_cartofactory.OpenPopup(@item.Id)" class="status-dropdown dropdown-toggle">
-                            @item.VehicleStatusName
+                        <div class="status-dropdown">
+                            <button class="dropdown-toggle status-perfect" data-options='[
+                            @foreach (var allcode in AllCode)
+                            {
+                                
+                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+
+                            }
+                                        ]'>
+                                @item.VehicleStatusName
+                            </button>
                         </div>
+@*                         <div onclick="_cartofactory.OpenPopup(@item.Id)" class="status-dropdown dropdown-toggle">
+                            @item.VehicleStatusName
+                        </div> *@
                     </td>
                 </tr>
             }
 
         </tbody>
     </table>
+    
 }
 else
 {
@@ -58,7 +73,6 @@ else
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
 }
