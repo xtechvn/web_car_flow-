@@ -38,6 +38,8 @@ builder.Services.Configure<DomainConfig>(configuration.GetSection("DomainConfig"
 // Register services
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IAllCodeRepository, AllCodeRepository>();
+builder.Services.AddSingleton<IVehicleInspectionRepository, VehicleInspectionRepository>();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())

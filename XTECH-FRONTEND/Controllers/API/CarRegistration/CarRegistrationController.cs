@@ -251,8 +251,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     });
                 }
 
-                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_");
+                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_")+DateTime.Now.ToString("dd_MM_yyyy");
 
+                redisService.Set(cache_name, JsonConvert.SerializeObject(request), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
 
 
@@ -269,10 +270,10 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp
                 };
-                var Insert = await _mongoService.Insert(registrationRecord);
-                if (Insert <= 0)
+                var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                if (SyncQueue == false)
                 {
-                    Insert = await _mongoService.Insert(registrationRecord);
+                    SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
                 }
                 // đẩy realtime đến tất cả client
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);

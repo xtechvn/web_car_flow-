@@ -28,16 +28,16 @@ namespace DAL
             {
                 SqlParameter[] objParam = new SqlParameter[]
                 {
-                    new SqlParameter("@VehicleNumber", searchModel.VehicleNumber),
-                    new SqlParameter("@PhoneNumber", searchModel.PhoneNumber),
-                    new SqlParameter("@VehicleStatus", searchModel.VehicleStatus),
-                    new SqlParameter("@LoadType", searchModel.LoadType),
-                    new SqlParameter("@VehicleWeighingType", searchModel.VehicleWeighingType),
-                    new SqlParameter("@VehicleTroughStatus", searchModel.VehicleTroughStatus),
-                    new SqlParameter("@TroughType", searchModel.TroughType),
-                    new SqlParameter("@VehicleWeighingStatus", searchModel.VehicleWeighingStatus),
+                    new SqlParameter("@VehicleNumber", searchModel.VehicleNumber==null? DBNull.Value :searchModel.VehicleNumber),
+                    new SqlParameter("@PhoneNumber", searchModel.PhoneNumber==null? DBNull.Value :searchModel.PhoneNumber),
+                    new SqlParameter("@VehicleStatus", searchModel.VehicleStatus==null? DBNull.Value :searchModel.VehicleStatus),
+                    new SqlParameter("@LoadType", searchModel.LoadType==null? DBNull.Value :searchModel.LoadType),
+                    new SqlParameter("@VehicleWeighingType", searchModel.VehicleWeighingType==null? DBNull.Value :searchModel.VehicleWeighingType),
+                    new SqlParameter("@VehicleTroughStatus", searchModel.VehicleTroughStatus==null? DBNull.Value :searchModel.VehicleTroughStatus),
+                    new SqlParameter("@TroughType", searchModel.TroughType==null? DBNull.Value :searchModel.TroughType),
+                    new SqlParameter("@VehicleWeighingStatus", searchModel.VehicleWeighingStatus==null? DBNull.Value :searchModel.VehicleWeighingStatus),
                 };
-                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetAllUser_search, objParam);
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspection, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     return dt.ToList<CartoFactoryModel>();
