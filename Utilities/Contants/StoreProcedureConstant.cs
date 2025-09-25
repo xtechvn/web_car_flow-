@@ -32,5 +32,6 @@ namespace Utilities.Contants
         public static string SP_Report_TotalRevenueOrderByClient = "SP_Report_TotalRevenueOrderByClient";
         public static string sp_InsertAllcode = "sp_InsertAllcode";
         public static string sp_UpdateAllCode = "sp_UpdateAllCode";
+        public static string SP_GetDetailtVehicleInspection = "SP_GetDetailtVehicleInspection";
     }
 }

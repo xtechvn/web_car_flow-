@@ -49,6 +49,28 @@ namespace DAL
             }
             return null;
         }
+        public async Task<CartoFactoryModel> GetDetailtVehicleInspection(int id)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+                    new SqlParameter("@Id", id),
+                   
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetDetailtVehicleInspection, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var data= dt.ToList<CartoFactoryModel>();
+                    return data.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetDetailtVehicleInspection - VehicleInspectionDAL: " + ex);
+            }
+            return null;
+        }
 
     }
 }

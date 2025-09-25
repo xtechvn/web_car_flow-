@@ -31,5 +31,7 @@ namespace Entities.Models
         public DateTime? CreatedDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public int? VehicleWeighingStatus { get; set; }
+        public int? LoadingStatus { get; set; }
     }
 }

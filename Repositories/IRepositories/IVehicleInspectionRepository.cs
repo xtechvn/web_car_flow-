@@ -10,5 +10,6 @@ namespace Repositories.IRepositories
     public interface IVehicleInspectionRepository
     {
         Task<List<CartoFactoryModel>> GetListCartoFactory(CartoFactorySearchModel searchModel);
+        Task<CartoFactoryModel> GetDetailtVehicleInspection(int id);
     }
 }

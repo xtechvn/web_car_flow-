@@ -56,6 +56,7 @@ namespace WEB.CMS.Controllers
                 ViewBag.Id = id;
                 ViewBag.StatusCar = status;
                 var data = new List<AllCode>();
+                var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(id);
                 switch (type)
                 {
                     case 1:
@@ -97,10 +98,23 @@ namespace WEB.CMS.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("CartoFactory - CarController: " + ex);
+                LogHelper.InsertLogTelegram("ProcessingIsLoading - CarController: " + ex);
             }
             return View();
-        }  
+        }
+        public async Task<IActionResult> ListProcessingIsLoading(CartoFactorySearchModel SearchModel)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ListProcessingIsLoading - CarController: " + ex);
+            }
+            return PartialView();
+        }
         public IActionResult CallTheScale()
         {
             try
@@ -109,10 +123,23 @@ namespace WEB.CMS.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("CartoFactory - CarController: " + ex);
+                LogHelper.InsertLogTelegram("CallTheScale - CarController: " + ex);
             }
             return View();
-        }  
+        }
+        public async Task<IActionResult> ListCallTheScale(CartoFactorySearchModel SearchModel)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ListCallTheScale - CarController: " + ex);
+            }
+            return PartialView();
+        }
         public IActionResult WeighedInput()
         {
             try
@@ -121,9 +148,22 @@ namespace WEB.CMS.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("CartoFactory - CarController: " + ex);
+                LogHelper.InsertLogTelegram("WeighedInput - CarController: " + ex);
             }
             return View();
+        }
+        public async Task<IActionResult> ListWeighedInput(CartoFactorySearchModel SearchModel)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ListWeighedInput - CarController: " + ex);
+            }
+            return PartialView();
         }
     }
 }
