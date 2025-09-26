@@ -17,5 +17,7 @@ namespace Entities.ViewModels.Car
         public string? TroughType { get; set; }
         public string? VehicleWeighingStatus { get; set; }
         public int? type { get; set; }
+        public int? LoadingStatus { get; set; }
+        public int? VehicleWeighedstatus { get; set; }
     }
 }

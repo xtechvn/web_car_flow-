@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Repositories.IRepositories;
 using Repositories.Repositories;
+using WEB.CMS.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,12 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IAllCodeRepository, AllCodeRepository>();
 builder.Services.AddSingleton<IVehicleInspectionRepository, VehicleInspectionRepository>();
-
+// Add SignalR với cấu hình KeepAlive
+builder.Services.AddSignalR(options =>
+{
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60); // client timeout sau 60s
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);     // server ping client mỗi 15s
+});
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
@@ -65,6 +71,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+// Map Hub
+app.MapHub<CarHub>("/CarHub");
 
 app.Run();

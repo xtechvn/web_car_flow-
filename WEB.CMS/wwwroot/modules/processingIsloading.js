@@ -127,7 +127,15 @@
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 2);
                 } else {
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 8);
+                    if (val_TT == 1) {
+                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    } else {
+                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    }
                 }
+                
                 
             }
         }
@@ -146,6 +154,146 @@
             $currentBtn = null;
         }
     }
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/CarHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+    const AllCode = [
+        { Description: "Thường", CodeValue: "1" },
+        { Description: "Xanh", CodeValue: "0" }, 
+    ];
+    const AllCode2 = [
+        { Description: "Blank", CodeValue: "1" },
+        { Description: "Đã hoàn thành thử tục", CodeValue: "0" }, 
+    ];
+    // Create a new array of objects in the desired format
+    const options = AllCode.map(allcode => ({
+        text: allcode.Description,
+        value: allcode.CodeValue
+    }));
+    const options2 = AllCode2.map(allcode2 => ({
+        text: allcode2.Description,
+        value: allcode2.CodeValue
+    }));
+    const jsonString = JSON.stringify(options);
+    const jsonString2 = JSON.stringify(options2);
+    // Hàm render row
+    function renderRow(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.registerDateOnline}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleLoad}</td>
+            <td>${item.vehicleStatusName}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect"  data-type="1" data-options='${jsonString}'>
+                        ${item.loadTypeName}
+                    </button>
+                </div>
+
+            </td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                        ${item.loadingStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
+    function renderRow_DA_SL(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.registerDateOnline}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleLoad}</td>
+            <td>${item.vehicleStatusName}</td>
+            <td>
+                <div class="">
+                    <p class=" status-perfect" >
+                        ${item.loadTypeName}
+                    </p>
+                </div>
+
+            </td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                        ${item.loadingStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable_Da_SL() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ListProcessingIsLoading_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.on("ListProcessingIsLoading", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
 });
 var _processing_is_loading = {
     init: function () {
@@ -163,6 +311,7 @@ var _processing_is_loading = {
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: null,
+            type: 0,
         }
         $.ajax({
             url: "/Car/ListProcessingIsLoading",
@@ -188,6 +337,7 @@ var _processing_is_loading = {
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
+            type: 1,
         }
         $.ajax({
             url: "/Car/ListProcessingIsLoading",

@@ -123,7 +123,13 @@
                     }) // xoá các class status- cũ
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
-                _Weighed_Input.UpdateStatus(id_row, val_TT, 4);
+                _Weighed_Input.UpdateStatus(id_row, val_TT, 9);
+                if (val_TT == 1) {
+                    $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+
+                } else {
+                    $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                }
             }
         }
         closeMenu();
@@ -141,6 +147,99 @@
             $currentBtn = null;
         }
     }
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/CarHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+    const AllCode = [
+        { Description: "Blank", CodeValue: "1" },
+        { Description: "Đã cân xong đầu vào", CodeValue: "0" },
+        // Add more objects as needed
+    ];
+    // Create a new array of objects in the desired format
+    const options = AllCode.map(allcode => ({
+        text: allcode.Description,
+        value: allcode.CodeValue
+    }));
+    const jsonString = JSON.stringify(options);
+    // Hàm render row
+    function renderRow(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.registerDateOnline}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.loadTypeName}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                        ${item.vehicleWeighedstatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
+
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable_Da_SL() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ListWeighedInput_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.on("ListWeighedInput", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
 });
 var _Weighed_Input = {
     init: function () {
@@ -157,7 +256,9 @@ var _Weighed_Input = {
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
-            LoadingStatus: null,
+            LoadingStatus: 0,
+            VehicleWeighedstatus: null,
+            type: 0,
         }
         $.ajax({
             url: "/Car/ListWeighedInput",
@@ -183,6 +284,8 @@ var _Weighed_Input = {
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
+            VehicleWeighedstatus: 0,
+            type: 1,
         }
         $.ajax({
             url: "/Car/ListWeighedInput",

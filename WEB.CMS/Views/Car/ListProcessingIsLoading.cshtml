@@ -23,10 +23,10 @@
                 <th>Tình trạng</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="dataBody-@ViewBag.type">
             @foreach (var item in Model)
             {
-                <tr class="CartoFactory_@item.Id" >
+                <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                     <td>@item.RecordNumber</td>
                     <td>@item.RegisterDateOnline</td>
                     <td>@item.CustomerName</td>
@@ -36,19 +36,31 @@
                     <td>@item.VehicleLoad</td>
                     <td>@item.VehicleStatusName</td>
                     <td>
-                        <div class="status-dropdown">
-                            <button class="dropdown-toggle status-perfect Vehicle-Status" data-type="1" data-options='[
-                            @foreach (var allcode in AllCode2)
+                        
+                            @if (ViewBag.type == 1)
                             {
-
-                                @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
-
+                                <div class="">
+                                    <p class=" status-perfect Vehicle-Status" data-type="1">
+                                        @item.LoadTypeName
+                                    </p>
+                                </div>
                             }
-                                                        ]'>
-                                @item.LoadTypeName
-                            </button>
-                        </div>
-                        </td>
+                            else
+                            {
+                                <div class="status-dropdown">
+                                    <button class="dropdown-toggle status-perfect Vehicle-Status" data-type="1" data-options='[
+                                    @foreach (var allcode in AllCode2)
+                                    {
+
+                                        @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+
+                                    }
+                                                                    ]'>
+                                        @item.LoadTypeName
+                                    </button>
+                                </div>
+                            }
+                    </td>
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle status-perfect" data-options='[
@@ -58,10 +70,10 @@
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
                             }
-                                                ]'>
+                                                        ]'>
                                 @item.LoadingStatusName
                             </button>
-                        </div>                   
+                        </div>
                     </td>
                 </tr>
             }

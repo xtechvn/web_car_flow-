@@ -1,16 +1,13 @@
 ﻿using Entities.Models;
 using Entities.ViewModels.Car;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using Microsoft.AspNetCore.SignalR;
 using Repositories.IRepositories;
-using Repositories.Repositories;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Utilities;
 using Utilities.Contants;
 using WEB.CMS.Customize;
+using WEB.CMS.Services;
 
 namespace WEB.CMS.Controllers
 {
@@ -19,11 +16,12 @@ namespace WEB.CMS.Controllers
     {
         private readonly IVehicleInspectionRepository _vehicleInspectionRepository;
         private readonly IAllCodeRepository _allCodeRepository;
-
-        public CarController(IVehicleInspectionRepository vehicleInspectionRepository, IAllCodeRepository allCodeRepository)
+        private readonly IHubContext<CarHub> _hubContext;
+        public CarController(IVehicleInspectionRepository vehicleInspectionRepository, IAllCodeRepository allCodeRepository, IHubContext<CarHub> hubContext)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
             _allCodeRepository = allCodeRepository;
+            _hubContext = hubContext;
         }
         public IActionResult CartoFactory()
         {
@@ -41,6 +39,7 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                ViewBag.type=SearchModel.type;//1 đã SL
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
                 ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
@@ -116,6 +115,7 @@ namespace WEB.CMS.Controllers
         {
             try
             {
+                ViewBag.type = SearchModel.type;
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.LOADINGSTATUS);
                 ViewBag.AllCode = AllCode;
                 var AllCode2 = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
@@ -148,6 +148,7 @@ namespace WEB.CMS.Controllers
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
                 ViewBag.AllCode = AllCode;
                 ViewBag.type = SearchModel.type;
+                ViewBag.LoadType = SearchModel.LoadType==null? "": SearchModel.LoadType;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -173,7 +174,8 @@ namespace WEB.CMS.Controllers
         {
             try
             {
-                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE );
+                ViewBag.type = SearchModel.type;
+                var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHEDSTATUS);
                 ViewBag.AllCode = AllCode;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 if (data != null)
@@ -225,6 +227,7 @@ namespace WEB.CMS.Controllers
                 model.VehicleTroughWeight = detail.VehicleTroughWeight;
                 model.VehicleTroughStatus = detail.VehicleTroughStatus;
                 model.LoadingStatus = detail.LoadingStatus;
+                model.VehicleWeighedstatus = detail.VehicleWeighedstatus;
                 model.UpdatedBy = _UserId;
                 switch (type)
                 {
@@ -232,12 +235,27 @@ namespace WEB.CMS.Controllers
                         {
                             model.VehicleStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            if(UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleStatus);
+                                detail.VehicleStatusName = allcode_detail.Description;
+                                if (status == (int)VehicleStatus.Da_Den_NM)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListCartoFactory_Da_SL", detail);
+                                }
+                                else
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
+                                }
+                            }
                         }
                         break;
                     case 2:
                         {
                             model.LoadType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            
                         }
                         break;
                     case 3:
@@ -245,12 +263,39 @@ namespace WEB.CMS.Controllers
                           
                             model.VehicleWeighingType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            if (UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHING_TYPE);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleWeighingType);
+                                detail.VehicleWeighingTypeName = allcode_detail.Description;
+                                if (status == (int)VehicleWeighingType.DA_Vao_Can)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListCallTheScale_Da_SL", detail);
+                                }
+                                else
+                                {
+                                    if(detail.LoadType == (int)LoadType.Xanh)
+                                    {
+                                        await _hubContext.Clients.All.SendAsync("ListCallTheScale_0", detail);
+                                    }
+                                    else
+                                    {
+                                        await _hubContext.Clients.All.SendAsync("ListCallTheScale_1", detail);
+
+                                    }
+
+                                }
+                            }
+                           
+                       
+                        
                         }
                         break;
                     case 4:
                         {
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
                         }
                         break;
                     case 5:
@@ -258,6 +303,7 @@ namespace WEB.CMS.Controllers
                            
                             model.VehicleTroughWeight = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
                         }
                         break;
                     case 6:
@@ -265,6 +311,7 @@ namespace WEB.CMS.Controllers
                            
                             model.VehicleTroughStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            await _hubContext.Clients.All.SendAsync("ListCarCall", detail);//máng
                         }
                         break;
                     case 7:
@@ -272,12 +319,55 @@ namespace WEB.CMS.Controllers
                             
                             model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
                         }
                         break; 
                     case 8:
                         {
                             model.LoadingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            if (UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.LoadType);
+                                detail.LoadTypeName = allcode_detail == null ? "" : allcode_detail.Description;
+                                var allcode2 = await _allCodeRepository.GetListSortByName(AllCodeType.LOADINGSTATUS);
+                                var allcode_detail2 = allcode2.FirstOrDefault(s => s.CodeValue == model.LoadingStatus);
+                                detail.LoadingStatusName = allcode_detail2 == null ? "" : allcode_detail2.Description;
+                                if (status == (int)LoadingStatus.Da_HTTC)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListProcessingIsLoading_Da_SL", detail);
+                                }
+                                else
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListProcessingIsLoading", detail);
+                                }
+                            }
+                           
+                          
+                        }
+                        break; 
+                    case 9:
+                        {
+                            model.VehicleWeighedstatus = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            if (UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHEDSTATUS);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleWeighedstatus);
+                                detail.VehicleWeighedstatusName = allcode_detail == null ? "" : allcode_detail.Description;
+                               
+                                if (status == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListWeighedInput_Da_SL", detail);
+                                }
+                                else
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListWeighedInput", detail);
+                                }
+                            }
+                           
+                          
                         }
                         break;
                 }
@@ -294,7 +384,7 @@ namespace WEB.CMS.Controllers
             }
             return Ok(new
             {
-                status = (int)ResponseType.SUCCESS,
+                status = (int)ResponseType.ERROR,
                 msg = "cập nhật không thành công"
             });
         }

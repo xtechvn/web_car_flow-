@@ -20,10 +20,10 @@
                 <th>Tình trạng </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="dataBody-@ViewBag.type">
             @foreach (var item in Model)
             {
-                <tr class="CartoFactory_@item.Id">
+                <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                     <td>@item.RecordNumber</td>
                     <td>@item.RegisterDateOnline</td>
                     <td>@item.CustomerName</td>
@@ -41,7 +41,7 @@
 
                             }
                                                 ]'>
-                                @item.VehicleWeighingTypeName
+                                @item.VehicleWeighedstatusName
                             </button>
                         </div>
                     </td>

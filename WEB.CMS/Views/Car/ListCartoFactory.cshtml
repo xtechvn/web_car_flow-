@@ -20,10 +20,10 @@
                 <th>Tình trạng xe</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="dataBody-@ViewBag.type">
             @foreach (var item in Model)
             {
-                <tr class="CartoFactory_@item.Id">
+                <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                     <td>@item.RecordNumber</td>
                     <td>@item.RegisterDateOnline</td>
                     <td>@item.CustomerName</td>
@@ -36,11 +36,11 @@
                             <button class="dropdown-toggle status-perfect" data-options='[
                             @foreach (var allcode in AllCode)
                             {
-                                
+
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
                             }
-                                        ]'>
+                                                ]'>
                                 @item.VehicleStatusName
                             </button>
                         </div>
@@ -50,7 +50,7 @@
 
         </tbody>
     </table>
-    
+
 }
 else
 {

@@ -47,8 +47,8 @@
         options.forEach(opt => {
             $('<li>')
                 .text(opt.text)
-                .addClass('status-option') 
-                .attr('data-value',opt.value) // Corrected from opt.valuse
+                .addClass('status-option')
+                .attr('data-value', opt.value) // Corrected from opt.valuse
                 .toggleClass('active', opt.text === currentText)
                 .appendTo($ul);
         });
@@ -112,7 +112,7 @@
                         id_row = match[1];
                     }
                 }
-              
+
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
@@ -125,6 +125,12 @@
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
                 _cartofactory.UpdateStatus(id_row, val_TT, 1);
+                if (val_TT == 1) {
+                    $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+             
+                } else {
+                    $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                }
             }
         }
         closeMenu();
@@ -142,74 +148,170 @@
             $currentBtn = null;
         }
     }
-  
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/CarHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+    const AllCode = [
+        { Description: "Blank", CodeValue: "1" },
+        { Description: "Đã đến nhà máy", CodeValue: "0" },
+        // Add more objects as needed
+    ];
+    // Create a new array of objects in the desired format
+    const options = AllCode.map(allcode => ({
+        text: allcode.Description,
+        value: allcode.CodeValue
+    }));
+    const jsonString = JSON.stringify(options);
+    // Hàm render row
+    function renderRow(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.registerDateOnline}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleLoad}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                        ${item.vehicleStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
+
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable_Da_SL() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ListCartoFactory_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.on("ListCartoFactory", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
+
 });
 var _cartofactory = {
 
-init: function () {
-    _cartofactory.ListCartoFactory();
-    _cartofactory.ListCartoFactory_Da_SL();
-},
-ListCartoFactory: function () {
-    var model = {
-        VehicleNumber: $('#input_chua_xu_ly').val(),
-        PhoneNumber: $('#input_chua_xu_ly').val(),
-        VehicleStatus: null,
-        LoadType: null,
-        VehicleWeighingType: null,
-        VehicleTroughStatus: null,
-        TroughType: null,
-        VehicleWeighingStatus: null,
-    }
-    $.ajax({
-        url: "/Car/ListCartoFactory",
-        type: "post",
-        data: { SearchModel: model },
-        success: function (result) {
-            $('#imgLoading').hide();
-            $('#data_chua_xu_ly').html(result);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log("Status: " + textStatus);
+    init: function () {
+        _cartofactory.ListCartoFactory();
+        _cartofactory.ListCartoFactory_Da_SL();
+    },
+    ListCartoFactory: function () {
+        var model = {
+            VehicleNumber: $('#input_da_xu_ly').val(),
+            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleStatus: null,
+            LoadType: null,
+            VehicleWeighingType: null,
+            VehicleTroughStatus: null,
+            TroughType: null,
+            VehicleWeighingStatus: null,
+            type: 0,
         }
-    });
-},
-ListCartoFactory_Da_SL: function () {
-    var model = {
-        VehicleNumber: $('#input_da_xu_ly').val(),
-        PhoneNumber: $('#input_da_xu_ly').val(),
-        VehicleStatus: 0,
-        LoadType: null,
-        VehicleWeighingType: null,
-        VehicleTroughStatus: null,
-        TroughType: null,
-        VehicleWeighingStatus: null,
-    }
-    $.ajax({
-        url: "/Car/ListCartoFactory",
-        type: "post",
-        data: { SearchModel: model },
-        success: function (result) {
-            $('#imgLoading').hide();
-            $('#data_da_xu_ly').html(result);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log("Status: " + textStatus);
+        $.ajax({
+            url: "/Car/ListCartoFactory",
+            type: "post",
+            data: { SearchModel: model },
+            success: function (result) {
+                $('#imgLoading').hide();
+                $('#data_chua_xu_ly').html(result);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    ListCartoFactory_Da_SL: function () {
+        var model = {
+            VehicleNumber: $('#input_da_xu_ly').val(),
+            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleStatus: 0,
+            LoadType: null,
+            VehicleWeighingType: null,
+            VehicleTroughStatus: null,
+            TroughType: null,
+            VehicleWeighingStatus: null,
+            type: 1,
         }
-    });
-},
-OpenPopup: function (id) {
-    let title = 'Cập nhật trạng thái';
-    let url = '/Car/OpenPopup';
-    let param = {
-        id: id,
-        type: 1
-    };
+        $.ajax({
+            url: "/Car/ListCartoFactory",
+            type: "post",
+            data: { SearchModel: model },
+            success: function (result) {
+                $('#imgLoading').hide();
+                $('#data_da_xu_ly').html(result);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    OpenPopup: function (id) {
+        let title = 'Cập nhật trạng thái';
+        let url = '/Car/OpenPopup';
+        let param = {
+            id: id,
+            type: 1
+        };
 
-    _magnific.OpenSmallPopup(title, url, param);
+        _magnific.OpenSmallPopup(title, url, param);
 
     },
-    UpdateStatus: function (id, status,type) {
+    UpdateStatus: function (id, status, type) {
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
@@ -226,5 +328,6 @@ OpenPopup: function (id) {
                 console.log("Status: " + textStatus);
             }
         });
-    }
+    },
+
 }

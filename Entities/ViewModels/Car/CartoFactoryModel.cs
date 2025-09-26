@@ -16,5 +16,6 @@ namespace Entities.ViewModels.Car
         public string VehicleTroughStatusName { get; set; }
         public string VehicleWeighingStatusName { get; set; }
         public string LoadingStatusName { get; set; }
+        public string VehicleWeighedstatusName { get; set; }
     }
 }

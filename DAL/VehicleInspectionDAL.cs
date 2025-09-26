@@ -37,6 +37,8 @@ namespace DAL
                     new SqlParameter("@VehicleTroughStatus", searchModel.VehicleTroughStatus==null? DBNull.Value :searchModel.VehicleTroughStatus),
                     new SqlParameter("@TroughType", searchModel.TroughType==null? DBNull.Value :searchModel.TroughType),
                     new SqlParameter("@VehicleWeighingStatus", searchModel.VehicleWeighingStatus==null? DBNull.Value :searchModel.VehicleWeighingStatus),
+                    new SqlParameter("@LoadingStatus", searchModel.LoadingStatus==null? DBNull.Value :searchModel.LoadingStatus),
+                    new SqlParameter("@VehicleWeighedstatus", searchModel.VehicleWeighedstatus==null? DBNull.Value :searchModel.VehicleWeighedstatus),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspection, objParam);
                 if (dt != null && dt.Rows.Count > 0)
@@ -79,15 +81,15 @@ namespace DAL
             new SqlParameter("@VehicleTroughWeight", (object?)model.VehicleTroughWeight ?? DBNull.Value),
             new SqlParameter("@VehicleTroughStatus", (object?)model.VehicleTroughStatus ?? DBNull.Value),
             new SqlParameter("@UpdatedBy", (object?)model.UpdatedBy ?? DBNull.Value),
+            new SqlParameter("@LoadingStatus", (object?)model.LoadingStatus ?? DBNull.Value),
+            new SqlParameter("@VehicleWeighedstatus", (object?)model.VehicleWeighedstatus ?? DBNull.Value),
            
                 };
 
                 // Gọi SP
                 var dt = _DbWorker.ExecuteNonQuery(StoreProcedureConstant.sp_UpdateVehicleInspection, objParam);
 
-                // Lấy giá trị Identity OUT
-                int identity = (int)objParam.Last().Value;
-                return identity;
+                return dt;
             }
             catch (Exception ex)
             {

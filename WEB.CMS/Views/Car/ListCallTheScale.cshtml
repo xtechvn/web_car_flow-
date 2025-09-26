@@ -23,7 +23,7 @@
                     <th>Tình trạng</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dataBody-@ViewBag.type">
                 @foreach (var item in Model)
                 {
                     <tr class="CartoFactory_@item.Id">
@@ -47,6 +47,9 @@
                                     @item.VehicleWeighingTypeName
                                 </button>
                             </div>
+                        </td>
+                        <td>
+                            <span class="icon"><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
                         </td>
                     </tr>
                 }
@@ -88,7 +91,7 @@ else
                     <th>Tình trạng</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dataBody-@ViewBag.type-@ViewBag.LoadType">
                 @foreach (var item in Model)
                 {
                     <tr class="CartoFactory_@item.Id">
@@ -111,7 +114,7 @@ else
                             </div>
                         </td>
                         <td>
-                            <span class="icon"><img src="images/graphics/SpeakerHigh.png" height="25" alt=""></span>
+                            <span class="icon"><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
                         </td>
                     </tr>
                 }
