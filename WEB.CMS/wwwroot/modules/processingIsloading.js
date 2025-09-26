@@ -276,12 +276,22 @@
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
-
     connection.on("ListProcessingIsLoading", function (item) {
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
+    //lấy từ ds xe đến nhà máy
+    connection.on("ListCartoFactory_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ListCartoFactory", function (item) {
+        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
+    });
+
+   
 
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

@@ -246,7 +246,7 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
+                                    await _hubContext.Clients.All.SendAsync(" ", detail);
                                 }
                             }
                         }

@@ -256,7 +256,22 @@
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
-
+    //sử lý đăng tải
+    connection.on("ListProcessingIsLoading_Da_SL", function (item) {
+        if (item.loadingStatus == 0) {
+            const tbody = document.getElementById("dataBody-0-0");
+            tbody.insertAdjacentHTML("beforeend", renderRow(item));
+            sortTable(); 
+        } else {
+            const tbody = document.getElementById("dataBody-0-1");
+            tbody.insertAdjacentHTML("beforeend", renderRow(item));
+            sortTable(); 
+        }     
+    });
+    connection.on("ListProcessingIsLoading", function (item) {
+        $('#dataBody-0-0').find('.CartoFactory_' + item.id).remove();
+        $('#dataBody-0-1').find('.CartoFactory_' + item.id).remove();
+    });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });
