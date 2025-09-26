@@ -258,7 +258,7 @@
     });
     //sử lý đăng tải
     connection.on("ListProcessingIsLoading_Da_SL", function (item) {
-        if (item.loadingStatus == 0) {
+        if (item.loadType == 0) {
             const tbody = document.getElementById("dataBody-0-0");
             tbody.insertAdjacentHTML("beforeend", renderRow(item));
             sortTable(); 

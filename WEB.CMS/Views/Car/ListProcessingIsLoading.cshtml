@@ -36,23 +36,32 @@
                     <td>@item.VehicleLoad</td>
                     <td>@item.VehicleStatusName</td>
                     <td>
-                        
-                            @if (ViewBag.type == 1)
-                            {
-                                <div class="">
-                                    <p class=" status-perfect Vehicle-Status" data-type="1">
-                                        @item.LoadTypeName
-                                    </p>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="status-dropdown">
-                                    <button class="dropdown-toggle status-perfect Vehicle-Status" data-type="1" data-options='[
-                                    @foreach (var allcode in AllCode2)
-                                    {
 
-                                        @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+                        @if (ViewBag.type == 1)
+                        {
+                            <div class="">
+                                <p class=" status-perfect Vehicle-Status" data-type="1">
+                                    @item.LoadTypeName
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-dropdown">
+                                <button class="dropdown-toggle status-perfect Vehicle-Status" data-type="1" data-options='[
+                                @foreach (var allcode in AllCode2)
+                                {
+                                    if (allcode.CodeValue == 0)
+                                    {
+                                        @:{"text":"@allcode.Description","class":"status-green","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+
+                                    }
+                                    else
+                                    {
+                                        @:{"text":"@allcode.Description","class":"status-normal","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
+
+                                    }
+
 
                                     }
                                                                     ]'>

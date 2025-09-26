@@ -47,6 +47,7 @@
             $('<li>')
                 .text(opt.text)
                 .addClass('status-option')
+                .addClass(opt.class) // class riêng cho mỗi option
                 .attr('data-value', opt.value) // Corrected from opt.valuse
                 .toggleClass('active', opt.text === currentText)
                 .appendTo($ul);
