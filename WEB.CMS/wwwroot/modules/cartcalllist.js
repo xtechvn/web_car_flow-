@@ -125,7 +125,14 @@
                 if (type == '1') {
                     _cartcalllist.UpdateStatus(id_row, val_TT, 4);
                 } else {
+
                     _cartcalllist.UpdateStatus(id_row, val_TT, 6);
+                    if (parseInt(val_TT) == 0) {    
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+
+                    } else {
+                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                    }
                 }
 
             }
@@ -145,6 +152,120 @@
             $currentBtn = null;
         }
     }
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/CarHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+    const AllCode = [
+        { Description: "Máng 1", CodeValue: "0" },
+        { Description: "Máng 2", CodeValue: "1" },
+        { Description: "Máng 3", CodeValue: "2" },
+        { Description: "Máng 4", CodeValue: "3" },
+        { Description: "Máng 5", CodeValue: "4" },
+        // Add more objects as needed
+    ];
+    const AllCode2 = [
+        { Description: "Blank", CodeValue: "3" },
+        { Description: "Đang xếp hàng", CodeValue: "2" },
+        { Description: "Đã gọi", CodeValue: "1" },
+        { Description: "Hoàn thành", CodeValue: "0" },
+        // Add more objects as needed
+    ];
+    // Create a new array of objects in the desired format
+    const options = AllCode.map(allcode => ({
+        text: allcode.Description,
+        value: allcode.CodeValue
+    })); 
+    const options2 = AllCode2.map(allcode2 => ({
+        text: allcode2.Description,
+        value: allcode2.CodeValue
+    }));
+    const jsonString = JSON.stringify(options);
+    const jsonString2 = JSON.stringify(options2);
+    // Hàm render row
+    function renderRow(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleWeighingTimeComplete}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                        ${item.troughTypeName}
+                    </button>
+                </div>
+
+            </td>
+             <td>${item.vehicleLoad}</td>
+              <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                        ${item.vehicleTroughStatusName}
+                    </button>
+                </div>
+
+            </td>
+        </tr>`;
+    }
+
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable_Da_SL() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ListCarCall_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.on("ListCarCall", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
 });
 var _cartcalllist = {
     init: function () {
@@ -161,6 +282,7 @@ var _cartcalllist = {
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
+            type:0,
         }
         $.ajax({
             url: "/ListCar/ListCarCallView",
@@ -185,6 +307,7 @@ var _cartcalllist = {
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
+            type:1,
         }
         $.ajax({
             url: "/ListCar/ListCarCallView",

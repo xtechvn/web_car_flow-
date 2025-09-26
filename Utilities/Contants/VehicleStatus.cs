@@ -24,5 +24,15 @@
     {
         Da_Can_Xong_Dau_Cao = 0,
         Blank = 1,
+    } 
+    public enum VehicleWeighingStatus
+    {
+        DA_Can_Ra = 0,
+        Quay_Lai_KT = 1,
+        Blank = 2,
+    }  public enum VehicleTroughStatus
+    {
+        Hoan_thanh = 0,
+      
     }
 }

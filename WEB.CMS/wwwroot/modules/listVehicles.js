@@ -124,6 +124,13 @@
                     .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
                 _listVehicles.UpdateStatus(id_row, val_TT, 7);
+                if (val_TT == 0) {
+                    $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+
+                } else {
+                    $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                    $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                }
             }
         }
         closeMenu();
@@ -141,6 +148,98 @@
             $currentBtn = null;
         }
     }
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/CarHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+    const AllCode = [
+        { Description: "Blank", CodeValue: "2" },
+        { Description: "Quay lại kiểm tra", CodeValue: "1" },
+        { Description: "Đã cân ra", CodeValue: "0" },
+        // Add more objects as needed
+    ];
+    // Create a new array of objects in the desired format
+    const options = AllCode.map(allcode => ({
+        text: allcode.Description,
+        value: allcode.CodeValue
+    }));
+    const jsonString = JSON.stringify(options);
+    // Hàm render row
+    function renderRow(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleWeighingTimeComeIn}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                        ${item.vehicleWeighingStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
+
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable_Da_SL() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ListVehicles_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.on("ListVehicles", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
 });
 var _listVehicles = {
     init: function () {
@@ -157,6 +256,7 @@ var _listVehicles = {
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
+            type:0,
         }
         $.ajax({
             url: "/ListCar/ListVehiclesisLoading",
@@ -177,10 +277,13 @@ var _listVehicles = {
             PhoneNumber: $('#input_da_xu_ly').val(),
             VehicleStatus: 0,
             LoadType: null,
-            VehicleWeighingType: null,
-            VehicleTroughStatus: null,
             TroughType: null,
+            type: 1,
+            VehicleWeighingType: 1,
+            VehicleTroughStatus: null,
             VehicleWeighingStatus: null,
+            LoadingStatus: 0,
+            VehicleWeighedstatus: 0,
         }
         $.ajax({
             url: "/ListCar/ListVehiclesisLoading",
