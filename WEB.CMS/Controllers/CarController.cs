@@ -241,6 +241,14 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Xe Đã hoàn thành thử tục"
                                 });
                             }
+                            if (detail.VehicleStatus == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
+                                });
+                            }
                             model.VehicleStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
@@ -274,6 +282,18 @@ namespace WEB.CMS.Controllers
                                 {
                                     status = (int)ResponseType.ERROR,
                                     msg = "Cập nhật không thành công.Xe Đã cân xong"
+                                });
+                            }
+                            if (status == (int)VehicleWeighingType.DA_Vao_Can)
+                            {
+                                model.VehicleWeighingTimeComeIn = DateTime.Now;
+                            }
+                            if (detail.VehicleWeighingType == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
                             model.VehicleWeighingType = status;
@@ -323,7 +343,14 @@ namespace WEB.CMS.Controllers
                         break;
                     case 6:
                         {
-                           
+                            if (detail.VehicleTroughStatus == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
+                                });
+                            }
                             model.VehicleTroughStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             await _hubContext.Clients.All.SendAsync("ListCarCall", detail);//máng
@@ -345,7 +372,14 @@ namespace WEB.CMS.Controllers
                         break;
                     case 7:
                         {
-
+                            if (detail.VehicleWeighingStatus == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
+                                });
+                            }
                             model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
@@ -371,6 +405,14 @@ namespace WEB.CMS.Controllers
                                 {
                                     status = (int)ResponseType.ERROR,
                                     msg = "Cập nhật không thành công.Xe Đã vào cân"
+                                });
+                            }
+                            if (detail.LoadingStatus == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
                             model.LoadingStatus = status;
@@ -406,7 +448,19 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Xe đang được gọi vào máng"
                                 });
                             }
+                            if (detail.VehicleWeighedstatus == status)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
+                                });
+                            }
                             model.VehicleWeighedstatus = status;
+                            if (status == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao)
+                            {
+                                model.VehicleWeighingTimeComeOut = DateTime.Now;
+                            }
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {

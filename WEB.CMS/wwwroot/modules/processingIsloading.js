@@ -117,24 +117,34 @@
                     .filter(c => c !== 'active')[0] || '';
 
 
-                $currentBtn
-                    .text(text)
-                    .removeClass(function (_, old) {
-                        return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    }) // xoá các class status- cũ
-                    .addClass(cls); // gắn class mới (status-arrived, status-blank…)
+   
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 2);
+                    $currentBtn
+                        .text(text)
+                        .removeClass(function (_, old) {
+                            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                        }) // xoá các class status- cũ
+                        .addClass(cls); // gắn class mới (status-arrived, status-blank…)
                 } else {
-                    _processing_is_loading.UpdateStatus(id_row, val_TT, 8);
-                    if (val_TT == 1) {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
-                    } else {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    var Status_type = _processing_is_loading.UpdateStatus(id_row, val_TT, 8);
+                    if (Status_type == 0) {
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            }) // xoá các class status- cũ
+                            .addClass(cls); // gắn class mới (status-arrived, status-blank…)
+                        if (val_TT == 1) {
+                            $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                        } else {
+                            $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                        }
                     }
+                   
                 }
                 
                 
@@ -364,14 +374,16 @@ var _processing_is_loading = {
         });
     },
     UpdateStatus: function (id, status, type) {
+        var status_type = 0
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
             data: { id: id, status: status, type: type },
             success: function (result) {
+                status_type = result.status;
                 if (result.status == 0) {
                     _msgalert.success(result.msg)
-                 
+                    $.magnificPopup.close();
                 } else {
                     _msgalert.error(result.msg)
                 }
@@ -380,5 +392,6 @@ var _processing_is_loading = {
                 console.log("Status: " + textStatus);
             }
         });
-    }
+        return status_type;
+    },
 }

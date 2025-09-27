@@ -116,21 +116,24 @@
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
+                var Status_type = _cartofactory.UpdateStatus(id_row, val_TT, 1);
+                if (Status_type == 0) {
+                    $currentBtn
+                        .text(text)
+                        .removeClass(function (_, old) {
+                            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                        }) // xoá các class status- cũ
+                        .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
-                $currentBtn
-                    .text(text)
-                    .removeClass(function (_, old) {
-                        return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    }) // xoá các class status- cũ
-                    .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
-                _cartofactory.UpdateStatus(id_row, val_TT, 1);
-                if (val_TT == 1) {
-                    $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-             
-                } else {
-                    $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    if (val_TT == 1) {
+                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+
+                    } else {
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    }
                 }
+                
             }
         }
         closeMenu();
@@ -312,11 +315,13 @@ var _cartofactory = {
 
     },
     UpdateStatus: function (id, status, type) {
+       var status_type=0
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
             data: { id: id, status: status, type: type },
             success: function (result) {
+                status_type = result.status;
                 if (result.status == 0) {
                     _msgalert.success(result.msg)
                     $.magnificPopup.close();
@@ -328,6 +333,7 @@ var _cartofactory = {
                 console.log("Status: " + textStatus);
             }
         });
+        return status_type;
     },
 
 }
