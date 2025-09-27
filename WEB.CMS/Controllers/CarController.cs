@@ -233,6 +233,14 @@ namespace WEB.CMS.Controllers
                 {
                     case 1:
                         {
+                           if( detail.LoadingStatus == (int)LoadingStatus.Da_HTTC)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Xe Đã hoàn thành thử tục"
+                                });
+                            }
                             model.VehicleStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
@@ -260,7 +268,14 @@ namespace WEB.CMS.Controllers
                         break;
                     case 3:
                         {
-
+                            if (detail.VehicleWeighedstatus == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Xe Đã cân xong"
+                                });
+                            }
                             model.VehicleWeighingType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
@@ -308,7 +323,7 @@ namespace WEB.CMS.Controllers
                         break;
                     case 6:
                         {
-
+                           
                             model.VehicleTroughStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             await _hubContext.Clients.All.SendAsync("ListCarCall", detail);//máng
@@ -350,6 +365,14 @@ namespace WEB.CMS.Controllers
                         break;
                     case 8:
                         {
+                            if (model.VehicleWeighingType == (int)VehicleWeighingType.DA_Vao_Can)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Xe Đã vào cân"
+                                });
+                            }
                             model.LoadingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
@@ -375,6 +398,14 @@ namespace WEB.CMS.Controllers
                         break;
                     case 9:
                         {
+                            if (detail.VehicleTroughStatus != null)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Xe đang được gọi vào máng"
+                                });
+                            }
                             model.VehicleWeighedstatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
