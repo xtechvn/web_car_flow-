@@ -1,5 +1,25 @@
 ﻿$(document).ready(function () {
     _Call_The_Scale.init();
+    $(document).on('click', '.open-audio', function (e) {
+        // 'this' chính là phần tử .open-audio được click
+        var $row = $(this).closest('tr');          // Tìm <tr> cha gần nhất
+        var $audioCell = $row.find('.td-audio');   // Tìm ô td chứa text
+        var text = $audioCell.text().trim();       // Lấy text trong ô
+
+        if (text) {
+            // Nếu đang đọc thì dừng trước
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+
+            var utterance = new SpeechSynthesisUtterance(text);
+            // Bạn có thể tùy chỉnh ngôn ngữ hoặc tốc độ ở đây, ví dụ:
+            // utterance.lang = 'vi-VN'; 
+            // utterance.rate = 1;
+            window.speechSynthesis.speak(utterance);
+        }
+    });
+ 
     var input_Call_The_Scale_Chua_SL = document.getElementById("input_Call_The_Scale_Chua_SL");
     input_Call_The_Scale_Chua_SL.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
