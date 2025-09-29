@@ -255,6 +255,18 @@
         sortTable(); // sắp xếp lại ngay khi thêm
     });
 
+    // Nhận data mới từ gọi xe cân đầu vào
+    connection.on("ListWeighedInput_Da_SL", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable();
+    });
+    connection.on("ListWeighedInput", function (item) {
+        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
+
+    });
+
+
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });
