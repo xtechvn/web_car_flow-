@@ -190,7 +190,7 @@ namespace WEB.CMS.Controllers
             }
             return PartialView();
         }
-        public async Task<IActionResult> UpdateStatus(int id, int status, int type)
+        public async Task<IActionResult> UpdateStatus(int id, int status, int type, int weight = 0)
         {
             try
             {
@@ -343,7 +343,7 @@ namespace WEB.CMS.Controllers
                         break;
                     case 6:
                         {
-                            if (detail.VehicleTroughStatus == status)
+                            if (detail.VehicleTroughStatus == status && detail.VehicleTroughWeight == weight)
                             {
                                 return Ok(new
                                 {
@@ -352,6 +352,7 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             model.VehicleTroughStatus = status;
+                            model.VehicleTroughWeight = weight; // ✅ lấy từ input
                             if (model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)
                             {
                                 return Ok(new

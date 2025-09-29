@@ -95,6 +95,7 @@
 
     // ✅ Xác nhận – đổi text + class cho button
     $(document).on('click', '#dropdown-container .actions .confirm', function (e) {
+        debugger
         e.stopPropagation();
         if ($menu && $currentBtn) {
             const $active = $menu.find('li.active');
@@ -125,14 +126,9 @@
                 if (type == '1') {
                     _cartcalllist.UpdateStatus(id_row, val_TT, 4);
                 } else {
-
-                    _cartcalllist.UpdateStatus(id_row, val_TT, 6);
-                    if (parseInt(val_TT) == 0) {    
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
-
-                    } else {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-                    }
+                    // ✅ lấy trọng lượng nhập trong input cùng dòng
+                    var weight = $row.find('input.weight').val() || 0;
+                    _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
                 }
 
             }
@@ -184,7 +180,7 @@
     const jsonString2 = JSON.stringify(options2);
     // Hàm render row
     function renderRow(item) {
-
+        debugger
         return `
         <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
             <td>${item.recordNumber}</td>
@@ -200,7 +196,7 @@
                 </div>
 
             </td>
-             <td>${item.vehicleLoad}</td>
+             <td>${item.vehicleTroughWeight}</td>
               <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
@@ -338,14 +334,23 @@ var _cartcalllist = {
             }
         });
     },
-    UpdateStatus: function (id, status, type) {
+    UpdateStatus: function (id, status, type, weight) {
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
-            data: { id: id, status: status, type: type },
+            data: { id: id, status: status, type: type,weight: weight },
             success: function (result) {
+                debugger
                 if (result.status == 0) {
                     _msgalert.success(result.msg)
+                    // ✅ chỉ remove row nếu cập nhật thành công
+                    if (type == 6) {
+                        if (parseInt(status) == 0) {
+                            $('#dataBody-0').find('.CartoFactory_' + id).remove();
+                        } else {
+                            $('#dataBody-1').find('.CartoFactory_' + id).remove();
+                        }
+                    }
 
                 } else {
                     _msgalert.error(result.msg)

@@ -45,7 +45,13 @@
                             </button>
                         </div>
                     </td>
-                    <td>@item.VehicleLoad</td>
+                    <td>
+                        <input type="text"
+                               class="input-form weight"
+                               value="@(item.VehicleTroughWeight > 0 ? item.VehicleTroughWeight.ToString() : "")"
+                               placeholder="Vui lòng nhập" />
+
+                    </td>
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle" data-options='[
