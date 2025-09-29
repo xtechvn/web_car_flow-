@@ -233,7 +233,7 @@ namespace WEB.CMS.Controllers
                 {
                     case 1:
                         {
-                           if( detail.LoadingStatus == (int)LoadingStatus.Da_HTTC)
+                            if (detail.LoadingStatus == (int)LoadingStatus.Da_HTTC)
                             {
                                 return Ok(new
                                 {
@@ -330,7 +330,7 @@ namespace WEB.CMS.Controllers
                         {
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
-                           
+
                         }
                         break;
                     case 5:
@@ -352,6 +352,14 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             model.VehicleTroughStatus = status;
+                            if (model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)
+                            {
+                                return Ok(new
+                                {
+                                    status = (int)ResponseType.ERROR,
+                                    msg = "Cập nhật không thành công.Chưa nhập trọng lượng "
+                                });
+                            }
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
