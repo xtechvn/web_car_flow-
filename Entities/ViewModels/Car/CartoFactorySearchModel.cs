@@ -8,16 +8,16 @@ namespace Entities.ViewModels.Car
 {
     public class CartoFactorySearchModel
     {
-        public string? VehicleNumber { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? VehicleStatus { get; set; }
-        public string? LoadType { get; set; }
-        public string? VehicleWeighingType { get; set; }
-        public string? VehicleTroughStatus { get; set; }
-        public string? TroughType { get; set; }
-        public string? VehicleWeighingStatus { get; set; }
-        public int? type { get; set; }
-        public int? LoadingStatus { get; set; }
-        public int? VehicleWeighedstatus { get; set; }
+        public string? VehicleNumber { get; set; }        // Biển số xe
+        public string? PhoneNumber { get; set; }          // Số điện thoại
+        public string? VehicleStatus { get; set; }        // Trạng thái xe đến
+        public string? LoadType { get; set; }             // Loại xanh/thuong
+        public string? VehicleWeighingType { get; set; }  // Trạng thái gọi xe vào cân
+        public string? VehicleTroughStatus { get; set; }  // Trạng thái  xe đã vào máng
+        public string? TroughType { get; set; }           // Loại máng
+        public string? VehicleWeighingStatus { get; set; } // Trạng thái  xe đã cân ra
+        public int? type { get; set; }                    // Loại 1 đã sử lý,0 chưa sl
+        public int? LoadingStatus { get; set; }           // Trạng sử lý đang tải
+        public int? VehicleWeighedstatus { get; set; }    // Trạng thái xe đã được cân đầu vào
     }
 }
