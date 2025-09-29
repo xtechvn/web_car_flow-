@@ -188,18 +188,22 @@
             <td>${item.driverName}</td>
             <td>${item.vehicleNumber}</td>
             <td>${item.vehicleWeighingTimeComplete}</td>
-            <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
-                        ${item.troughTypeName}
-                    </button>
-                </div>
-
-            </td>
-             <td>${item.vehicleTroughWeight}</td>
+           <td>
+        <div class="status-dropdown">
+            <button class="dropdown-toggle status-perfect" data-type="1" data-options='${jsonString}'>
+                ${item.troughTypeName || ""}
+            </button>
+        </div>
+    </td>
+    <td>
+        <input type="text"
+               class="input-form weight"
+               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+               placeholder="Vui lòng nhập" />
+    </td>
               <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                    <button class="dropdown-toggle" data-options='${jsonString2}'>
                         ${item.vehicleTroughStatusName}
                     </button>
                 </div>

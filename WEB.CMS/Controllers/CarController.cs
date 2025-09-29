@@ -371,7 +371,7 @@ namespace WEB.CMS.Controllers
                                 {
                                     await _hubContext.Clients.All.SendAsync("ListCarCall_Da_SL", detail);
                                 }
-                                else if (status == (int)VehicleTroughStatus.Blank)
+                                else 
                                 {
                                     await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
                                 }
