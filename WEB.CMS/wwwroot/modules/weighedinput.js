@@ -127,10 +127,10 @@
                         }) // xoá các class status- cũ
                         .addClass(cls); // gắn class mới (status-arrived, status-blank…)
                     if (val_TT == 1) {
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
 
                     } else {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
                 }
             
