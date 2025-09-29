@@ -275,14 +275,16 @@ var _cartcalllist = {
     ListCartoFactory: function () {
         var model = {
             VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: null,
-            VehicleStatus: null,
+            PhoneNumber: $('#input_chua_xu_ly').val(), 
+            VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
-            type:0,
+            LoadingStatus: 0,
+            VehicleWeighedstatus: null,
+            type: 0,
         }
         $.ajax({
             url: "/ListCar/ListCarCallView",
@@ -304,10 +306,12 @@ var _cartcalllist = {
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,
-            VehicleTroughStatus: null,
+            VehicleTroughStatus: 0,
             TroughType: null,
             VehicleWeighingStatus: null,
-            type:1,
+            LoadingStatus: 0,
+            VehicleWeighedstatus: null,
+            type: 0,
         }
         $.ajax({
             url: "/ListCar/ListCarCallView",
