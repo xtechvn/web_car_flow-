@@ -255,8 +255,8 @@ var _cartofactory = {
     },
     ListCartoFactory: function () {
         var model = {
-            VehicleNumber: $('#input_da_xu_ly').val(),
-            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleNumber: $('#input_chua_xu_ly').val(),
+            PhoneNumber: $('#input_chua_xu_ly').val(),
             VehicleStatus: null,
             LoadType: null,
             VehicleWeighingType: null,

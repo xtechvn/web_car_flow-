@@ -14,8 +14,8 @@
 
             var utterance = new SpeechSynthesisUtterance(text);
             // Bạn có thể tùy chỉnh ngôn ngữ hoặc tốc độ ở đây, ví dụ:
-            // utterance.lang = 'vi-VN'; 
-            // utterance.rate = 1;
+             utterance.lang = 'vi-VN'; 
+             //utterance.rate = 1;
             window.speechSynthesis.speak(utterance);
         }
     });
