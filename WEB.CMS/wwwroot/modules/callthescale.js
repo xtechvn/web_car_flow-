@@ -7,15 +7,33 @@
         var text = $audioCell.text().trim();       // Lấy text trong ô
 
         if (text) {
-            // Nếu đang đọc thì dừng trước
-            if (window.speechSynthesis.speaking) {
+            // Nếu đang nói thì dừng và bỏ disable cho tất cả nút
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
                 window.speechSynthesis.cancel();
+                $('.open-audio').prop('disabled', false); // Bật lại tất cả nút
+                return;
             }
 
             var utterance = new SpeechSynthesisUtterance(text);
             // Bạn có thể tùy chỉnh ngôn ngữ hoặc tốc độ ở đây, ví dụ:
              utterance.lang = 'vi-VN'; 
-             //utterance.rate = 1;
+            //utterance.rate = 1;
+            // Vô hiệu hóa nút trong lúc đang đọc
+            $('.open-audio').prop('disabled', true);
+            $('.open-audio').hide();
+
+            // Bật lại nút khi đọc xong
+            utterance.onend = function () {
+                $('.open-audio').prop('disabled', false);
+                $('.open-audio').show();
+                console.log('✅ Đọc xong, nút đã bật lại');
+            };
+
+            // Nếu có lỗi xảy ra cũng bật lại nút
+            utterance.onerror = function () {
+                $('.open-audio').prop('disabled', false);
+                $('.open-audio').show();
+            };
             window.speechSynthesis.speak(utterance);
         }
     });
@@ -209,7 +227,10 @@
                 </div>
 
             </td>
-            <td><span class="icon"><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span></td>
+            <td> <button class="open-audio">
+                                <span class="icon "><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
+
+                            </button></td>
         </tr>`;
     }
     function renderRow(item) {
@@ -228,7 +249,10 @@
                 </div>
 
             </td>
-            <td><span class="icon"><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span></td>
+            <td> <button class="open-audio">
+                                <span class="icon "><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
+
+                            </button></td>
         </tr>`;
     }
 
