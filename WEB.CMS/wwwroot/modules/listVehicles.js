@@ -249,13 +249,15 @@ var _listVehicles = {
     ListCartoFactory: function () {
         var model = {
             VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: null,
-            VehicleStatus: null,
+            PhoneNumber: $('#input_chua_xu_ly').val(), 
+            VehicleStatus: 0,
             LoadType: null,
-            VehicleWeighingType: null,
+            VehicleWeighingType: 0,
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
+            LoadingStatus: 0,
+            VehicleWeighedstatus: 0,
             type:0,
         }
         $.ajax({
@@ -277,13 +279,14 @@ var _listVehicles = {
             PhoneNumber: $('#input_da_xu_ly').val(),
             VehicleStatus: 0,
             LoadType: null,
-            TroughType: null,
-            type: 1,
-            VehicleWeighingType: 1,
+            VehicleWeighingType: 0,
             VehicleTroughStatus: null,
-            VehicleWeighingStatus: null,
+            TroughType: null,
+            VehicleWeighingStatus: 0,
             LoadingStatus: 0,
             VehicleWeighedstatus: 0,
+            type: 1,
+           
         }
         $.ajax({
             url: "/ListCar/ListVehiclesisLoading",

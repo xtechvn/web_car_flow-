@@ -353,7 +353,6 @@ namespace WEB.CMS.Controllers
                             }
                             model.VehicleTroughStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
-                            await _hubContext.Clients.All.SendAsync("ListCarCall", detail);//máng
                             if (UpdateCar > 0)
                             {
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
@@ -363,7 +362,7 @@ namespace WEB.CMS.Controllers
                                 {
                                     await _hubContext.Clients.All.SendAsync("ListCarCall_Da_SL", detail);
                                 }
-                                else
+                                else if (status == (int)VehicleTroughStatus.Blank)
                                 {
                                     await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
                                 }

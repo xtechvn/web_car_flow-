@@ -33,6 +33,7 @@
     }  public enum VehicleTroughStatus
     {
         Hoan_thanh = 0,
+        Blank = 3,
       
     }
 }

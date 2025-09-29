@@ -278,12 +278,12 @@ var _cartcalllist = {
             PhoneNumber: $('#input_chua_xu_ly').val(), 
             VehicleStatus: 0,
             LoadType: null,
-            VehicleWeighingType: null,
+            VehicleWeighingType: 0,
             VehicleTroughStatus: null,
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
-            VehicleWeighedstatus: null,
+            VehicleWeighedstatus: 0,
             type: 0,
         }
         $.ajax({
@@ -305,13 +305,13 @@ var _cartcalllist = {
             PhoneNumber: $('#input_da_xu_ly').val(),
             VehicleStatus: 0,
             LoadType: null,
-            VehicleWeighingType: null,
+            VehicleWeighingType: 0,
             VehicleTroughStatus: 0,
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
-            VehicleWeighedstatus: null,
-            type: 0,
+            VehicleWeighedstatus: 0,
+            type: 1,
         }
         $.ajax({
             url: "/ListCar/ListCarCallView",
