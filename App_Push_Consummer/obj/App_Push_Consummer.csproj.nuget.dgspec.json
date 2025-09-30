@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "I:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj": {}
+    "D:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj": {}
   },
   "projects": {
-    "I:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj": {
+    "D:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "I:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj",
+        "projectUniqueName": "D:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj",
         "projectName": "App_Push_Consummer",
-        "projectPath": "I:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "I:\\web_car_flow\\App_Push_Consummer\\obj\\",
+        "projectPath": "D:\\web_car_flow\\App_Push_Consummer\\App_Push_Consummer.csproj",
+        "packagesPath": "C:\\Users\\ThinkPad X1 Gen 7\\.nuget\\packages\\",
+        "outputPath": "D:\\web_car_flow\\App_Push_Consummer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ThinkPad X1 Gen 7\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -84,7 +84,7 @@
             },
             "Telegram.Bot": {
               "target": "Package",
-              "version": "[22.6.2, )"
+              "version": "[19.0.0, )"
             }
           },
           "imports": [
@@ -103,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -41,6 +41,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IAllCodeRepository, AllCodeRepository>();
 builder.Services.AddSingleton<IVehicleInspectionRepository, VehicleInspectionRepository>();
+builder.Services.AddSingleton<RedisConn>();
+builder.Services.AddHostedService<RedisSubscriberService>();
 // Add SignalR với cấu hình KeepAlive
 builder.Services.AddSignalR(options =>
 {

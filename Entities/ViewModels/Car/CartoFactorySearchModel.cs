@@ -20,4 +20,19 @@ namespace Entities.ViewModels.Car
         public int? LoadingStatus { get; set; }           // Trạng sử lý đang tải
         public int? VehicleWeighedstatus { get; set; }    // Trạng thái xe đã được cân đầu vào
     }
+    public class RegistrationRecord
+    {
+        public string _id { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string PlateNumber { get; set; } = string.Empty;
+        public string Referee { get; set; } = string.Empty;
+        public string GPLX { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public int QueueNumber { get; set; }
+        public DateTime RegistrationTime { get; set; }
+        public string ZaloStatus { get; set; } = string.Empty;
+        public string Camp { get; set; } = string.Empty;
+        public int Type { get; set; } = 0;
+    }
+
 }

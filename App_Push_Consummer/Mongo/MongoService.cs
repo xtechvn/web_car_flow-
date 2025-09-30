@@ -3,6 +3,7 @@ using App_Push_Consummer.Model;
 using App_Push_Consummer.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Collections.Concurrent;
 using System.Configuration;
 
 namespace App_Push_Consummer.Mongo
@@ -82,6 +83,32 @@ namespace App_Push_Consummer.Mongo
                 LogHelper.InsertLogTelegram("GetList - MongoService: " + ex.Message);
             }
             return list;
+        }
+        public async Task<long> update(RegistrationRecordMongo item, string id)
+        {
+            try
+            {
+                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"];
+
+                var client = new MongoClient(url);
+                var db = client.GetDatabase(ConfigurationManager.AppSettings["MongoServer_catalog_log"]);
+                var collection = db.GetCollection<RegistrationRecordMongo>(ConfigurationManager.AppSettings["MongoServer_Data_Car"]);
+                if (id != null && id.Trim() != "")
+                {
+                    var filter = Builders<RegistrationRecordMongo>.Filter;
+                    var filterDefinition = filter.Empty;
+                    filterDefinition &= Builders<RegistrationRecordMongo>.Filter.Eq(x => x._id, id);
+     
+                    await collection.ReplaceOneAsync(filterDefinition, item);
+                    return item.QueueNumber;
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("InsertBooking - BookingHotelDAL - Cannot Excute: " + ex.ToString());
+                return null;
+            }
         }
     }
 }

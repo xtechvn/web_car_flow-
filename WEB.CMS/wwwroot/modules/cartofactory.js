@@ -191,6 +191,28 @@
         </tr>`;
     }
 
+    function renderRow2(item) {
+
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.queueNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.registerDateOnline}</td>
+            <td>${item.name}</td>
+            <td>${item.gplx}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.plateNumber}</td>
+            <td>${item.referee}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                        ${item.vehicleStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
     // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
     function sortTable_Da_SL() {
         const tbody = document.getElementById("dataBody-1");
@@ -231,6 +253,11 @@
     connection.on("ListCartoFactory", function (item) {
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ReceiveRegistration", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        tbody.insertAdjacentHTML("beforeend", renderRow2(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
 

@@ -289,4 +289,10 @@ wwwroot\lib\token-input\jquery.tokeninput.js
 wwwroot\lib\token-input\token-input.css
 wwwroot\lib\token-input\token-input-facebook.css
 wwwroot\modules\account.js
+wwwroot\modules\callthescale.js
+wwwroot\modules\cartcalllist.js
+wwwroot\modules\cartofactory.js
 wwwroot\modules\common.js
+wwwroot\modules\listVehicles.js
+wwwroot\modules\processingIsloading.js
+wwwroot\modules\weighedinput.js
