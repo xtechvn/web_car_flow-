@@ -36,16 +36,18 @@
 
                     <td>
                         <div class="status-dropdown">
-                            <button class="dropdown-toggle status-perfect" data-type="1" data-options='[
+                            <button class="dropdown-toggle status-perfect @(ViewBag.type == 1 ? "disabled" : "")"
+                                    data-type="1"
+                                    data-options='[
                             @foreach (var allcode in AllCode2)
                             {
-
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
-
                             }
-                                                                ]'>
+                ]'
+                            @(ViewBag.type == 1 ? "disabled" : "")>
                                 @item.TroughTypeName
                             </button>
+
                         </div>
                     </td>
                     <td>

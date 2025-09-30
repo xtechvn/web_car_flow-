@@ -26,6 +26,10 @@
     $(document).on('click', '.status-dropdown .dropdown-toggle', function (e) {
         e.stopPropagation();
         const $btn = $(this);
+        // 🚫 Nếu button đã disabled thì thoát luôn
+        if ($btn.hasClass("disabled") || $btn.is(":disabled")) {
+            return;
+        }
         const optsData = $btn.data('options'); // mảng [{text, class}]
         const options = Array.isArray(optsData) ? optsData : JSON.parse(optsData);
         const currentText = $.trim($btn.text());
@@ -94,15 +98,18 @@
     });
 
     // ✅ Xác nhận – đổi text + class cho button
+    // Khi chọn máng xuất trong dropdown (type=1)
     $(document).on('click', '#dropdown-container .actions .confirm', function (e) {
         debugger
         e.stopPropagation();
+
         if ($menu && $currentBtn) {
             const $active = $menu.find('li.active');
             if ($active.length) {
                 const text = $active.text();
                 const val_TT = $active.attr('data-value');
                 const $row = $currentBtn.closest('tr');
+
                 let id_row = 0;
                 if ($row.length) {
                     const classAttr = $row.attr('class');
@@ -112,30 +119,37 @@
                     }
                 }
 
-                const cls = $active.attr('class').split(/\s+/)
-                    .filter(c => c !== 'active')[0] || '';
-
-
+                // cập nhật giao diện dropdown
                 $currentBtn
                     .text(text)
                     .removeClass(function (_, old) {
                         return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    }) // xoá các class status- cũ
-                    .addClass(cls); // gắn class mới (status-arrived, status-blank…)
+                    })
+                    .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
+
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
+                    // update máng xuất
                     _cartcalllist.UpdateStatus(id_row, val_TT, 4);
+
+                    // gọi SignalR thông báo cho tất cả client
+                    connection.invoke("BroadcastUpdateMang", val_TT, "Đang xử lý")
+                        .catch(err => console.error(err.toString()));
                 } else {
-                    // ✅ lấy trọng lượng nhập trong input cùng dòng
                     var weight = $row.find('input.weight').val() || 0;
                     _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
 
                     if (val_TT != 0) {
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                    }
 
-                    } 
+                    // nếu trạng thái kết thúc → giải phóng máng
+                    if (val_TT == 0) {
+                        let mangId = $row.find('button[data-type="1"]').text();
+                        connection.invoke("BroadcastUpdateMang", mangId, "Trống")
+                            .catch(err => console.error(err.toString()));
+                    }
                 }
-
             }
         }
         closeMenu();
@@ -176,7 +190,7 @@
     const options = AllCode.map(allcode => ({
         text: allcode.Description,
         value: allcode.CodeValue
-    })); 
+    }));
     const options2 = AllCode2.map(allcode2 => ({
         text: allcode2.Description,
         value: allcode2.CodeValue
@@ -184,38 +198,42 @@
     const jsonString = JSON.stringify(options);
     const jsonString2 = JSON.stringify(options2);
     // Hàm render row
-    function renderRow(item) {
-        debugger
+    function renderRow(item, isProcessed) {
         return `
-        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
-            <td>${item.recordNumber}</td>
-            <td>${item.customerName}</td>
-            <td>${item.driverName}</td>
-            <td>${item.vehicleNumber}</td>
-            <td>${item.vehicleWeighingTimeComplete}</td>
-           <td>
-        <div class="status-dropdown">
-            <button class="dropdown-toggle status-perfect" data-type="1" data-options='${jsonString}'>
-                ${item.troughTypeName || ""}
-            </button>
-        </div>
-    </td>
-    <td>
-        <input type="text"
-               class="input-form weight"
-               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
-               placeholder="Vui lòng nhập" />
-    </td>
-              <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle" data-options='${jsonString2}'>
-                        ${item.vehicleTroughStatusName}
-                    </button>
-                </div>
-
-            </td>
-        </tr>`;
+    <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
+        <td>${item.recordNumber}</td>
+        <td>${item.customerName}</td>
+        <td>${item.driverName}</td>
+        <td>${item.vehicleNumber}</td>
+        <td>${item.vehicleWeighingTimeComplete || ""}</td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle status-perfect ${isProcessed ? "disabled" : ""}"
+                        data-type="1"
+                        data-options='${jsonString}'
+                        ${isProcessed ? "disabled" : ""}>
+                    ${item.troughTypeName || ""}
+                </button>
+            </div>
+        </td>
+        <td>
+            <input type="text"
+                   class="input-form weight"
+                   value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+                   placeholder="Vui lòng nhập" />
+        </td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle"
+                        data-options='${jsonString2}'>
+                    ${item.vehicleTroughStatusName || ""}
+                </button>
+            </div>
+        </td>
+    </tr>`;
     }
+
+
 
     // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
     function sortTable_Da_SL() {
@@ -244,26 +262,58 @@
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
+    // Hàm cập nhật trạng thái máng (client-side)
+
+
     connection.start()
         .then(() => console.log("✅ Kết nối SignalR thành công"))
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
     connection.on("ListCarCall_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
+    // Nhận data từ server (SignalR)
+    connection.on("UpdateMangStatus", function (oldMangId, newMangId, carId) {
+        // ✅ Update máng mới thành "Đang xử lý"
+        if (newMangId !== null && newMangId !== undefined) {
+            $("#input" + (parseInt(newMangId) + 1)).val("Đang xử lý")
+                .removeClass("empty").addClass("processing");
+        }
+
+        // ✅ Kiểm tra máng cũ: nếu không còn xe nào ở máng đó thì reset về "Trống"
+        if (oldMangId !== null && oldMangId !== undefined && oldMangId != newMangId) {
+            const hasOtherCars = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
+                return $(tr).find("button[data-type='1']").text().trim() === "Máng " + (parseInt(oldMangId) + 1);
+            });
+
+            if (!hasOtherCars) {
+                $("#input" + (parseInt(oldMangId) + 1)).val("Trống")
+                    .removeClass("processing").addClass("empty");
+            }
+        }
+
+        // ✅ Update luôn dropdown text trong bảng cho xe đó
+        const $row = $(".CartoFactory_" + carId);
+        if ($row.length) {
+            $row.find(".dropdown-toggle[data-type='1']").text("Máng " + (parseInt(newMangId) + 1));
+        }
+    });
+
+
+
 
     connection.on("ListCarCall", function (item) {
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
 
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListWeighedInput_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable();
     });
     connection.on("ListWeighedInput", function (item) {
@@ -285,6 +335,34 @@
     });
 });
 var _cartcalllist = {
+    // ✅ Hàm đồng bộ máng khi vừa load trang hoặc reload data
+    initMangStatus: function () {
+        $("#dataBody-0 tr, #dataBody-1 tr").each(function () {
+            const $row = $(this);
+            const mangText = $row.find("button[data-type='1']").text().trim();
+
+            if (mangText && mangText.startsWith("Máng")) {
+                const mangId = parseInt(mangText.replace("Máng", "").trim()) - 1;
+                if (!isNaN(mangId)) {
+                   _cartcalllist.updateMangStatus(mangId, "Đang xử lý");
+                }
+            }
+        });
+    },
+    updateMangStatus: function (mangId, statusText) {
+        
+        const $input = $("#input" + (parseInt(mangId) + 1));
+
+        if ($input.length) {
+            $input.val(statusText);
+
+            if (statusText === "Trống") {
+                $input.removeClass("processing").addClass("empty");
+            } else {
+                $input.removeClass("empty").addClass("processing");
+            }
+        }
+    },
     init: function () {
         _cartcalllist.ListCartoFactory();
         _cartcalllist.ListCartoFactory_Da_SL();
@@ -292,7 +370,7 @@ var _cartcalllist = {
     ListCartoFactory: function () {
         var model = {
             VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(), 
+            PhoneNumber: $('#input_chua_xu_ly').val(),
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -310,6 +388,7 @@ var _cartcalllist = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#data_chua_xu_ly').html(result);
+                _cartcalllist.initMangStatus();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
@@ -337,6 +416,7 @@ var _cartcalllist = {
             success: function (result) {
                 $('#imgLoading').hide();
                 $('#data_da_xu_ly').html(result);
+                _cartcalllist.initMangStatus();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
@@ -347,7 +427,7 @@ var _cartcalllist = {
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
-            data: { id: id, status: status, type: type,weight: weight },
+            data: { id: id, status: status, type: type, weight: weight },
             success: function (result) {
                 debugger
                 if (result.status == 0) {

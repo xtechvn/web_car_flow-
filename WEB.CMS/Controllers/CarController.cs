@@ -342,8 +342,19 @@ namespace WEB.CMS.Controllers
                         break;
                     case 4:
                         {
+                            var oldTrough = detail.TroughType; // giữ lại máng cũ
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+
+                            if (UpdateCar > 0)
+                            {
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
+                                detail.TroughTypeName = allcode_detail?.Description ?? "";
+
+                                // ✅ bắn cả máng cũ + máng mới
+                                await _hubContext.Clients.All.SendAsync("UpdateMangStatus", oldTrough, model.TroughType, detail.Id);
+                            }
 
                         }
                         break;
