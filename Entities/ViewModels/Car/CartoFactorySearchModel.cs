@@ -34,7 +34,7 @@ namespace Entities.ViewModels.Car
         public string ZaloStatus { get; set; } = string.Empty;
         public string Camp { get; set; } = string.Empty;
         public int Type { get; set; } = 0;
-        public string CreateTime { get; set; } = 0;
+        public string CreateTime { get; set; }
     }
 
 }

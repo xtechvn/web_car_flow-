@@ -169,11 +169,18 @@
     const jsonString = JSON.stringify(options);
     // Hàm render row
     function renderRow(item) {
-
+        var date = new Date(item.registerDateOnline);
+        let formatted =
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear() + " " +
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + ":" +
+            String(date.getSeconds()).padStart(2, '0');
         return `
         <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
             <td>${item.recordNumber}</td>
-            <td>${item.registerDateOnline}</td>
+            <td>${formatted}</td>
             <td>${item.customerName}</td>
             <td>${item.driverName}</td>
             <td>${item.phoneNumber}</td>
@@ -205,7 +212,7 @@
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
-                        ${item.vehicleStatusName}
+                       
                     </button>
                 </div>
 
