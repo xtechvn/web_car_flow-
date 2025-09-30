@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("App_Push_Consummer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bae6d4bcbd69a55c0be365d9627522a65ff56211")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa196cb9cbe8cc48a4a73f803d8146d8680e9bc7")]
 [assembly: System.Reflection.AssemblyProductAttribute("App_Push_Consummer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("App_Push_Consummer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
