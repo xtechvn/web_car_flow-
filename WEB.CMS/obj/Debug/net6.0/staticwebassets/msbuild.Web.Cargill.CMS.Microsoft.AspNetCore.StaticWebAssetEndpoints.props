@@ -3516,17 +3516,17 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-rWF3l7hlCvaXqxLYG5bYvXU4uhCm4W9w1OI0MaqNyr8="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"13548"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022rWF3l7hlCvaXqxLYG5bYvXU4uhCm4W9w1OI0MaqNyr8=\u0022"},{"Name":"Last-Modified","Value":"Tue, 30 Sep 2025 01:41:41 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/Web.Cargill.CMS/modules/cartofactory.bb8dlliroi.js">
+    <StaticWebAssetEndpoint Include="_content/Web.Cargill.CMS/modules/cartofactory.8udixwfr4d.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\modules\cartofactory.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"bb8dlliroi"},{"Name":"integrity","Value":"sha256-V/RCy1NcIS0N6x0efqwWeR\u002BZvjb7inB/rcmMUO0U11s="},{"Name":"label","Value":"_content/Web.Cargill.CMS/modules/cartofactory.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"12908"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022V/RCy1NcIS0N6x0efqwWeR\u002BZvjb7inB/rcmMUO0U11s=\u0022"},{"Name":"Last-Modified","Value":"Tue, 30 Sep 2025 02:01:12 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"8udixwfr4d"},{"Name":"integrity","Value":"sha256-cPglU40WzkuJO\u002BpZpk\u002BI9Ac9pQBPV6BuS23J6nZeRGI="},{"Name":"label","Value":"_content/Web.Cargill.CMS/modules/cartofactory.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"12888"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022cPglU40WzkuJO\u002BpZpk\u002BI9Ac9pQBPV6BuS23J6nZeRGI=\u0022"},{"Name":"Last-Modified","Value":"Tue, 30 Sep 2025 02:05:09 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Web.Cargill.CMS/modules/cartofactory.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\modules\cartofactory.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-V/RCy1NcIS0N6x0efqwWeR\u002BZvjb7inB/rcmMUO0U11s="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"12908"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022V/RCy1NcIS0N6x0efqwWeR\u002BZvjb7inB/rcmMUO0U11s=\u0022"},{"Name":"Last-Modified","Value":"Tue, 30 Sep 2025 02:01:12 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-cPglU40WzkuJO\u002BpZpk\u002BI9Ac9pQBPV6BuS23J6nZeRGI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"12888"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022cPglU40WzkuJO\u002BpZpk\u002BI9Ac9pQBPV6BuS23J6nZeRGI=\u0022"},{"Name":"Last-Modified","Value":"Tue, 30 Sep 2025 02:05:09 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/Web.Cargill.CMS/modules/common.88hqih7oz9.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\modules\common.js'))</AssetFile>

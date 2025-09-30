@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LHkSo0AnfWOAJEOAmg/rYwDyz50MIoCr/Rh/s6ssCC0=",
+  "Hash": "UrY2SZKH+nkCMY5qiTidLDQ2w4AAttd/LNI8Q+TMtfM=",
   "Source": "Web.Cargill.CMS",
   "BasePath": "_content/Web.Cargill.CMS",
   "Mode": "Default",
@@ -6226,8 +6226,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "bb8dlliroi",
-      "Integrity": "V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s=",
+      "Fingerprint": "8udixwfr4d",
+      "Integrity": "cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\modules\\cartofactory.js"
@@ -30345,7 +30345,7 @@
       ]
     },
     {
-      "Route": "modules/cartofactory.bb8dlliroi.js",
+      "Route": "modules/cartofactory.8udixwfr4d.js",
       "AssetFile": "D:\\web_car_flow\\WEB.CMS\\wwwroot\\modules\\cartofactory.js",
       "Selectors": [],
       "ResponseHeaders": [
@@ -30355,7 +30355,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12908"
+          "Value": "12888"
         },
         {
           "Name": "Content-Type",
@@ -30363,11 +30363,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s=\""
+          "Value": "\"cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 30 Sep 2025 02:01:12 GMT"
+          "Value": "Tue, 30 Sep 2025 02:05:09 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -30377,7 +30377,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "bb8dlliroi"
+          "Value": "8udixwfr4d"
         },
         {
           "Name": "label",
@@ -30385,7 +30385,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s="
+          "Value": "sha256-cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI="
         }
       ]
     },
@@ -30400,7 +30400,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "12908"
+          "Value": "12888"
         },
         {
           "Name": "Content-Type",
@@ -30408,11 +30408,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s=\""
+          "Value": "\"cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 30 Sep 2025 02:01:12 GMT"
+          "Value": "Tue, 30 Sep 2025 02:05:09 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -30422,7 +30422,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s="
+          "Value": "sha256-cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI="
         }
       ]
     },

@@ -5286,8 +5286,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>bb8dlliroi</Fingerprint>
-      <Integrity>V/RCy1NcIS0N6x0efqwWeR+Zvjb7inB/rcmMUO0U11s=</Integrity>
+      <Fingerprint>8udixwfr4d</Fingerprint>
+      <Integrity>cPglU40WzkuJO+pZpk+I9Ac9pQBPV6BuS23J6nZeRGI=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\modules\cartofactory.js'))</OriginalItemSpec>

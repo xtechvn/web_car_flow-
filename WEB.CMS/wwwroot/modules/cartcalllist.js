@@ -129,6 +129,11 @@
                     // ✅ lấy trọng lượng nhập trong input cùng dòng
                     var weight = $row.find('input.weight').val() || 0;
                     _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+
+                    if (val_TT != 0) {
+                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+
+                    } 
                 }
 
             }

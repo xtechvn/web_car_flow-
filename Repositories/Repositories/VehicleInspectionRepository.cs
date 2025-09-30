@@ -56,5 +56,17 @@ namespace Repositories.Repositories
             }
             return null;
         }
+        public int SaveVehicleInspection(RegistrationRecord model)
+        {
+            try
+            {
+                return  _VehicleInspectionDAL.SaveVehicleInspection(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionRepository: " + ex);
+            }
+            return 0;
+        }
     }
 }
