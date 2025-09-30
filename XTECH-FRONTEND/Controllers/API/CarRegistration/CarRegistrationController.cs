@@ -268,31 +268,17 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     QueueNumber = queueNumber,
                     RegistrationTime = DateTime.Now,
                     ZaloStatus = "Đang xử lý...",
-                    Camp = request.Camp
+                    Camp = request.Camp,
+                    Type = 0
                 };
                 var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
                 if (SyncQueue == false)
                 {
                     SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
                 }
-                // đẩy realtime đến tất cả client
+            
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-                //if ((hours == 18 && minutes < 30) || (hours == 17 && minutes >= 55))
-                //{
-                //    var Insert = await _mongoService.Insert(registrationRecord);
-                //    if (Insert <= 0)
-                //    {
-                //        Insert = await _mongoService.Insert(registrationRecord);
-                //    }
-                //}
-                //else
-                //{
-                //    var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
-                //    if (SyncQueue == false)
-                //    {
-                //        SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
-                //    }
-                //}
+               await redisService.PublishAsync("ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)

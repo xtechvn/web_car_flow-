@@ -43,6 +43,7 @@ namespace App_Push_Consummer.Model
         public DateTime RegistrationTime { get; set; }
         public string ZaloStatus { get; set; } = string.Empty;
         public string Camp { get; set; } = string.Empty;
+        public int type { get; set; } = 0; // 0: đăng ký mới, 1: da update lại
     }
 
     public class ValidationResult
@@ -82,5 +83,6 @@ namespace App_Push_Consummer.Model
         }
         public string ZaloStatus { get; set; }
         public string Camp { get; set; }
+        public int Type { get; set; }
     }
 }

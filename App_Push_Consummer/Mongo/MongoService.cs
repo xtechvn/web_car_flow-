@@ -12,14 +12,14 @@ namespace App_Push_Consummer.Mongo
 
         public MongoService()
         {
-           
+
 
         }
         public async Task<long> Insert(RegistrationRecord model)
         {
             try
             {
-                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] ;
+                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"];
 
                 var client = new MongoClient(url);
 
@@ -48,14 +48,14 @@ namespace App_Push_Consummer.Mongo
             }
             return 0;
         }
-       
+
         public List<RegistrationRecordMongo> GetList()
         {
             var list = new List<RegistrationRecordMongo>();
             try
             {
 
-                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"] ;
+                string url = "mongodb://" + ConfigurationManager.AppSettings["MongoServer_user"] + ":" + ConfigurationManager.AppSettings["MongoServer_pwd"] + "@" + ConfigurationManager.AppSettings["MongoServer_Host"] + ":" + ConfigurationManager.AppSettings["MongoServer_Port"];
 
                 var client = new MongoClient(url);
                 var db = client.GetDatabase(ConfigurationManager.AppSettings["MongoServer_catalog_log"]);
@@ -65,10 +65,11 @@ namespace App_Push_Consummer.Mongo
                 var DateTime_Lte = new DateTime(now.Year, now.Month, now.Day, 18, 29, 59);
                 var DateTime_Gte = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
                 var filter = Builders<RegistrationRecordMongo>.Filter.Empty;
-            
-                    filter &= Builders<RegistrationRecordMongo>.Filter.Gte("RegistrationTime", DateTime_Gte);
-                    filter &= Builders<RegistrationRecordMongo>.Filter.Lte("RegistrationTime", DateTime_Lte);
-                
+
+                filter &= Builders<RegistrationRecordMongo>.Filter.Eq(n => n.Type, 0);
+                filter &= Builders<RegistrationRecordMongo>.Filter.Gte("RegistrationTime", DateTime_Gte);
+                filter &= Builders<RegistrationRecordMongo>.Filter.Lte("RegistrationTime", DateTime_Lte);
+
 
                 var S = Builders<RegistrationRecordMongo>.Sort.Ascending("QueueNumber");
                 list = collection.Find(filter).Sort(S).ToList();
