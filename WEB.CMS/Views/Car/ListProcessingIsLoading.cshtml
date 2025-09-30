@@ -32,7 +32,10 @@
                     <td>@item.CustomerName</td>
                     <td>@item.DriverName</td>
                     <td>@item.PhoneNumber</td>
-                    <td>@item.VehicleNumber</td>
+                    <td>
+                        <a class="btn-detail"
+                           data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
+                    </td>
                     <td>@item.VehicleLoad</td>
                     <td>@item.VehicleStatusName</td>
                     <td>

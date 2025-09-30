@@ -48,7 +48,6 @@
             </div>
         </header>
         <!--END HEADER-->
-
         @RenderBody()
 
 
@@ -66,6 +65,47 @@
             <div class="form-default magnific-body"></div>
         </div>
         <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+    </div>
+    <div id="popup" class="popup-form  white-popup mfp-hide">
+        <div class="round_lighbox">
+            <div class="title-popup">Lịch sử cập nhật trạng thái</div>
+            <div class="content_lightbox">
+                <table class="detail-table">
+                    <tbody>
+                        <tr>
+                            <td class="label">Tên khách hàng (trại, đại lý)</td>
+                            <td class="value">Chị em Rọt</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Tên lái xe</td>
+                            <td class="value">Nguyễn Văn Cường</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Biển số xe</td>
+                            <td class="value">29L1 - 8866</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ cân xong đầu vào</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ gọi vào máng xuất</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ vào máng</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ hoàn thành</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
     </div>
 
 
@@ -89,6 +129,48 @@
         // js dropdown
 
 
+    </script>
+    <script>
+        $('.open-popup-link').magnificPopup({
+            type: 'inline',
+            midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+            mainClass: 'mfp-with-zoom',
+            fixedContentPos: false,
+            fixedBgPos: true,
+            overflowY: 'auto',
+            closeBtnInside: true,
+            preloader: false,
+            removalDelay: 300,
+        });
+         $(document).on("click", ".btn-detail", function () {
+            debugger
+            var id = $(this).data("id");
+
+            $.ajax({
+                url: "/Car/Detail",
+                type: "GET",
+                data: { id: id },
+                success: function (result) {
+                    debugger
+                    // nhét partial view vào popup
+                    $("#popup").html(result);
+
+                    // mở popup
+                    $.magnificPopup.open({
+                        items: {
+                            src: '#popup',
+                            type: 'inline'
+                        },
+                        mainClass: 'mfp-with-zoom',
+                        closeBtnInside: true,
+                        fixedContentPos: true
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Có lỗi khi tải dữ liệu: " + error);
+                }
+            });
+        });
     </script>
 
     <div class="clearfix"></div>

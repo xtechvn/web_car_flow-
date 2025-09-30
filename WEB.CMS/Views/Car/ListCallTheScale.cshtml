@@ -32,7 +32,10 @@
                         <td>@item.CustomerName</td>
                         <td>@item.DriverName</td>
                         <td>@item.PhoneNumber</td>
-                        <td class="td-audio">@item.VehicleNumber</td>
+                        <td class="td-audio">
+                            <a class="btn-detail"
+                               data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
+                        </td>
                         <td>@item.LoadTypeName</td>
                         <td>
                             <div class="status-dropdown">
@@ -100,7 +103,10 @@ else
                     <tr class="CartoFactory_@item.Id">
                         <td>@item.RecordNumber</td>
                         <td>@item.PhoneNumber</td>
-                        <td class="td-audio">@item.VehicleNumber</td>
+                        <td class="td-audio">
+                            <a class="btn-detail"
+                               data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
+                        </td>
                         <td>@item.LoadTypeName</td>
                         <td>
                             <div class="status-dropdown">

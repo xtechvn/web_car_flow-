@@ -35,6 +35,20 @@ namespace WEB.CMS.Controllers
             }
             return View();
         }
+        public async Task<IActionResult> Detail(int id)
+        {
+            try
+            {
+                var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(id);
+                return PartialView(detail);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ProcessingIsLoading - CarController: " + ex);
+            }
+            return View();
+        }
+
         public async Task<IActionResult> ListCartoFactory(CartoFactorySearchModel SearchModel)
         {
             try
