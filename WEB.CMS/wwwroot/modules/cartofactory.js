@@ -195,8 +195,8 @@
 
         return `
         <tr class="CartoFactory_${item.id}" data-queue="${item.queueNumber}" >
-            <td>${item.recordNumber}</td>
-            <td>${item.registerDateOnline}</td>
+            <td>${item.queueNumber}</td>
+            <td>${item.createTime}</td>
             <td>${item.name}</td>
             <td>${item.gplx}</td>
             <td>${item.phoneNumber}</td>

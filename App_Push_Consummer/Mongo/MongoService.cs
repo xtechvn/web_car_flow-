@@ -107,7 +107,7 @@ namespace App_Push_Consummer.Mongo
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("InsertBooking - BookingHotelDAL - Cannot Excute: " + ex.ToString());
-                return null;
+                return 0;
             }
         }
     }

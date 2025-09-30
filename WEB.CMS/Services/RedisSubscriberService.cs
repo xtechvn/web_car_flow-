@@ -26,8 +26,14 @@ namespace WEB.CMS.Services
             {
                 // Forward tới tất cả client qua SignalR
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(record);
-                record.Id = id;
-                await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
+                
+                if(id > 0)
+                {
+                    record.Id = id;
+                    record.CreateTime = record.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss");
+                    await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
+                }
+                
             });
 
             await Task.CompletedTask;
