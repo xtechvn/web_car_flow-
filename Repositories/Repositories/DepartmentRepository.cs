@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Repositories.Repositories
 {
-    internal class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly DepartmentDAL _DepartmentDAL;
  
