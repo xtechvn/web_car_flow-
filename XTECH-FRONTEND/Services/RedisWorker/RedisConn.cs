@@ -1,5 +1,7 @@
 ﻿using StackExchange.Redis;
+using System.Text.Json;
 using XTECH_FRONTEND.IRepositories;
+using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Services.RedisWorker
@@ -88,6 +90,21 @@ namespace XTECH_FRONTEND.Services.RedisWorker
                 catch { }
             }
         }
-       
+        // ===============================
+        // Pub/Sub cho realtime
+        // ===============================
+
+        /// <summary>
+        /// Subscribe channel và xử lý message realtime
+        /// </summary>
+
+        public async Task PublishAsync(string channel, RegistrationRecord record)
+        {
+            var sub = _redis.GetSubscriber();
+            var json = JsonSerializer.Serialize(record);
+            await sub.PublishAsync(channel, json);
+        }
+
+
     }
 }

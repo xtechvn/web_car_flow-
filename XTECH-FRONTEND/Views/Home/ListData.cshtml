@@ -32,12 +32,12 @@
                     <th>Hoàn hảo/Trại *</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dataBody">
                 @if (data != null && data.Count > 0)
                 {
                     foreach (var item in data)
                     {
-                        <tr>
+                        <tr data-queue="@item.QueueNumber">
                             <td>@item.Name</td>
                             <td>@item.PlateNumber </td>
                             <td>@item.GPLX</td>
@@ -55,3 +55,74 @@
         </table>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/registrationHub")
+        .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
+        .build();
+  
+    // Hàm render row
+    function renderRow(item) {
+        var date = new Date(item.registrationTime);
+        let formatted =
+        String(date.getDate()).padStart(2, '0') + "/" +
+        String(date.getMonth() + 1).padStart(2, '0') + "/" +
+        date.getFullYear() + " " +
+        String(date.getHours()).padStart(2, '0') + ":" +
+        String(date.getMinutes()).padStart(2, '0') + ":" +
+        String(date.getSeconds()).padStart(2, '0');
+        return `
+            <tr data-queue="${item.queueNumber}">
+                <td>${item.name}</td>
+                <td>${item.plateNumber}</td>
+                <td>${item.gplx}</td>
+                <td>${item.referee}</td>
+                <td>${item.phoneNumber}</td>
+                <td>${item.queueNumber}</td>
+                <td>${formatted}</td>
+                <td>${item.zaloStatus}</td>
+                <td>${item.camp}</td>
+            </tr>`;
+    }
+
+    // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
+    function sortTable() {
+        const tbody = document.getElementById("dataBody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-queue") || 0);
+            const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    connection.start()
+        .then(() => console.log("✅ Kết nối SignalR thành công"))
+        .catch(err => console.error("❌ Lỗi kết nối:", err));
+    // Nhận data mới từ server
+    connection.on("ReceiveRegistration", function (item) {
+        const tbody = document.getElementById("dataBody");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
+    });
+
+
+  
+    connection.onreconnecting(error => {
+        console.warn("🔄 Đang reconnect...", error);
+    });
+
+    connection.onreconnected(connectionId => {
+        console.log("✅ Đã reconnect. Connection ID:", connectionId);
+    });
+
+    connection.onclose(error => {
+        console.error("❌ Kết nối bị đóng.", error);
+    });
+
+    
+</script>

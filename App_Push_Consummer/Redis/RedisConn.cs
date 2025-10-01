@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using App_Push_Consummer.Model;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace App_Push_Consummer.Redis
 {
@@ -94,5 +90,11 @@ namespace App_Push_Consummer.Redis
             }
         }
 
+        public async Task PublishAsync(string channel, RegistrationRecord record)
+        {
+            var sub = _redis.GetSubscriber();
+            var json = JsonSerializer.Serialize(record);
+            await sub.PublishAsync(channel, json);
+        }
     }
 }

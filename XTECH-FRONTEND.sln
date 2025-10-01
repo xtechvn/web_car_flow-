@@ -7,6 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XTECH-FRONTEND", "XTECH-FRO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_Push_Consummer", "App_Push_Consummer\App_Push_Consummer.csproj", "{F150597A-C6AD-E107-B8DF-833DCCD8FA1A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{DBF5FB82-1F71-4EE1-87B9-F7C4B71D5C03}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{37CF8720-D2F3-49C9-9551-E7A3E7CE0BBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{96432111-8E33-44F6-9A90-F7032EBCAA74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{9B2DAF8E-9A27-413B-9959-91EF6F3DDBBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Cargill.CMS", "WEB.CMS\Web.Cargill.CMS.csproj", "{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +31,26 @@ Global
 		{F150597A-C6AD-E107-B8DF-833DCCD8FA1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F150597A-C6AD-E107-B8DF-833DCCD8FA1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F150597A-C6AD-E107-B8DF-833DCCD8FA1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBF5FB82-1F71-4EE1-87B9-F7C4B71D5C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF5FB82-1F71-4EE1-87B9-F7C4B71D5C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF5FB82-1F71-4EE1-87B9-F7C4B71D5C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBF5FB82-1F71-4EE1-87B9-F7C4B71D5C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CF8720-D2F3-49C9-9551-E7A3E7CE0BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CF8720-D2F3-49C9-9551-E7A3E7CE0BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CF8720-D2F3-49C9-9551-E7A3E7CE0BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CF8720-D2F3-49C9-9551-E7A3E7CE0BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96432111-8E33-44F6-9A90-F7032EBCAA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96432111-8E33-44F6-9A90-F7032EBCAA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96432111-8E33-44F6-9A90-F7032EBCAA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96432111-8E33-44F6-9A90-F7032EBCAA74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B2DAF8E-9A27-413B-9959-91EF6F3DDBBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2DAF8E-9A27-413B-9959-91EF6F3DDBBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2DAF8E-9A27-413B-9959-91EF6F3DDBBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2DAF8E-9A27-413B-9959-91EF6F3DDBBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

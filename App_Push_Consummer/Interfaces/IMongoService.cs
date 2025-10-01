@@ -10,6 +10,7 @@ namespace App_Push_Consummer.Interfaces
     public interface IMongoService
     {
         Task<long> Insert(RegistrationRecord model);
+        Task<long> update(RegistrationRecordMongo model,string id);
         List<RegistrationRecordMongo> GetList();
     }
 }

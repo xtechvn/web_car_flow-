@@ -2,13 +2,12 @@
 using App_Push_Consummer.Common;
 using App_Push_Consummer.Interfaces;
 using App_Push_Consummer.Model;
+using App_Push_Consummer.Model.DB_Core;
+using App_Push_Consummer.Mongo;
 using App_Push_Consummer.Redis;
 using App_Push_Consummer.Utilities;
-using Google.Apis.Sheets.v4.Data;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Configuration;
-using System.Diagnostics;
 
 namespace App_Push_Consummer.Engines
 {
@@ -52,14 +51,7 @@ namespace App_Push_Consummer.Engines
                         insertResult = await _mongoService.Insert(queue_info);
                     }
 
-                    var sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
 
-                    if (!sheetsSuccess)
-                    {
-
-                        ErrorWriter.InsertLogTelegramByUrl(tele_token, tele_group_id, "Lưu ex ko thành công = " + queue_info.ToString());
-                        sheetsSuccess = await _googleSheetsService.SaveRegistrationAsync(queue_info);
-                    }
 
                     Console.WriteLine("Thành công."+ queue_info.QueueNumber);
                 }
@@ -76,11 +68,29 @@ namespace App_Push_Consummer.Engines
             try
             {
                 var data = _mongoService.GetList();
-                var SaveRegistration = await _googleSheetsService.SaveRegistrationEX(data);
-                if (SaveRegistration == false)
+                if(data == null || data.Count >= 0)
                 {
-                    SaveRegistration = await _googleSheetsService.SaveRegistrationEX(data);
+                    foreach(var item in data)
+                    {
+                        var model = new RegistrationRecord();
+                        model.PlateNumber = item.PlateNumber;
+                        model.Name = item.Name;
+                        model.PhoneNumber = item.PhoneNumber;
+                        model.Referee = item.Referee;
+                        model.GPLX = item.GPLX;
+                        model.Camp = item.Camp;
+                        model.QueueNumber = item.QueueNumber;
+                        model.RegistrationTime = (DateTime)DateUtil.StringToDateTime( item.CreatedTime);
+                      var id=  Repository.SaveVehicleInspection(model);
+                        model.Id = id;
+                        await redisService.PublishAsync("ReceiveRegistration", model);
+                        item.Type = 1;
+                        _mongoService.update(item, item._id);
+                    }
+                    
                 }
+                
+               
             }
             catch (Exception ex)
             {

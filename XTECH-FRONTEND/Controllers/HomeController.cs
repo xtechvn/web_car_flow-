@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Text.Encodings.Web;
 using System.Xml.Linq;
 using XTECH_FRONTEND.IRepositories;
+using XTECH_FRONTEND.Utilities;
 
 namespace XTECH_FRONTEND.Controllers
 {

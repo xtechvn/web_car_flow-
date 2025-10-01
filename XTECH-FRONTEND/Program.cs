@@ -33,6 +33,12 @@ builder.Services.AddSingleton<IValidationService, ValidationService>();
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
 builder.Services.AddSingleton<IZaloService, ZaloOfficialAccountService>();
 builder.Services.AddSingleton<IMongoService, MongoService>();
+// Add SignalR với cấu hình KeepAlive
+builder.Services.AddSignalR(options =>
+{
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60); // client timeout sau 60s
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);     // server ping client mỗi 15s
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,7 +56,10 @@ app.MapControllerRoute(
     name: "home",
     pattern: "/ListData",
     defaults: new { controller = "Home", action = "ListData" });
+// Add SignalR
 
+// Map Hub
+app.MapHub<RegistrationHub>("/registrationHub");
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();

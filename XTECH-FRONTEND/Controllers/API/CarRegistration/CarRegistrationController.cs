@@ -1,11 +1,14 @@
 ﻿using DnsClient;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Configuration;
 using System.Diagnostics;
+using Telegram.Bot.Types;
 using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
+using XTECH_FRONTEND.Repositories;
 using XTECH_FRONTEND.Services;
 using XTECH_FRONTEND.Services.RedisWorker;
 using XTECH_FRONTEND.Utilities;
@@ -26,6 +29,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly WorkQueueClient _workQueueClient;
         private readonly RedisConn redisService;
         private readonly IConfiguration _configuration;
+        private readonly IHubContext<RegistrationHub> _hubContext;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
@@ -33,7 +37,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             IZaloService zaloService,
             ILogger<CarRegistrationController> logger,
             IConfiguration configuration,
-            IMongoService mongoService)
+            IMongoService mongoService, IHubContext<RegistrationHub> hubContext)
         {
             _validationService = validationService;
             _googleSheetsService = googleSheetsService;
@@ -45,6 +49,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             redisService = new RedisConn(configuration);
             redisService.Connect();
             _configuration = configuration;
+            _hubContext = hubContext;
         }
         [HttpPost("register-V1")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
@@ -246,8 +251,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     });
                 }
 
-                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_");
+                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_")+DateTime.Now.ToString("dd_MM_yyyy");
 
+                redisService.Set(cache_name, JsonConvert.SerializeObject(request), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
 
 
@@ -262,26 +268,17 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     QueueNumber = queueNumber,
                     RegistrationTime = DateTime.Now,
                     ZaloStatus = "Đang xử lý...",
-                    Camp = request.Camp
+                    Camp = request.Camp,
+                    Type = 0
                 };
-
-
-                if ((hours == 18 && minutes < 30) || (hours == 17 && minutes >= 58))
+                var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                if (SyncQueue == false)
                 {
-                    var Insert = await _mongoService.Insert(registrationRecord);
-                    if (Insert <= 0)
-                    {
-                        Insert = await _mongoService.Insert(registrationRecord);
-                    }
+                    SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
                 }
-                else
-                {
-                    var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
-                    if (SyncQueue == false)
-                    {
-                        SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
-                    }
-                }
+            
+                await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
+               await redisService.PublishAsync("ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)
@@ -292,9 +289,13 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     {
                         Directory.CreateDirectory(logDirectory);
                     }
+                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";                  
                     var logPath = Path.Combine(logDirectory, "slow_requests.log");
-                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";
-                    await System.IO.File.AppendAllTextAsync(logPath, logMessage + Environment.NewLine);
+                    using (var fs = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    using (var writer = new StreamWriter(fs))
+                    {
+                        writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}");
+                    }
                 }
                 // Return success response
                 return Ok(new CarRegistrationResponse
