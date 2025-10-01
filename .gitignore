@@ -2,33 +2,18 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-# Visual Studio cache and settings
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build results
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Tt]estResults/
-
-# NuGet packages
-*.nupkg
-*.snupkg
-packages/
-*.nuget.props
-*.nuget.targets
-
-# Others
-*.cache
-*.dll
-*.exe
-*.pdb
-*.dbmdl
-
-# Ignore specific folders
-/XTECH-FRONTEND/Controllers
-/XTECH-FRONTEND/Properties
+/DAL/bin
+/DAL/obj
+/Entities/bin
+/Entities/obj
+/Repositories/bin
+/Repositories/obj
+/Utilities/bin
+/Utilities/obj
+/Web.Cargill.CMS/bin
+/Web.Cargill.CMS/obj
+/.vs
+/App_Push_Consummer/bin
+/App_Push_Consummer/obj
+/XTECH-FRONTEND/bin
+/XTECH-FRONTEND/obj
