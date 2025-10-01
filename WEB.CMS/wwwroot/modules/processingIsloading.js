@@ -175,7 +175,7 @@
     ];
     const AllCode2 = [
         { Description: "Blank", CodeValue: "1" },
-        { Description: "Đã hoàn", CodeValue: "0" }, 
+        { Description: "Hoàn thành", CodeValue: "0" }, 
     ];
     // Create a new array of objects in the desired format
     const options = AllCode.map(allcode => ({
