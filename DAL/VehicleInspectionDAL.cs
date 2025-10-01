@@ -134,7 +134,7 @@ namespace DAL
                 objParam_order[5] = new SqlParameter("@LicenseNumber", model.Camp);
                 objParam_order[6] = new SqlParameter("@PhoneNumber", model.PhoneNumber);
                 objParam_order[7] = new SqlParameter("@VehicleLoad", model.Referee);
-                objParam_order[8] = new SqlParameter("@VehicleStatus", DBNull.Value);
+                objParam_order[8] = new SqlParameter("@VehicleStatus", (int)VehicleStatus.Blank);
                 objParam_order[9] = new SqlParameter("@LoadType", DBNull.Value);
                 objParam_order[10] = new SqlParameter("@IssueCreateDate", DateTime.Now);
                 objParam_order[11] = new SqlParameter("@IssueUpdatedDate", DBNull.Value);

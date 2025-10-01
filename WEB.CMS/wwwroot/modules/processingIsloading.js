@@ -138,9 +138,9 @@
                             .addClass(cls); // gắn class mới (status-arrived, status-blank…)
                         if (val_TT == 1) {
                         
-                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
-                        } else {
                             $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        } else {
+                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     
                         }
                     }
@@ -175,7 +175,7 @@
     ];
     const AllCode2 = [
         { Description: "Blank", CodeValue: "1" },
-        { Description: "Đã hoàn thành thử tục", CodeValue: "0" }, 
+        { Description: "Đã hoàn", CodeValue: "0" }, 
     ];
     // Create a new array of objects in the desired format
     const options = AllCode.map(allcode => ({
