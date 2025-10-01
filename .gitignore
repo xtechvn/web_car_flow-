@@ -2,10 +2,33 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/XTECH-FRONTEND/Controllers
-/.vs
+# Visual Studio cache and settings
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-/.vs
-/XTECH-FRONTEND/obj
-/XTECH-FRONTEND/bin
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]estResults/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Others
+*.cache
+*.dll
+*.exe
+*.pdb
+*.dbmdl
+
+# Ignore specific folders
+/XTECH-FRONTEND/Controllers
 /XTECH-FRONTEND/Properties
