@@ -143,12 +143,43 @@
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
 
+
                     // nếu trạng thái kết thúc → giải phóng máng
                     if (val_TT == 0) {
-                        let mangId = $row.find('button[data-type="1"]').text();
-                        connection.invoke("BroadcastUpdateMang", mangId, "Trống")
-                            .catch(err => console.error(err.toString()));
+                        let mangName = $row.find('button[data-type="1"]').text().trim();
+                        let match = mangName.match(/\d+/);
+                        if (match) {
+                            let mangIndex = parseInt(match[0]);
+
+                            // 🔎 Check còn xe nào khác trong cùng máng này không
+                            let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
+                                let btnText = $(tr).find("button[data-type='1']").text().trim();
+                                let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
+                                return btnText === mangName && trangThai !== "Hoàn thành";
+                            });
+
+                            if (stillHasCar) {
+                                // ✅ Nếu còn xe khác chưa hoàn thành → máng vẫn đang xử lý
+                                $("#input" + mangIndex).val("Đang xử lý")
+                                    .removeClass("empty").addClass("processing");
+                            } else {
+                                // ✅ Nếu không còn xe nào → máng trống
+                                $("#input" + mangIndex).val("Trống")
+                                    .removeClass("processing").addClass("empty");
+                            }
+                        }
+                    } else {
+                        // ✅ nếu không phải hoàn thành => máng đó đang xử lý
+                        let mangName = $row.find('button[data-type="1"]').text().trim();
+                        let match = mangName.match(/\d+/);
+                        if (match) {
+                            let mangIndex = parseInt(match[0]);
+                            $("#input" + mangIndex).val("Đang xử lý")
+                                .removeClass("empty").addClass("processing");
+                        }
                     }
+
+
                 }
             }
         }
@@ -336,22 +367,30 @@
 });
 var _cartcalllist = {
     // ✅ Hàm đồng bộ máng khi vừa load trang hoặc reload data
+    // ✅ Đồng bộ trạng thái máng khi load trang hoặc reload data
     initMangStatus: function () {
-        $("#dataBody-0 tr, #dataBody-1 tr").each(function () {
-            const $row = $(this);
-            const mangText = $row.find("button[data-type='1']").text().trim();
+        // Giả sử có 5 máng, bạn thay bằng số máng thực tế
+        for (let mangIndex = 1; mangIndex <= 5; mangIndex++) {
+            let mangName = "Máng " + mangIndex;
 
-            if (mangText && mangText.startsWith("Máng")) {
-                const mangId = parseInt(mangText.replace("Máng", "").trim()) - 1;
-                if (!isNaN(mangId)) {
-                   _cartcalllist.updateMangStatus(mangId, "Đang xử lý");
-                }
+            // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không
+            let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
+                let btnText = $(tr).find("button[data-type='1']").text().trim();
+                let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
+                return btnText === mangName && trangThai !== "Hoàn thành";
+            });
+
+            if (stillHasCar) {
+                _cartcalllist.updateMangStatus(mangIndex, "Đang xử lý");
+            } else {
+                _cartcalllist.updateMangStatus(mangIndex, "Trống");
             }
-        });
+        }
     },
-    updateMangStatus: function (mangId, statusText) {
-        
-        const $input = $("#input" + (parseInt(mangId) + 1));
+
+    // ✅ Hàm cập nhật input trạng thái máng
+    updateMangStatus: function (mangIndex, statusText) {
+        const $input = $("#input" + mangIndex);
 
         if ($input.length) {
             $input.val(statusText);
@@ -396,6 +435,7 @@ var _cartcalllist = {
         });
     },
     ListCartoFactory_Da_SL: function () {
+
         var model = {
             VehicleNumber: $('#input_da_xu_ly').val(),
             PhoneNumber: $('#input_da_xu_ly').val(),
@@ -429,9 +469,9 @@ var _cartcalllist = {
             type: "post",
             data: { id: id, status: status, type: type, weight: weight },
             success: function (result) {
-                debugger
                 if (result.status == 0) {
-                    _msgalert.success(result.msg)
+                    _msgalert.success(result.msg);
+
                     // ✅ chỉ remove row nếu cập nhật thành công
                     if (type == 6) {
                         if (parseInt(status) == 0) {
@@ -441,8 +481,12 @@ var _cartcalllist = {
                         }
                     }
 
+                    // 🔥 Sau khi update → reload lại dữ liệu cả 2 bảng
+                    _cartcalllist.ListCartoFactory();
+                    _cartcalllist.ListCartoFactory_Da_SL();
+
                 } else {
-                    _msgalert.error(result.msg)
+                    _msgalert.error(result.msg);
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -450,4 +494,5 @@ var _cartcalllist = {
             }
         });
     }
+
 }
