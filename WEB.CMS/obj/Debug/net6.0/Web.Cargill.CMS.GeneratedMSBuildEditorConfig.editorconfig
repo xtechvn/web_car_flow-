@@ -9,101 +9,105 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WEB.CMS
 build_property.RootNamespace = WEB.CMS
-build_property.ProjectDir = D:\web_car_flow\WEB.CMS\
+build_property.ProjectDir = I:\web_car_flow\WEB.CMS\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\web_car_flow\WEB.CMS
+build_property.MSBuildProjectDirectory = I:\web_car_flow\WEB.CMS
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 6.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/web_car_flow/WEB.CMS/Views/Account/Login.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/CallTheScale.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/CallTheScale.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXENhbGxUaGVTY2FsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/CartoFactory.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/CartoFactory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXENhcnRvRmFjdG9yeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/ListCallTheScale.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[I:/web_car_flow/WEB.CMS/Views/Car/ListCallTheScale.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXExpc3RDYWxsVGhlU2NhbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/ListCartoFactory.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/ListCartoFactory.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXExpc3RDYXJ0b0ZhY3RvcnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/ListProcessingIsLoading.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/ListProcessingIsLoading.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXExpc3RQcm9jZXNzaW5nSXNMb2FkaW5nLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/ListWeighedInput.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/ListWeighedInput.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXExpc3RXZWlnaGVkSW5wdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/OpenPopup.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/OpenPopup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXE9wZW5Qb3B1cC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/ProcessingIsLoading.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/ProcessingIsLoading.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXFByb2Nlc3NpbmdJc0xvYWRpbmcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Car/WeighedInput.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Car/WeighedInput.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyXFdlaWdoZWRJbnB1dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Error/AjaxAuthenticate.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Error/AjaxAuthenticate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJyb3JcQWpheEF1dGhlbnRpY2F0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Error/Index.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Error/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJyb3JcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Home/Error.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Home/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Home/Index.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/ListCar/CarCallList.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/ListCar/CarCallList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdENhclxDYXJDYWxsTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/ListCar/ListCarCallView.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/ListCar/ListCarCallView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdENhclxMaXN0Q2FyQ2FsbFZpZXcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/ListCar/ListVehicles.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/ListCar/ListVehicles.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdENhclxMaXN0VmVoaWNsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/ListCar/ListVehiclesisLoading.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/ListCar/ListVehiclesisLoading.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlzdENhclxMaXN0VmVoaWNsZXNpc0xvYWRpbmcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Shared/Error.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Shared/_AccountLayout.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Shared/_AccountLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BY2NvdW50TGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/_ViewStart.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/web_car_flow/WEB.CMS/Views/Shared/_Layout.cshtml]
+[I:/web_car_flow/WEB.CMS/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-62p9ebcx3v

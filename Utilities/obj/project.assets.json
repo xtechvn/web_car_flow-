@@ -3790,23 +3790,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ThinkPad X1 Gen 7\\.nuget\\packages\\": {},
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\web_car_flow\\Utilities\\Utilities.csproj",
+      "projectUniqueName": "I:\\web_car_flow\\Utilities\\Utilities.csproj",
       "projectName": "Utilities",
-      "projectPath": "D:\\web_car_flow\\Utilities\\Utilities.csproj",
-      "packagesPath": "C:\\Users\\ThinkPad X1 Gen 7\\.nuget\\packages\\",
-      "outputPath": "D:\\web_car_flow\\Utilities\\obj\\",
+      "projectPath": "I:\\web_car_flow\\Utilities\\Utilities.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "I:\\web_car_flow\\Utilities\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ThinkPad X1 Gen 7\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3904,7 +3904,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
