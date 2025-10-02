@@ -23,7 +23,7 @@ namespace WEB.CMS.Services
         {
             _redisService.Connect();
 
-            await _redisService.SubscribeAsync("ReceiveRegistration", async (RegistrationRecord record) =>
+            await _redisService.SubscribeAsync("Add_ReceiveRegistration", async (RegistrationRecord record) =>
             {
                 // Forward tới tất cả client qua SignalR
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(record);
