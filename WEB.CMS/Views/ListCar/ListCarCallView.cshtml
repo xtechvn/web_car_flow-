@@ -53,8 +53,11 @@
                     <td>
                         <input type="text"
                                class="input-form weight @(ViewBag.type == 1 ? "disabled" : "")"
+                               maxlength="8"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
                                value="@(item.VehicleTroughWeight > 0 ? item.VehicleTroughWeight.ToString() : "")"
                                placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
+
 
                     </td>
                     <td>
