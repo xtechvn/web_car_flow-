@@ -247,12 +247,13 @@
                 </button>
             </div>
         </td>
-        <td>
-            <input type="text"
-                   class="input-form weight"
-                   value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
-                   placeholder="Vui lòng nhập" />
-        </td>
+      <td>
+        <input type="text"
+               class="input-form weight"
+               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+               placeholder="Vui lòng nhập"
+               ${isProcessed ? "disabled" : ""} />
+    </td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle"

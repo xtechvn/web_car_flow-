@@ -52,9 +52,9 @@
                     </td>
                     <td>
                         <input type="text"
-                               class="input-form weight"
+                               class="input-form weight @(ViewBag.type == 1 ? "disabled" : "")"
                                value="@(item.VehicleTroughWeight > 0 ? item.VehicleTroughWeight.ToString() : "")"
-                               placeholder="Vui lòng nhập" />
+                               placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
 
                     </td>
                     <td>
