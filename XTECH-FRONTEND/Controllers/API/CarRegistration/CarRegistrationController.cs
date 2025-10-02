@@ -277,7 +277,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     InsertMG = await _mongoService.Insert(registrationRecord);
                 }
             
-                await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
+                //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
                await redisService.PublishAsync("ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
