@@ -186,6 +186,7 @@
             <td>${item.phoneNumber}</td>
             <td>${item.vehicleNumber}</td>
             <td>${item.vehicleLoad}</td>
+            <td>${item.licenseNumber}</td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
@@ -209,10 +210,11 @@
             <td>${item.phoneNumber}</td>
             <td>${item.plateNumber}</td>
             <td>${item.referee}</td>
+            <td>${item.camp}</td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
-                       
+                       Blank
                     </button>
                 </div>
 
