@@ -15,185 +15,181 @@
     <!-- build:head -->
 </head>
 
-    <body class="homepage">
-        <style>
-            .data-table {
-                font-size: 11px !important;
-            }
-        </style>
-        <section class="section-main clearfix">
-            <!--await Component.InvokeAsync("Menu")-->
-            <!--HEADER-->
-            <header class="header">
-                <div class="header__logo">
-                    <img src="/images/graphics/logo.svg" alt="Cargill">
-                </div>
-                <div class="header__right">
-                    <div class="header-actions">
-                        <a href="/" class="action-btn menu-btn">
-                            <img src="/images/icons/menu.svg" alt="Menu">
-                        </a>
+<body class="homepage">
 
-                        <a href="/" class="action-btn">
-                            <img src="/images/icons/settings.svg" alt="Cài đặt">
-                        </a>
+    <section class="section-main clearfix">
+        <!--await Component.InvokeAsync("Menu")-->
+        <!--HEADER-->
+        <header class="header">
+            <div class="header__logo">
+                <img src="/images/graphics/logo.svg" alt="Cargill">
+            </div>
+            <div class="header__right">
+                <div class="header-actions">
+                    <a href="/" class="action-btn menu-btn">
+                        <img src="/images/icons/menu.svg" alt="Menu">
+                    </a>
 
-                        <a href="" class="action-btn">
-                            <img src="/images/icons/bell.svg" alt="Thông báo">
-                            <span class="badge">00+</span>
+                    <a href="/" class="action-btn">
+                        <img src="/images/icons/settings.svg" alt="Cài đặt">
+                    </a>
 
-                        </a>
-                        <div class="user-box">
-                            <img src="/images/icons/user.svg" alt="">
-                            <span>Chào, BinhDT</span>
-                        </div>
+                    <a href="" class="action-btn">
+                        <img src="/images/icons/bell.svg" alt="Thông báo">
+                        <span class="badge">00+</span>
+
+                    </a>
+                    <div class="user-box">
+                        <img src="/images/icons/user.svg" alt="">
+                        <span>Chào, BinhDT</span>
                     </div>
-
                 </div>
-            </header>
-            <!--END HEADER-->
-            @RenderBody()
+
+            </div>
+        </header>
+        <!--END HEADER-->
+        @RenderBody()
 
 
-        </section>
-        <footer class="footer">
-            <p>
-                CÔNG TY TNHH CARGILL VIỆT NAM - CHI NHÁNH HÀ NAM<br>
-                Địa chỉ KCN Đồng Văn II, thị xã Duy Tiên, tỉnh Hà Nam<br>
-                Số liên hệ hỗ trợ khách hàng: <b>0226.625.1580</b>
-            </p>
-        </footer>
-        <div id="magnific-popup-small" class="white-popup mfp-hide">
+    </section>
+    <footer class="footer">
+        <p>
+            CÔNG TY TNHH CARGILL VIỆT NAM - CHI NHÁNH HÀ NAM<br>
+            Địa chỉ KCN Đồng Văn II, thị xã Duy Tiên, tỉnh Hà Nam<br>
+            Số liên hệ hỗ trợ khách hàng: <b>0226.625.1580</b>
+        </p>
+    </footer>
+    <div id="magnific-popup-small" class="white-popup mfp-hide">
+        <div class="content_lightbox">
+            <div class="head magnific-title"></div>
+            <div class="form-default magnific-body"></div>
+        </div>
+        <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+    </div>
+    <div id="popup" class="popup-form  white-popup mfp-hide">
+        <div class="round_lighbox">
+            <div class="title-popup">Lịch sử cập nhật trạng thái</div>
             <div class="content_lightbox">
-                <div class="head magnific-title"></div>
-                <div class="form-default magnific-body"></div>
-            </div>
-            <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-        </div>
-        <div id="popup" class="popup-form  white-popup mfp-hide">
-            <div class="round_lighbox">
-                <div class="title-popup">Lịch sử cập nhật trạng thái</div>
-                <div class="content_lightbox">
-                    <table class="detail-table">
-                        <tbody>
-                            <tr>
-                                <td class="label">Tên khách hàng (trại, đại lý)</td>
-                                <td class="value">Chị em Rọt</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Tên lái xe</td>
-                                <td class="value">Nguyễn Văn Cường</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Biển số xe</td>
-                                <td class="value">29L1 - 8866</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Giờ cân xong đầu vào</td>
-                                <td class="value highlight">17:07 06/08/2025</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Giờ gọi vào máng xuất</td>
-                                <td class="value highlight">17:07 06/08/2025</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Giờ vào máng</td>
-                                <td class="value highlight">17:07 06/08/2025</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Giờ hoàn thành</td>
-                                <td class="value highlight">17:07 06/08/2025</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+                <table class="detail-table">
+                    <tbody>
+                        <tr>
+                            <td class="label">Tên khách hàng (trại, đại lý)</td>
+                            <td class="value">Chị em Rọt</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Tên lái xe</td>
+                            <td class="value">Nguyễn Văn Cường</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Biển số xe</td>
+                            <td class="value">29L1 - 8866</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ cân xong đầu vào</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ gọi vào máng xuất</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ vào máng</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Giờ hoàn thành</td>
+                            <td class="value highlight">17:07 06/08/2025</td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
+
         </div>
+    </div>
 
 
-        <!--end popup-->
-        <!--Jquery lib-->
-        <script src="~/js/jquery-2.1.4.min.js"></script>
-        <script src="~/lib/jquery.validate.js"></script>
-        <script src="~/lib/jquery-ui-1.12.1/jquery-ui.min.js"></script>
-        <script src="~/js/jquery.magnific-popup.min.js"></script>
-        <script src="~/js/simple-scrollbar.min.js"></script>
-        <script src="~/lib/cms-common.js"></script>
-        <script src="~/js/common.js"></script>
-        <script type="text/javascript" src="~/lib/toastr/toastr.min.js"></script>
-        <script>
-            $(function () {
-                $('.table-wrapper').each(function () {
-                    SimpleScrollbar.initEl(this);
-                });
+    <!--end popup-->
+    <!--Jquery lib-->
+    <script src="~/js/jquery-2.1.4.min.js"></script>
+    <script src="~/lib/jquery.validate.js"></script>
+    <script src="~/lib/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/simple-scrollbar.min.js"></script>
+    <script src="~/lib/cms-common.js"></script>
+    <script src="~/js/common.js"></script>
+    <script type="text/javascript" src="~/lib/toastr/toastr.min.js"></script>
+    <script>
+        $(function () {
+            $('.table-wrapper').each(function () {
+                SimpleScrollbar.initEl(this);
             });
+        });
 
-            // js dropdown
+        // js dropdown
 
 
-        </script>
-        <script>
-            $('.open-popup-link').magnificPopup({
-                type: 'inline',
-                midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
-                mainClass: 'mfp-with-zoom',
-                fixedContentPos: false,
-                fixedBgPos: true,
-                overflowY: 'auto',
-                closeBtnInside: true,
-                preloader: false,
-                removalDelay: 300,
+    </script>
+    <script>
+        $('.open-popup-link').magnificPopup({
+            type: 'inline',
+            midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+            mainClass: 'mfp-with-zoom',
+            fixedContentPos: false,
+            fixedBgPos: true,
+            overflowY: 'auto',
+            closeBtnInside: true,
+            preloader: false,
+            removalDelay: 300,
+        });
+         $(document).on("click", ".btn-detail", function () {
+            debugger
+            var id = $(this).data("id");
+
+            $.ajax({
+                url: "/Car/Detail",
+                type: "GET",
+                data: { id: id },
+                success: function (result) {
+                    debugger
+                    // nhét partial view vào popup
+                    $("#popup").html(result);
+
+                    // mở popup
+                    $.magnificPopup.open({
+                        items: {
+                            src: '#popup',
+                            type: 'inline'
+                        },
+                        mainClass: 'mfp-with-zoom',
+                        closeBtnInside: true,
+                        fixedContentPos: true
+                    });
+                },
+                error: function (xhr, status, error) {
+                    alert("Có lỗi khi tải dữ liệu: " + error);
+                }
             });
-            $(document).on("click", ".btn-detail", function () {
-                debugger
-                var id = $(this).data("id");
+        });
+    </script>
 
-                $.ajax({
-                    url: "/Car/Detail",
-                    type: "GET",
-                    data: { id: id },
-                    success: function (result) {
-                        debugger
-                        // nhét partial view vào popup
-                        $("#popup").html(result);
+    <div class="clearfix"></div>
 
-                        // mở popup
-                        $.magnificPopup.open({
-                            items: {
-                                src: '#popup',
-                                type: 'inline'
-                            },
-                            mainClass: 'mfp-with-zoom',
-                            closeBtnInside: true,
-                            fixedContentPos: true
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        alert("Có lỗi khi tải dữ liệu: " + error);
-                    }
-                });
-            });
-        </script>
+    <script>
+        $('.open-popup-link').magnificPopup({
+            type: 'inline',
+            midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+            mainClass: 'mfp-with-zoom',
+            fixedContentPos: false,
+            fixedBgPos: true,
+            overflowY: 'auto',
+            closeBtnInside: true,
+            preloader: false,
+            removalDelay: 300,
+        });
+    </script>
 
-        <div class="clearfix"></div>
-
-        <script>
-            $('.open-popup-link').magnificPopup({
-                type: 'inline',
-                midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
-                mainClass: 'mfp-with-zoom',
-                fixedContentPos: false,
-                fixedBgPos: true,
-                overflowY: 'auto',
-                closeBtnInside: true,
-                preloader: false,
-                removalDelay: 300,
-            });
-        </script>
-
-        <!-- build:script -->
-        @RenderSection("Scripts", required: false)
-    </body>
+    <!-- build:script -->
+    @RenderSection("Scripts", required: false)
+</body>
 </html>
