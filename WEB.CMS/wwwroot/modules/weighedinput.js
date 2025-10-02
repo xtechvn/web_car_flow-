@@ -114,27 +114,39 @@
 
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
+                const $btn = $currentBtn; // copy lại trước khi gọi Ajax
+                $.ajax({
+                    url: "/Car/UpdateStatus",
+                    type: "post",
+                    data: { id: id_row, status: val_TT, type: 9 },
+                    success: function (result) {
+                        status_type = result.status;
+                        if (result.status == 0) {
+                            _msgalert.success(result.msg)
+                            $btn
+                                .text(text)
+                                .removeClass(function (_, old) {
+                                    return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                                }) // xoá các class status- cũ
+                                .addClass(cls); // gắn class mới (status-arrived, status-blank…)\
+                            if (val_TT == 1) {
+                                $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                               
 
-
-        
-
-                var Status_type = _Weighed_Input.UpdateStatus(id_row, val_TT, 9);
-                if (Status_type == 0) {
-                    $currentBtn
-                        .text(text)
-                        .removeClass(function (_, old) {
-                            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                        }) // xoá các class status- cũ
-                        .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                    if (val_TT == 1) {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-
-                    } else {
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            } else {
+                                $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            }
+                        } else {
+                            _msgalert.error(result.msg)
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Status: " + textStatus);
                     }
-                }
-            
-            }        }
+                });
+
+            }
+        }
         closeMenu();
     });
 
@@ -169,7 +181,7 @@
     function renderRow(item) {
 
         return `
-        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" data-LoadType="${item.loadType}" >
             <td>${item.recordNumber}</td>
             <td>${item.registerDateOnline}</td>
             <td>${item.customerName}</td>
@@ -203,6 +215,19 @@
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
+    function sortTable_Da_SL2() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-LoadType") || 0);
+            const qb = parseInt(b.getAttribute("data-LoadType") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
     function sortTable() {
         const tbody = document.getElementById("dataBody-0");
         const rows = Array.from(tbody.querySelectorAll("tr"));
@@ -210,6 +235,19 @@
         rows.sort((a, b) => {
             const qa = parseInt(a.getAttribute("data-queue") || 0);
             const qb = parseInt(b.getAttribute("data-queue") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
+    function sortTable2() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-LoadType") || 0);
+            const qb = parseInt(b.getAttribute("data-LoadType") || 0);
             return qa - qb;
         });
 
@@ -224,12 +262,14 @@
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+        sortTable_Da_SL2(); // sắp xếp lại ngay khi thêm
     });
 
     connection.on("ListWeighedInput", function (item) {
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
+        sortTable2(); // sắp xếp lại ngay khi thêm
     });
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListCallTheScale_Da_SL", function (item) {
@@ -239,7 +279,7 @@
     });
     connection.on("ListCallTheScale", function (item) {
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
-       
+
     });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
