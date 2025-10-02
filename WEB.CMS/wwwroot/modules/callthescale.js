@@ -166,6 +166,8 @@
 
                     if (val_TT == 1) {
                         $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-0-0').find('.CartoFactory_' + id_row).remove();
+                        $('#dataBody-0-1').find('.CartoFactory_' + id_row).remove();
 
                     } else {
                         $('#dataBody-0-0').find('.CartoFactory_' + id_row).remove();
