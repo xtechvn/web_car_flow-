@@ -34,6 +34,7 @@
     {
         Hoan_thanh = 0,
         Blank = 3,
+        Da_goi = 1,
       
     }
 }

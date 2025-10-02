@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="ViewComponents\" />
     <Folder Include="Views\Shared\Components\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
 
 </Project>

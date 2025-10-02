@@ -14,7 +14,7 @@
                 return;
             }
 
-            var utterance = new SpeechSynthesisUtterance(text);
+            var utterance = new SpeechSynthesisUtterance("Mời biển số xe"+ text+" vào trạm cân");
             // Bạn có thể tùy chỉnh ngôn ngữ hoặc tốc độ ở đây, ví dụ:
              utterance.lang = 'vi-VN'; 
             //utterance.rate = 1;

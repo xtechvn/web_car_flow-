@@ -271,14 +271,14 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Camp = request.Camp,
                     Type = 0
                 };
-                var SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
-                if (SyncQueue == false)
+                var InsertMG = await _mongoService.Insert(registrationRecord); 
+                if (InsertMG == 0)
                 {
-                    SyncQueue = _workQueueClient.SyncQueue(registrationRecord);
+                    InsertMG = await _mongoService.Insert(registrationRecord);
                 }
             
-                await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-               await redisService.PublishAsync("ReceiveRegistration", registrationRecord);
+                //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
+               await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)

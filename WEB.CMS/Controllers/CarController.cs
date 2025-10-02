@@ -342,6 +342,11 @@ namespace WEB.CMS.Controllers
                         break;
                     case 4:
                         {
+                            if(model.VehicleTroughStatus == null)
+                            {
+                                model.VehicleTroughStatus = (int)VehicleTroughStatus.Da_goi;
+                            }
+                            
                             var oldTrough = detail.TroughType; // giữ lại máng cũ
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
