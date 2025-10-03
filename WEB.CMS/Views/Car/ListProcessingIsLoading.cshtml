@@ -28,7 +28,7 @@
             {
                 <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                     <td>@item.RecordNumber</td>
-                    <td>@item.RegisterDateOnline</td>
+                    <td>@(((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy"))</td>
                     <td>@item.CustomerName</td>
                     <td>@item.DriverName</td>
                     <td>@item.PhoneNumber</td>

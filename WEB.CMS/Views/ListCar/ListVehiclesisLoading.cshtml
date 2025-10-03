@@ -28,7 +28,9 @@
                     <td>
                         @item.VehicleNumber
                     </td>
-                    <td>@item.VehicleWeighingTimeComplete?.ToString("HH:mm dd/MM/yyyy")</td>
+                    <td>
+                        @(item.VehicleWeighingTimeComplete!=null?((DateTime)item.VehicleWeighingTimeComplete).ToString("HH:mm dd/MM/yyyy"):"")
+                    </td>
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle status-perfect" data-options='[

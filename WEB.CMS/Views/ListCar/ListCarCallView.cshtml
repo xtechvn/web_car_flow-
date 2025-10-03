@@ -32,7 +32,9 @@
                         <a class="btn-detail"
                            data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
                     </td>
-                    <td>@item.VehicleWeighingTimeComeOut?.ToString("HH:mm dd/MM/yyyy")</td>
+                    <td>
+                        @(((DateTime)item.VehicleWeighingTimeComeOut).ToString("HH:mm dd/MM/yyyy"))
+                    </td>
 
                     <td>
                         <div class="status-dropdown">
@@ -44,7 +46,7 @@
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
                             }
                 ]'
-                            @(ViewBag.type == 1 ? "disabled" : "")>
+                                    @(ViewBag.type == 1 ? "disabled" : "")>
                                 @item.TroughTypeName
                             </button>
 
