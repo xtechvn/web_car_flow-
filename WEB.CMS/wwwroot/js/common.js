@@ -53,15 +53,15 @@
             Stickyfill.add(stickyElements);
         }
         $("<div id='box_menu_before'></div>").insertBefore(".section_top");
-        //$(window).scroll(function () {
-        //    var top_start = $("#box_menu_before").position().top + 0;
-        //    if ($(window).scrollTop() >= top_start) {
-        //        $('.section_top').addClass('fixed');
-        //    } else if ($(window).scrollTop() <= top_start) {
+        $(window).scroll(function () {
+            var top_start = $("#box_menu_before").position().top + 0;
+            if ($(window).scrollTop() >= top_start) {
+                $('.section_top').addClass('fixed');
+            } else if ($(window).scrollTop() <= top_start) {
 
-        //        $('.section_top').removeClass('fixed');
-        //    }
-        //});
+                $('.section_top').removeClass('fixed');
+            }
+        });
 
     }
 

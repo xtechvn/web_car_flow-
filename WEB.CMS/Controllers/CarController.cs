@@ -498,6 +498,7 @@ namespace WEB.CMS.Controllers
                             if (status == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao)
                             {
                                 model.VehicleWeighingTimeComeOut = DateTime.Now;
+                                model.VehicleTroughStatus = (int)VehicleTroughStatus.Blank;
                             }
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if(detail.VehicleWeighedstatus==null && model.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank)
