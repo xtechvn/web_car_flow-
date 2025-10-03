@@ -67,7 +67,7 @@
 
     $(function () {
         backToTop();
-        fixStickyIE();
+        // fixStickyIE();
     });
     $(window).on('load resize', function () {
         resizeSite()

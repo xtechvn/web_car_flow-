@@ -363,7 +363,7 @@ button::-moz-focus-inner {
 
 .white-popup {
   position: relative;
-  background: #f4f4f4;
+  background: #fff;
   width: auto;
   max-width: 500px;
   margin: 20px auto;
@@ -945,15 +945,19 @@ button::-moz-focus-inner {
 }
 
 .title-popup {
-  padding: 15px;
-  background: #fff;
   font: 700 1.125rem arial;
   line-height: 1.5;
-  border-bottom: 1px solid #e5e5e5;
   font-family: "Merriweather", serif;
   font-size: 16px;
+  padding: 15px;
+  border-bottom:1px solid #E0E0E0;
 }
-
+.des-popup{
+  margin: 0;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #667085;
+}
 .content-popup {
   padding: 15px;
   font-size: 16px;
