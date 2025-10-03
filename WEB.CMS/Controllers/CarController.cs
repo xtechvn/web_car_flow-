@@ -343,7 +343,7 @@ namespace WEB.CMS.Controllers
                         break;
                     case 4:
                         {
-                            if(model.VehicleTroughStatus == null)
+                            if(model.VehicleTroughStatus == null || model.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
                             {
                                 model.VehicleTroughStatus = (int)VehicleTroughStatus.Da_goi;
                             }
