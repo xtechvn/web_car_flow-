@@ -242,6 +242,7 @@ namespace WEB.CMS.Controllers
                 model.VehicleTroughStatus = detail.VehicleTroughStatus;
                 model.LoadingStatus = detail.LoadingStatus;
                 model.VehicleWeighedstatus = detail.VehicleWeighedstatus;
+                model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
                 model.UpdatedBy = _UserId;
                 switch (type)
                 {
@@ -348,6 +349,7 @@ namespace WEB.CMS.Controllers
                             }
                             
                             var oldTrough = detail.TroughType; // giữ lại máng cũ
+                            model.TimeCallVehicleTroughTimeComeIn = DateTime.Now;
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
 
@@ -381,6 +383,10 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
+                            if (status == (int)VehicleTroughStatus.Boc_Hang)
+                                model.VehicleTroughTimeComeIn = DateTime.Now; 
+                            if (status == (int)VehicleTroughStatus.Hoan_thanh)
+                                model.VehicleTroughTimeComeOut = DateTime.Now;
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
                             if (model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)

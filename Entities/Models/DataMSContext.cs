@@ -27,6 +27,7 @@ namespace Entities.Models
         public virtual DbSet<UserDepart> UserDeparts { get; set; }
         public virtual DbSet<UserPosition> UserPositions { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<VehicleAudio> VehicleAudios { get; set; }
         public virtual DbSet<VehicleInspection> VehicleInspections { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -247,6 +248,25 @@ namespace Entities.Models
                     .HasConstraintName("FK_UserRole_User");
             });
 
+            modelBuilder.Entity<VehicleAudio>(entity =>
+            {
+                entity.ToTable("VehicleAudio");
+
+                entity.HasIndex(e => new { e.OrderNumber, e.PlateNumber }, "IX_VehicleAudio_Order_Plate");
+
+                entity.Property(e => e.AudioPath)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.PlateNumber)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<VehicleInspection>(entity =>
             {
                 entity.ToTable("VehicleInspection");
@@ -261,15 +281,15 @@ namespace Entities.Models
 
                 entity.Property(e => e.IssueUpdatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.LicenseNumber)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
+                entity.Property(e => e.LicenseNumber).HasMaxLength(30);
 
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RegisterDateOnline).HasColumnType("datetime");
+
+                entity.Property(e => e.TimeCallVehicleTroughTimeComeIn).HasColumnType("datetime");
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
 

@@ -34,6 +34,7 @@ namespace Entities.ViewModels.Car
         public int? LoadingStatus { get; set; }
         public int? VehicleWeighingStatus { get; set; }
         public int? VehicleWeighedstatus { get; set; }
+        public DateTime? TimeCallVehicleTroughTimeComeIn { get; set; }
     }
 
 }
