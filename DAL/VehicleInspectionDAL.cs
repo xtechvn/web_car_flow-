@@ -84,6 +84,7 @@ namespace DAL
             new SqlParameter("@LoadingStatus", (object?)model.LoadingStatus ?? DBNull.Value),
             new SqlParameter("@VehicleWeighedstatus", (object?)model.VehicleWeighedstatus ?? DBNull.Value),
             new SqlParameter("@VehicleWeighingStatus", (object?)model.VehicleWeighingStatus ?? DBNull.Value),
+            new SqlParameter("@TimeCallVehicleTroughTimeComeIn", (object?)model.TimeCallVehicleTroughTimeComeIn ?? DBNull.Value),
            
                 };
 
