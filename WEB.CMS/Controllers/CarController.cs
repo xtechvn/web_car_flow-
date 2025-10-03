@@ -389,7 +389,7 @@ namespace WEB.CMS.Controllers
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
-                            if (model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)
+                            if ((model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)&& status == (int)VehicleTroughStatus.Hoan_thanh)
                             {
                                 return Ok(new
                                 {
