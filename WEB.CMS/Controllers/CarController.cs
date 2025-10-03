@@ -424,6 +424,8 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
+                            if (status == (int)VehicleWeighingStatus.DA_Can_Ra)
+                                model.VehicleWeighingTimeComplete = DateTime.Now;
                             model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
