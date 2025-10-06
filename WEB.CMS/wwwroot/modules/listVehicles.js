@@ -250,12 +250,14 @@
     });
 
     connection.on("ListVehicles", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListCarCall_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable();

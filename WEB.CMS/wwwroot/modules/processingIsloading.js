@@ -309,11 +309,13 @@
     // Nhận data mới từ server
     connection.on("ListProcessingIsLoading_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
     connection.on("ListProcessingIsLoading", function (item) {
         const tbody = document.getElementById("dataBody-0");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });

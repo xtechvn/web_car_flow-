@@ -332,17 +332,20 @@
     // Nhận data mới từ server
     connection.on("ListCallTheScale_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
 
     connection.on("ListCallTheScale_0", function (item) {
         const tbody = document.getElementById("dataBody-0-0");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
     connection.on("ListCallTheScale_1", function (item) {
         const tbody = document.getElementById("dataBody-0-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
