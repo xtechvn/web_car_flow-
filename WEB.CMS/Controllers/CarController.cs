@@ -511,6 +511,7 @@ namespace WEB.CMS.Controllers
                             {
                                 model.VehicleWeighingTimeComeOut = DateTime.Now;
                                 model.VehicleTroughStatus = (int)VehicleTroughStatus.Blank;
+                                detail.VehicleWeighingTimeComeOut = DateTime.Now;
                             }
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if(detail.VehicleWeighedstatus==null && model.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank)
