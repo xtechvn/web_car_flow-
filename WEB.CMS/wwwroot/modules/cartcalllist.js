@@ -354,7 +354,7 @@
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListWeighedInput_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable();
     });
     connection.on("ListWeighedInput", function (item) {
