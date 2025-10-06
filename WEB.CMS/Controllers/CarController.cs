@@ -286,7 +286,11 @@ namespace WEB.CMS.Controllers
                         {
                             model.LoadType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
-
+                            var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                            var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == status);
+                            detail.LoadTypeName = allcode_detail.Description;
+                            await _hubContext.Clients.All.SendAsync("ListProcessingIsLoading", detail);
+                            
                         }
                         break;
                     case 3:
