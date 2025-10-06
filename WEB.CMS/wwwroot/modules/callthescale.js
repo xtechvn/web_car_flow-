@@ -154,7 +154,24 @@
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
-                var Status_type = _Call_The_Scale.UpdateStatus(id_row, val_TT, 3);
+                var Status_type = 0;
+                $.ajax({
+                    url: "/Car/UpdateStatus",
+                    type: "post",
+                    data: { id: id_row, status: val_TT, type: 3 },
+                    success: function (result) {
+                        status_type = result.status;
+                        if (result.status == 0) {
+                            _msgalert.success(result.msg)
+                            $.magnificPopup.close();
+                        } else {
+                            _msgalert.error(result.msg)
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Status: " + textStatus);
+                    }
+                });
                 if (Status_type == 0) {
                     $currentBtn
                         .text(text)
@@ -419,23 +436,7 @@ var _Call_The_Scale = {
     },
     UpdateStatus: function (id, status, type) {
         var status_type = 0
-        $.ajax({
-            url: "/Car/UpdateStatus",
-            type: "post",
-            data: { id: id, status: status, type: type },
-            success: function (result) {
-                status_type = result.status;
-                if (result.status == 0) {
-                    _msgalert.success(result.msg)
-                    $.magnificPopup.close();
-                } else {
-                    _msgalert.error(result.msg)
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log("Status: " + textStatus);
-            }
-        });
+       
         return status_type;
     },
 }

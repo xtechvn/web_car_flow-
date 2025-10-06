@@ -486,7 +486,7 @@ namespace WEB.CMS.Controllers
                         break;
                     case 9:
                         {
-                            if (detail.VehicleTroughStatus != null || model.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
+                            if ( model.VehicleTroughStatus != (int)VehicleTroughStatus.Blank)
                             {
                                 return Ok(new
                                 {
