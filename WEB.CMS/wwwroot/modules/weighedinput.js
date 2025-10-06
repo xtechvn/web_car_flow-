@@ -304,8 +304,12 @@
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable();
     });
-    connection.on("ListCallTheScale", function (item) {
-        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
+    connection.on("ListCallTheScale_0", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+
+    });
+    connection.on("ListCallTheScale_1", function (item) {
+        $('.CartoFactory_' + item.id).remove();
 
     });
     connection.onreconnecting(error => {
