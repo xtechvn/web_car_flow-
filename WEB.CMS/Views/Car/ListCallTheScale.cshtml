@@ -27,7 +27,7 @@
             <tbody id="dataBody-@ViewBag.type">
                 @foreach (var item in Model)
                 {
-                    <tr class="CartoFactory_@item.Id">
+                    <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                         <td>@item.RecordNumber</td>
                         <td>@(((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy"))</td>
                         <td>@item.CustomerName</td>
@@ -102,7 +102,7 @@ else
             <tbody id="dataBody-@ViewBag.type-@ViewBag.LoadType">
                 @foreach (var item in Model)
                 {
-                    <tr class="CartoFactory_@item.Id">
+                    <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                         <td>@item.RecordNumber</td>
                         <td>@item.PhoneNumber</td>
                         <td class="td-audio">
