@@ -42,7 +42,7 @@
                         @if (ViewBag.type == 1)
                         {
                             <div class="">
-                                <p class=" status-perfect Vehicle-Status" data-type="1">
+                                <p class="  Vehicle-Status" data-type="1">
                                     @item.LoadTypeName
                                 </p>
                             </div>
@@ -50,7 +50,7 @@
                         else
                         {
                             <div class="status-dropdown">
-                                <button class="dropdown-toggle status-perfect Vehicle-Status" data-type="1" data-options='[
+                                <button class="dropdown-toggle  Vehicle-Status" data-type="1" data-options='[
                                 @foreach (var allcode in AllCode2)
                                 {
                                     if (allcode.CodeValue == 0)
@@ -74,7 +74,7 @@
                     </td>
                     <td>
                         <div class="status-dropdown">
-                            <button class="dropdown-toggle status-perfect" data-options='[
+                            <button class="dropdown-toggle " data-options='[
                             @foreach (var allcode in AllCode)
                             {
 
