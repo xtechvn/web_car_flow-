@@ -1,4 +1,5 @@
-﻿using Entities.ViewModels;
+﻿using Entities.Models;
+using Entities.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -15,12 +16,14 @@ namespace WEB.CMS.Controllers
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _WebHostEnvironment;
         private readonly IRoleRepository _RoleRepository;
-        public UserController(IUserRepository userRepository, IConfiguration configuration, IWebHostEnvironment hostEnvironment, IRoleRepository roleRepository)
+        private readonly IDepartmentRepository _DepartmentRepository;
+        public UserController(IUserRepository userRepository, IConfiguration configuration, IWebHostEnvironment hostEnvironment, IRoleRepository roleRepository, IDepartmentRepository departmentRepository)
         {
             _UserRepository = userRepository;
             _configuration = configuration;
             _WebHostEnvironment = hostEnvironment;
             _RoleRepository = roleRepository;
+            _DepartmentRepository = departmentRepository;
         }
 
         public IActionResult Index()
@@ -183,5 +186,57 @@ namespace WEB.CMS.Controllers
                 return null;
             }
         }
+        public async Task<IActionResult> AddOrUpdate(int Id, bool IsClone = false)
+        {
+            try
+            {
+                var model = new User();
+                ViewBag.UserRoleList = null;
+                ViewBag.CompanyType = "";
+                if (Id != 0)
+                {
+
+                    model = await _UserRepository.FindById(Id);
+                    if (IsClone)
+                    {
+                        model = new User
+                        {
+                            FullName = model.FullName,
+                            UserName = model.UserName,
+                            Email = model.Email,
+                            Address = model.Address,
+                            BirthDay = model.BirthDay,
+                            Gender = model.Gender,
+                            Status = model.Status,
+                            Note = model.Note,
+                            DepartmentId = model.DepartmentId,
+                            Phone = model.Phone,
+                        };
+                    }
+                    var list_role_active = await _UserRepository.GetUserActiveRoleList(model.Id);
+                    if (list_role_active != null && list_role_active.Count > 0)
+                    {
+                        ViewBag.UserRoleList = list_role_active.Select(x => x.Id).ToList();
+                    }
+
+                }
+                else
+                {
+                    model.Gender = 1;
+                }
+
+                ViewBag.DepartmentList = await _DepartmentRepository.GetAll(String.Empty);
+                ViewBag.RoleList = await _RoleRepository.GetAll();
+                ViewBag.UserPosition = _UserRepository.GetUserPositions();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("AddOrUpdate - UserController: " + ex);
+                return Content("");
+            }
+
+        }
+        
     }
 }

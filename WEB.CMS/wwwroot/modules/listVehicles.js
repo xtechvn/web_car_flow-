@@ -180,7 +180,7 @@
         .build();
     const AllCode = [
         { Description: "Blank", CodeValue: "2" },
-        { Description: "Quay lại kiểm tra", CodeValue: "1" },
+       
         { Description: "Đã cân ra", CodeValue: "0" },
         // Add more objects as needed
     ];

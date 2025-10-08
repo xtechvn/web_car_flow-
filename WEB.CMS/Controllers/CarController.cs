@@ -2,6 +2,7 @@
 using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
@@ -359,6 +360,8 @@ namespace WEB.CMS.Controllers
 
                             if (UpdateCar > 0)
                             {
+                                var so_mang = status + 1;
+                                LogHelper.InsertLogTelegram("Mời xe biển số " + detail.VehicleNumber +" vào máng số "+ so_mang);
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
                                 detail.TroughTypeName = allcode_detail?.Description ?? "";

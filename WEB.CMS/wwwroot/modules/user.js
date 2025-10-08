@@ -8,21 +8,47 @@
     };
     _user.Init(_searchData);
 
-    $('#token-input-role').tokenInput('/Role/GetRoleSuggestionList', {
-        queryParam: "name",
-        hintText: "Nhập từ khóa tìm kiếm",
-        searchingText: "Đang tìm kiếm...",
-        placeholder: 'Nhập từ khóa tìm kiếm',
-        searchDelay: 500,
-        preventDuplicates: true,
-        minChars: 4,
-        noResultsText: "Không tìm thấy kết quả",
-        tokenLimit: 10,
-        onAdd: function (item) {
-            _user.OnChangeRoleId($(this).val());
+    //$('#token-input-role').tokenInput('/Role/GetRoleSuggestionList', {
+    //    queryParam: "name",
+    //    hintText: "Nhập từ khóa tìm kiếm",
+    //    searchingText: "Đang tìm kiếm...",
+    //    placeholder: 'Nhập từ khóa tìm kiếm',
+    //    searchDelay: 500,
+    //    preventDuplicates: true,
+    //    minChars: 4,
+    //    noResultsText: "Không tìm thấy kết quả",
+    //    tokenLimit: 10,
+    //    onAdd: function (item) {
+    //        _user.OnChangeRoleId($(this).val());
+    //    },
+    //    onDelete: function (item) {
+    //        _user.OnChangeRoleId($(this).val());
+    //    }
+    //});
+    $('.open-popup-link').magnificPopup({
+        type: 'inline',
+
+        // 💡 THÊM THUỘC TÍNH ITEMS VÀ CHỈ ĐỊNH ID NỘI DUNG
+        items: {
+            src: '#popup' // Chỉ định nội dung popup là thẻ div có ID="popup"
         },
-        onDelete: function (item) {
-            _user.OnChangeRoleId($(this).val());
+
+        midClick: true,
+        mainClass: 'mfp-with-zoom',
+        fixedContentPos: false,
+        fixedBgPos: true,
+        overflowY: 'auto',
+        closeBtnInside: true,
+        preloader: false,
+        removalDelay: 300,
+
+        // Thêm logic để đóng popup bằng nút "Bỏ qua" (Nếu cần)
+        callbacks: {
+            open: function () {
+                $('#popup .actions .cancel').off('click').on('click', function () {
+                    $.magnificPopup.close();
+                });
+            }
         }
     });
 });
@@ -205,81 +231,16 @@ var _user = {
     OnOpenCreateForm: function () {
         let title = 'Thêm người dùng';
         let url = '/user/AddOrUpdate';
-        _user.modal_element.find('.modal-title').html(title);
-        _user.modal_element.find('.modal-dialog').css('max-width', '900px');
-        _ajax_caller.get(url, { Id: 0 }, function (result) {
-            _user.modal_element.find('.modal-body').html(result);
-            $('.select2_modal').select2();
-            $('.DepartmentId').select2({
-                placeholder: "Chọn phòng ban"
-            });
-            $('.UserPositionId').select2({
-                placeholder: "Chọn chức vụ"
-            });
-            $('.select2_modal_multiple').select2({
-                placeholder: "Chọn vai trò"
-            });
-            $('.select2_modal_multiple').select2({
-                placeholder : "Chọn vai trò"
-            });
-            $('.datepicker-input').daterangepicker({
-                singleDatePicker: true,
-                showDropdowns: true,
-                minYear: 1901,
-                maxYear: parseInt(moment().format('YYYY'), 10),
-                locale: {
-                    format: 'DD/MM/YYYY'
-                }
-            }, function (start, end, label) {
-                $(this).val(start.format('MM/DD/YYYY'));
-                $(this).change();
-            });
-            _user.modal_element.modal('show');
-        });
-
-        //let param = { Id: 0 };
-        //_magnific.OpenLargerPopup(title, url, param);
+        let param = { Id: 0 };
+        _magnific.OpenSmallPopup(title, url, param);
     },
 
     OnOpenEditForm: function (id) {
         let title = 'Cập nhật người dùng';
         let url = '/user/AddOrUpdate';
 
-        _user.modal_element.find('.modal-title').html(title);
-        _user.modal_element.find('.modal-dialog').css('max-width', '900px');
-        _ajax_caller.get(url, { Id: id }, function (result) {
-            _user.modal_element.find('.modal-body').html(result);
-            $('.select2_modal').select2();
-            $('.select2_modal_multiple').select2({
-                placeholder: "Chọn vai trò"
-            });
-            $('.DepartmentId').select2({
-                placeholder: "Chọn phòng ban"
-            });
-            $('.UserPositionId').select2({
-                placeholder: "Chọn chức vụ"
-            });
-            $('.select2_modal_multiple').select2({
-                placeholder: "Chọn vai trò"
-            });
-            $('.datepicker-input').daterangepicker({
-                singleDatePicker: true,
-                showDropdowns: true,
-                minYear: 1901,
-                maxYear: parseInt(moment().format('YYYY'), 10),
-                locale: {
-                    format: 'DD/MM/YYYY'
-                }
-            }, function (start, end, label) {
-                $(this).val(start.format('MM/DD/YYYY'));
-                $(this).change();
-            });
-            _user.modal_element.modal('show');
-        });
-
-
-        //let param = { Id: id };
-        //_magnific.OpenLargerPopup(title, url, param);
+        let param = { Id: id };
+        _magnific.OpenLargerPopup(title, url, param);
     },
     OnOpenGenQrFrom: function (id) {
         let url = '/User/ViewConfirm';
@@ -420,7 +381,7 @@ var _user = {
             let UserPositionId = $('#UserPositionId').val();
             let DebtLimit = $('#DebtLimit').val();
             let Rank = $('#UserPositionId').find(':selected').attr('data-lvl');
-            formData.set("RoleId", roles != null ? roles.join(',') : "");
+            formData.set("RoleId", roles);
             formData.set("UserPositionId", UserPositionId != null ? UserPositionId : 0);
             formData.set("Rank", Rank != null ? Rank : 0);
             formData.set("DebtLimit", DebtLimit != null ? DebtLimit : 0);
@@ -590,5 +551,4 @@ var _user = {
             });
         });
     },
-    
 };
