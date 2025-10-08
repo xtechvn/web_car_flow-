@@ -274,7 +274,7 @@
         <td>${item.vehicleWeighingTimeComplete || ""}</td>
         <td>
             <div class="status-dropdown">
-                <button class="dropdown-toggle status-perfect ${isProcessed ? "disabled" : ""}"
+                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
                         data-type="1"
                         data-options='${jsonString}'
                         ${isProcessed ? "disabled" : ""}>

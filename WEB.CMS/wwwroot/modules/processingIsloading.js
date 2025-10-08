@@ -228,7 +228,7 @@
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect"  data-type="1" data-options='${jsonString}'>
+                    <button class="dropdown-toggle "  data-type="1" data-options='${jsonString}'>
                         ${item.loadTypeName}
                     </button>
                 </div>
@@ -236,7 +236,7 @@
             </td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                    <button class="dropdown-toggle " data-options='${jsonString2}'>
                         ${item.loadingStatusName}
                     </button>
                 </div>
@@ -259,7 +259,7 @@
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="">
-                    <p class=" status-perfect" >
+                    <p class=" " >
                         ${item.loadTypeName}
                     </p>
                 </div>
@@ -267,7 +267,7 @@
             </td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                    <button class="dropdown-toggle " data-options='${jsonString2}'>
                         ${item.loadingStatusName}
                     </button>
                 </div>
