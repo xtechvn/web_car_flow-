@@ -361,7 +361,7 @@ namespace WEB.CMS.Controllers
                             if (UpdateCar > 0)
                             {
                                 var so_mang = status + 1;
-                                LogHelper.InsertLogTelegram("Mời xe biển số " + detail.VehicleNumber +" vào máng số "+ so_mang);
+                                LogHelper.InsertLogTelegram("Xin mời xe biển số " + detail.VehicleNumber + " của tài xế "+ detail.DriverName + " di chuyển vào máng số " + so_mang+". Trân trọng!");
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
                                 detail.TroughTypeName = allcode_detail?.Description ?? "";
