@@ -365,6 +365,14 @@
         $('#dataBody-0-0').find('.CartoFactory_' + item.id).remove();
         $('#dataBody-0-1').find('.CartoFactory_' + item.id).remove();
     });
+    connection.on("ListWeighedInput_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListWeighedInput", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });

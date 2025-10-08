@@ -388,7 +388,14 @@
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
 
     });
-
+    connection.on("ListVehicles_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListVehicles", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
 
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

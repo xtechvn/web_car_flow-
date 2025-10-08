@@ -328,8 +328,19 @@
     connection.on("ListCartoFactory", function (item) {
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
     });
-
-   
+    connection.on("ListCallTheScale_Da_SL", function (item) {
+        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListCallTheScale_0", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ListCallTheScale_1", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
 
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

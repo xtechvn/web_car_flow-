@@ -295,7 +295,14 @@
         tbody.insertAdjacentHTML("beforeend", renderRow2(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
-
+    connection.on("ListProcessingIsLoading_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListProcessingIsLoading", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });
