@@ -6,6 +6,11 @@
     var AllCode2 = (List<AllCode>)ViewBag.AllCode2;
 }
 @model List<CartoFactoryModel>
+<style>
+    .data-table td {
+        white-space: unset !important;
+    }
+</style>
 @if (Model != null && Model.Count > 0)
 {
     <table class="data-table">
