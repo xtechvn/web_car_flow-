@@ -14,7 +14,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IAllCodeRepository, AllCodeRepository>();
+builder.Services.AddSingleton<IVehicleInspectionRepository, VehicleInspectionRepository>();
+builder.Services.AddSingleton<IRoleRepository, RoleRepository>();
+builder.Services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
