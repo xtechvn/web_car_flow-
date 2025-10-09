@@ -54,7 +54,9 @@
                         <td>
                             <button class="open-audio" style="width:40px !important">
                                 <span class="icon "><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
-
+                                <audio id="myAudio_@item.Id" controls style="display:none!important;">
+                                    <source src="@item.AudioPath" type="audio/mpeg" />
+                                </audio>
                             </button>
                         </td>
                     </tr>
