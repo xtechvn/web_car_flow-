@@ -1,6 +1,7 @@
 ﻿using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,28 @@ namespace Web.Cargill.Api.Controllers
 
         }
         [HttpPost("Insert")]
-        public async Task<IActionResult> Insert(RegistrationRecord record)
+        public async Task<IActionResult> Insert([FromBody] RegistrationRecord record)
         {
            
             try
             {
 
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(record);
+                string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
+                record.Bookingid = id;
+                var client = new HttpClient();
+                var request = new HttpRequestMessage(HttpMethod.Post, url_n8n);
+                request.Content = new StringContent(JsonConvert.SerializeObject(record), null, "application/json");
+                var response = await client.SendAsync(request);
+               if(response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thành công: " + responseContent);
+                }
+                else
+                {
+                    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại: " + response.StatusCode);
+                }
                 return Ok(new
                 { 
                     status= (int)ResponseType.SUCCESS,
