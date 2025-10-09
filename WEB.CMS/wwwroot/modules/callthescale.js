@@ -97,26 +97,51 @@
         $menu.append($actions);
         container.append($menu);
 
-        // Tính toán vị trí
-        const btnOffset = $btn.offset();
-        const btnHeight = $btn.outerHeight();
-        const menuHeight = $menu.outerHeight();
-        const winHeight = $(window).height();
-        let top = btnOffset.top + btnHeight;
-        let dropUp = false;
 
+        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
+        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
+        const btnHeight = rect.height;
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        $menu.css({
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            display: 'block',
+            visibility: 'hidden'
+        });
+
+        const menuWidth = $menu.outerWidth();
+        const menuHeight = $menu.outerHeight();
+
+        // Vị trí mặc định: bên dưới button (viewport coords)
+        let left = rect.left;
+        let top = rect.top + btnHeight;
+
+        // Nếu dropdown tràn phải -> dịch sang trái
+        if (left + menuWidth + paddingScreen > winWidth) {
+            left = winWidth - menuWidth - paddingScreen;
+        }
+
+        // Nếu tràn trái -> giữ cách paddingScreen
+        if (left < paddingScreen) {
+            left = paddingScreen;
+        }
+
+        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
         if (top + menuHeight > winHeight) {
-            top = btnOffset.top - menuHeight;
-            dropUp = true;
+            top = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
+        // Áp vị trí cuối cùng và hiển thị menu
         $menu.css({
-            left: btnOffset.left,
+            left: left,
             top: top,
-            display: 'block'
+            visibility: 'visible' // hiện lên
         });
     });
 
@@ -154,7 +179,24 @@
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
-                var Status_type = _Call_The_Scale.UpdateStatus(id_row, val_TT, 3);
+                var Status_type = 0;
+                $.ajax({
+                    url: "/Car/UpdateStatus",
+                    type: "post",
+                    data: { id: id_row, status: val_TT, type: 3 },
+                    success: function (result) {
+                        status_type = result.status;
+                        if (result.status == 0) {
+                            _msgalert.success(result.msg)
+                            $.magnificPopup.close();
+                        } else {
+                            _msgalert.error(result.msg)
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Status: " + textStatus);
+                    }
+                });
                 if (Status_type == 0) {
                     $currentBtn
                         .text(text)
@@ -166,6 +208,7 @@
 
                     if (val_TT == 1) {
                         $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                       
 
                     } else {
                         $('#dataBody-0-0').find('.CartoFactory_' + id_row).remove();
@@ -221,7 +264,7 @@
             <td>${item.loadTypeName}</td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                    <button class="dropdown-toggle " data-options='${jsonString}'>
                         ${item.vehicleWeighingTypeName}
                     </button>
                 </div>
@@ -289,17 +332,20 @@
     // Nhận data mới từ server
     connection.on("ListCallTheScale_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
 
     connection.on("ListCallTheScale_0", function (item) {
         const tbody = document.getElementById("dataBody-0-0");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
     connection.on("ListCallTheScale_1", function (item) {
         const tbody = document.getElementById("dataBody-0-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
@@ -318,6 +364,14 @@
     connection.on("ListProcessingIsLoading", function (item) {
         $('#dataBody-0-0').find('.CartoFactory_' + item.id).remove();
         $('#dataBody-0-1').find('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListWeighedInput_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListWeighedInput", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_Da_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
@@ -418,23 +472,7 @@ var _Call_The_Scale = {
     },
     UpdateStatus: function (id, status, type) {
         var status_type = 0
-        $.ajax({
-            url: "/Car/UpdateStatus",
-            type: "post",
-            data: { id: id, status: status, type: type },
-            success: function (result) {
-                status_type = result.status;
-                if (result.status == 0) {
-                    _msgalert.success(result.msg)
-                    $.magnificPopup.close();
-                } else {
-                    _msgalert.error(result.msg)
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log("Status: " + textStatus);
-            }
-        });
+       
         return status_type;
     },
 }

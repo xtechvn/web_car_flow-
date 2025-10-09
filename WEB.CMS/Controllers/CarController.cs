@@ -2,6 +2,7 @@
 using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
@@ -242,6 +243,7 @@ namespace WEB.CMS.Controllers
                 model.VehicleTroughStatus = detail.VehicleTroughStatus;
                 model.LoadingStatus = detail.LoadingStatus;
                 model.VehicleWeighedstatus = detail.VehicleWeighedstatus;
+                model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
                 model.UpdatedBy = _UserId;
                 switch (type)
                 {
@@ -276,7 +278,7 @@ namespace WEB.CMS.Controllers
                                 }
                                 else
                                 {
-                                    await _hubContext.Clients.All.SendAsync(" ", detail);
+                                    await _hubContext.Clients.All.SendAsync("ListCartoFactory", detail);
                                 }
                             }
                         }
@@ -285,7 +287,11 @@ namespace WEB.CMS.Controllers
                         {
                             model.LoadType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
-
+                            var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.LOAD_TYPE);
+                            var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == status);
+                            detail.LoadTypeName = allcode_detail.Description;
+                            await _hubContext.Clients.All.SendAsync("ListProcessingIsLoading", detail);
+                            
                         }
                         break;
                     case 3:
@@ -342,17 +348,20 @@ namespace WEB.CMS.Controllers
                         break;
                     case 4:
                         {
-                            if(model.VehicleTroughStatus == null)
+                            if(model.VehicleTroughStatus == null || model.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
                             {
                                 model.VehicleTroughStatus = (int)VehicleTroughStatus.Da_goi;
                             }
                             
                             var oldTrough = detail.TroughType; // giữ lại máng cũ
+                            model.TimeCallVehicleTroughTimeComeIn = DateTime.Now;
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
 
                             if (UpdateCar > 0)
                             {
+                                var so_mang = status + 1;
+                                LogHelper.InsertLogTelegram("Xin mời xe biển số " + detail.VehicleNumber + " của tài xế "+ detail.DriverName + " di chuyển vào máng số " + so_mang+". Trân trọng!");
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
                                 detail.TroughTypeName = allcode_detail?.Description ?? "";
@@ -381,9 +390,13 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
+                            if (status == (int)VehicleTroughStatus.Boc_Hang)
+                                model.VehicleTroughTimeComeIn = DateTime.Now; 
+                            if (status == (int)VehicleTroughStatus.Hoan_thanh)
+                                model.VehicleTroughTimeComeOut = DateTime.Now;
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
-                            if (model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)
+                            if ((model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)&& status == (int)VehicleTroughStatus.Hoan_thanh)
                             {
                                 return Ok(new
                                 {
@@ -418,6 +431,8 @@ namespace WEB.CMS.Controllers
                                     msg = "Cập nhật không thành công.Tình trạng xe không thay đổi"
                                 });
                             }
+                            if (status == (int)VehicleWeighingStatus.DA_Can_Ra)
+                                model.VehicleWeighingTimeComplete = DateTime.Now;
                             model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
@@ -478,7 +493,7 @@ namespace WEB.CMS.Controllers
                         break;
                     case 9:
                         {
-                            if (detail.VehicleTroughStatus != null)
+                            if ( model.VehicleTroughStatus != (int)VehicleTroughStatus.Blank && model.VehicleTroughStatus != null)
                             {
                                 return Ok(new
                                 {
@@ -498,8 +513,14 @@ namespace WEB.CMS.Controllers
                             if (status == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao)
                             {
                                 model.VehicleWeighingTimeComeOut = DateTime.Now;
+                                model.VehicleTroughStatus = (int)VehicleTroughStatus.Blank;
+                                detail.VehicleWeighingTimeComeOut = DateTime.Now;
                             }
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+                            if(detail.VehicleWeighedstatus==null && model.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank)
+                            {
+                                break;
+                            }
                             if (UpdateCar > 0)
                             {
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHEDSTATUS);

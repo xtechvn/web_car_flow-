@@ -271,14 +271,30 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Camp = request.Camp,
                     Type = 0
                 };
-                var InsertMG = await _mongoService.Insert(registrationRecord); 
-                if (InsertMG == 0)
-                {
-                    InsertMG = await _mongoService.Insert(registrationRecord);
-                }
-            
+                //var InsertMG = await _mongoService.Insert(registrationRecord); 
+                //if (InsertMG == 0)
+                //{
+                //    InsertMG = await _mongoService.Insert(registrationRecord);
+                //}
+                var message = $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
+                 $" Tên khách hàng: {registrationRecord.Name}\n" +
+                 $"📱 Số điện thoại: {registrationRecord.PhoneNumber}\n" +
+                 $"🚗 Biển số xe: {registrationRecord.PlateNumber}\n" +
+                 $"🚗 Trọng tải xe: {registrationRecord.Referee}\n" +
+                 $"🎫 Hoàn hảo/Trại : {registrationRecord.GPLX}\n" +
+                 $"🎫 Số thứ tự của bạn: {registrationRecord.QueueNumber:D3}\n" +
+                 $"⏰ Thời gian đăng ký: {registrationRecord.RegistrationTime:dd/MM/yyyy HH:mm}\n\n" +
+                 $"📍 VUI LÒNG:\n" +
+                 $"• Chuẩn bị đầy đủ giấy tờ xe\n" +
+                 $"• Có mặt đúng giờ theo thứ tự\n" +
+                 $"• Theo dõi cập nhật qua Zalo\n\n" +
+                 $"🔔 Chúng tôi sẽ thông báo khi đến lượt bạn!\n\n" +
+                 $"📞 Hotline hỗ trợ: 1900-1234\n" +
+                 $"🌐 Website: https://cargillhanam.com\n\n" +
+                 $"Cảm ơn bạn đã sử dụng dịch vụ! ";
+                LogHelper.InsertLogTelegram(message);
                 //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-               await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
+                await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)

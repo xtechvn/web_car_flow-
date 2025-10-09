@@ -66,26 +66,3 @@
     },
 
 }
-const express = require('express');
-const fetch = require('node-fetch');
-const app = express();
-
-app.get('/api/tts', async (req, res) => {
-    const text = req.query.text || 'Xin chào';
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=${encodeURIComponent(text)}`;
-
-    const response = await fetch(url, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0'
-        }
-    });
-
-    if (!response.ok) {
-        return res.status(500).send("Google TTS error");
-    }
-
-    res.set('Content-Type', 'audio/mpeg');
-    response.body.pipe(res);
-});
-
-app.listen(3000, () => console.log('Server chạy ở http://localhost:3000'));

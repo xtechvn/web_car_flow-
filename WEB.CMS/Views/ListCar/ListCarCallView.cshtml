@@ -6,13 +6,18 @@
     var AllCode2 = (List<AllCode>)ViewBag.AllCode2;
 }
 @model List<CartoFactoryModel>
+<style>
+    .data-table td {
+        white-space: unset !important;
+    }
+</style>
 @if (Model != null && Model.Count > 0)
 {
     <table class="data-table">
         <thead>
             <tr>
                 <th>STT</th>
-                <th>Tên KH (Trại, đại lý)</th>
+                <th style="width:100px!important">Tên KH (Trại, đại lý)</th>
                 <th>Tên lái xe</th>
                 <th>Biển số xe</th>
                 <th>Giờ cân xong đầu vào</th>
@@ -32,7 +37,9 @@
                         <a class="btn-detail"
                            data-id="@item.Id" style="cursor:pointer">@item.VehicleNumber</a>
                     </td>
-                    <td>@item.VehicleWeighingTimeComplete</td>
+                    <td>
+                        @(((DateTime)item.VehicleWeighingTimeComeOut).ToString("HH:mm dd/MM/yyyy"))
+                    </td>
 
                     <td>
                         <div class="status-dropdown">
@@ -44,7 +51,7 @@
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode2.Last() ? "," : "")
                             }
                 ]'
-                            @(ViewBag.type == 1 ? "disabled" : "")>
+                                    @(ViewBag.type == 1 ? "disabled" : "")>
                                 @item.TroughTypeName
                             </button>
 
@@ -52,9 +59,12 @@
                     </td>
                     <td>
                         <input type="text"
-                               class="input-form weight"
+                               class="input-form weight @(ViewBag.type == 1 ? "disabled" : "")"
+                               maxlength="8"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,8);"
                                value="@(item.VehicleTroughWeight > 0 ? item.VehicleTroughWeight.ToString() : "")"
-                               placeholder="Vui lòng nhập" />
+                               placeholder="Vui lòng nhập" @(ViewBag.type == 1 ? "disabled" : "") />
+
 
                     </td>
                     <td>

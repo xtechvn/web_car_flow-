@@ -59,26 +59,51 @@
         $menu.append($actions);
         container.append($menu);
 
-        // Tính toán vị trí
-        const btnOffset = $btn.offset();
-        const btnHeight = $btn.outerHeight();
-        const menuHeight = $menu.outerHeight();
-        const winHeight = $(window).height();
-        let top = btnOffset.top + btnHeight;
-        let dropUp = false;
 
+        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
+        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
+        const btnHeight = rect.height;
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        $menu.css({
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            display: 'block',
+            visibility: 'hidden'
+        });
+
+        const menuWidth = $menu.outerWidth();
+        const menuHeight = $menu.outerHeight();
+
+        // Vị trí mặc định: bên dưới button (viewport coords)
+        let left = rect.left;
+        let top = rect.top + btnHeight;
+
+        // Nếu dropdown tràn phải -> dịch sang trái
+        if (left + menuWidth + paddingScreen > winWidth) {
+            left = winWidth - menuWidth - paddingScreen;
+        }
+
+        // Nếu tràn trái -> giữ cách paddingScreen
+        if (left < paddingScreen) {
+            left = paddingScreen;
+        }
+
+        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
         if (top + menuHeight > winHeight) {
-            top = btnOffset.top - menuHeight;
-            dropUp = true;
+            top = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
+        // Áp vị trí cuối cùng và hiển thị menu
         $menu.css({
-            left: btnOffset.left,
+            left: left,
             top: top,
-            display: 'block'
+            visibility: 'visible' // hiện lên
         });
     });
 
@@ -203,7 +228,7 @@
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect"  data-type="1" data-options='${jsonString}'>
+                    <button class="dropdown-toggle "  data-type="1" data-options='${jsonString}'>
                         ${item.loadTypeName}
                     </button>
                 </div>
@@ -211,7 +236,7 @@
             </td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                    <button class="dropdown-toggle " data-options='${jsonString2}'>
                         ${item.loadingStatusName}
                     </button>
                 </div>
@@ -234,7 +259,7 @@
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="">
-                    <p class=" status-perfect" >
+                    <p class=" " >
                         ${item.loadTypeName}
                     </p>
                 </div>
@@ -242,7 +267,7 @@
             </td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString2}'>
+                    <button class="dropdown-toggle " data-options='${jsonString2}'>
                         ${item.loadingStatusName}
                     </button>
                 </div>
@@ -284,11 +309,13 @@
     // Nhận data mới từ server
     connection.on("ListProcessingIsLoading_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
     connection.on("ListProcessingIsLoading", function (item) {
         const tbody = document.getElementById("dataBody-0");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
@@ -301,8 +328,19 @@
     connection.on("ListCartoFactory", function (item) {
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
     });
-
-   
+    connection.on("ListCallTheScale_Da_SL", function (item) {
+        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListCallTheScale_0", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ListCallTheScale_1", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
 
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

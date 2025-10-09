@@ -62,25 +62,51 @@
         container.append($menu);
 
         // Tính toán vị trí
-        const btnOffset = $btn.offset();
-        const btnHeight = $btn.outerHeight();
-        const menuHeight = $menu.outerHeight();
-        const winHeight = $(window).height();
-        let top = btnOffset.top + btnHeight;
-        let dropUp = false;
 
+        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
+        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
+        const btnHeight = rect.height;
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        $menu.css({
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            display: 'block',
+            visibility: 'hidden'
+        });
+
+        const menuWidth = $menu.outerWidth();
+        const menuHeight = $menu.outerHeight();
+
+        // Vị trí mặc định: bên dưới button (viewport coords)
+        let left = rect.left;
+        let top = rect.top + btnHeight;
+
+        // Nếu dropdown tràn phải -> dịch sang trái
+        if (left + menuWidth + paddingScreen > winWidth) {
+            left = winWidth - menuWidth - paddingScreen;
+        }
+
+        // Nếu tràn trái -> giữ cách paddingScreen
+        if (left < paddingScreen) {
+            left = paddingScreen;
+        }
+
+        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
         if (top + menuHeight > winHeight) {
-            top = btnOffset.top - menuHeight;
-            dropUp = true;
+            top = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
+        // Áp vị trí cuối cùng và hiển thị menu
         $menu.css({
-            left: btnOffset.left,
+            left: left,
             top: top,
-            display: 'block'
+            visibility: 'visible' // hiện lên
         });
     });
 
@@ -99,7 +125,7 @@
 
     // ✅ Xác nhận – đổi text + class cho button
     // Khi chọn máng xuất trong dropdown (type=1)
-    $(document).on('click', '#dropdown-container .actions .confirm', function (e) {
+    $(document).on('click', '#dropdown-container .actions .confirm', async function (e) {
         debugger
         e.stopPropagation();
 
@@ -120,29 +146,38 @@
                 }
 
                 // cập nhật giao diện dropdown
-                $currentBtn
-                    .text(text)
-                    .removeClass(function (_, old) {
-                        return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                    })
-                    .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
+            
 
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
                     // update máng xuất
-                    _cartcalllist.UpdateStatus(id_row, val_TT, 4);
-
+                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 4);
+                    if (status_type == 0) {
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            })
+                            .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
+                    }
                     // gọi SignalR thông báo cho tất cả client
                     connection.invoke("BroadcastUpdateMang", val_TT, "Đang xử lý")
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
-                    _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
-
+                    var status_type=await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+                    
                     if (val_TT != 0) {
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
-
+                    if (status_type == 0) {
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            })
+                            .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
+                    }
 
                     // nếu trạng thái kết thúc → giải phóng máng
                     if (val_TT == 0) {
@@ -239,7 +274,7 @@
         <td>${item.vehicleWeighingTimeComplete || ""}</td>
         <td>
             <div class="status-dropdown">
-                <button class="dropdown-toggle status-perfect ${isProcessed ? "disabled" : ""}"
+                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
                         data-type="1"
                         data-options='${jsonString}'
                         ${isProcessed ? "disabled" : ""}>
@@ -247,12 +282,13 @@
                 </button>
             </div>
         </td>
-        <td>
-            <input type="text"
-                   class="input-form weight"
-                   value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
-                   placeholder="Vui lòng nhập" />
-        </td>
+      <td>
+        <input type="text"
+               class="input-form weight"
+               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+               placeholder="Vui lòng nhập"
+               ${isProcessed ? "disabled" : ""} />
+    </td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle"
@@ -301,6 +337,7 @@
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
     connection.on("ListCarCall_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
@@ -344,14 +381,21 @@
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListWeighedInput_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable();
     });
     connection.on("ListWeighedInput", function (item) {
         $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
 
     });
-
+    connection.on("ListVehicles_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+    });
+    connection.on("ListVehicles", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
 
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
@@ -463,12 +507,14 @@ var _cartcalllist = {
             }
         });
     },
-    UpdateStatus: function (id, status, type, weight) {
+    UpdateStatus: async function (id, status, type, weight) {
+        var status_type = 1
         $.ajax({
             url: "/Car/UpdateStatus",
             type: "post",
             data: { id: id, status: status, type: type, weight: weight },
             success: function (result) {
+                status_type = result.status;
                 if (result.status == 0) {
                     _msgalert.success(result.msg);
 
@@ -488,11 +534,14 @@ var _cartcalllist = {
                 } else {
                     _msgalert.error(result.msg);
                 }
+               
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
             }
+              
         });
+        return await status_type;
     }
 
 }

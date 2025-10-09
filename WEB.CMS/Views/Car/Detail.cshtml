@@ -27,7 +27,7 @@
                     <tr>
                         <td class="label">Giờ gọi vào máng xuất</td>
                         <td class="value highlight">
-                            @(Model.IssueUpdatedDate?.ToString("HH:mm dd/MM/yyyy"))
+                            @(Model.TimeCallVehicleTroughTimeComeIn?.ToString("HH:mm dd/MM/yyyy"))
                         </td>
                     </tr>
                     <tr>
@@ -39,7 +39,7 @@
                     <tr>
                         <td class="label">Giờ hoàn thành</td>
                         <td class="value highlight">
-                            @(Model.VehicleWeighingTimeComplete?.ToString("HH:mm dd/MM/yyyy"))
+                            @(Model.VehicleTroughTimeComeOut?.ToString("HH:mm dd/MM/yyyy"))
                         </td>
                     </tr>
                 </tbody>

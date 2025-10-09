@@ -58,26 +58,51 @@
         $menu.append($actions);
         container.append($menu);
 
-        // Tính toán vị trí
-        const btnOffset = $btn.offset();
-        const btnHeight = $btn.outerHeight();
-        const menuHeight = $menu.outerHeight();
-        const winHeight = $(window).height();
-        let top = btnOffset.top + btnHeight;
-        let dropUp = false;
 
+        // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) ---
+        const rect = $btn[0].getBoundingClientRect(); // viewport coordinates
+        const btnHeight = rect.height;
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const paddingScreen = 15; // chừa khoảng 15px mỗi bên
+        $menu.css({
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            display: 'block',
+            visibility: 'hidden'
+        });
+
+        const menuWidth = $menu.outerWidth();
+        const menuHeight = $menu.outerHeight();
+
+        // Vị trí mặc định: bên dưới button (viewport coords)
+        let left = rect.left;
+        let top = rect.top + btnHeight;
+
+        // Nếu dropdown tràn phải -> dịch sang trái
+        if (left + menuWidth + paddingScreen > winWidth) {
+            left = winWidth - menuWidth - paddingScreen;
+        }
+
+        // Nếu tràn trái -> giữ cách paddingScreen
+        if (left < paddingScreen) {
+            left = paddingScreen;
+        }
+
+        // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
         if (top + menuHeight > winHeight) {
-            top = btnOffset.top - menuHeight;
-            dropUp = true;
+            top = rect.top - menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
         }
 
+        // Áp vị trí cuối cùng và hiển thị menu
         $menu.css({
-            left: btnOffset.left,
+            left: left,
             top: top,
-            display: 'block'
+            visibility: 'visible' // hiện lên
         });
     });
 
@@ -114,27 +139,39 @@
 
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
+                const $btn = $currentBtn; // copy lại trước khi gọi Ajax
+                $.ajax({
+                    url: "/Car/UpdateStatus",
+                    type: "post",
+                    data: { id: id_row, status: val_TT, type: 9 },
+                    success: function (result) {
+                        status_type = result.status;
+                        if (result.status == 0) {
+                            _msgalert.success(result.msg)
+                            $btn
+                                .text(text)
+                                .removeClass(function (_, old) {
+                                    return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                                }) // xoá các class status- cũ
+                                .addClass(cls); // gắn class mới (status-arrived, status-blank…)\
+                            if (val_TT == 1) {
+                                $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                               
 
-
-        
-
-                var Status_type = _Weighed_Input.UpdateStatus(id_row, val_TT, 9);
-                if (Status_type == 0) {
-                    $currentBtn
-                        .text(text)
-                        .removeClass(function (_, old) {
-                            return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                        }) // xoá các class status- cũ
-                        .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                    if (val_TT == 1) {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-
-                    } else {
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            } else {
+                                $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            }
+                        } else {
+                            _msgalert.error(result.msg)
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Status: " + textStatus);
                     }
-                }
-            
-            }        }
+                });
+
+            }
+        }
         closeMenu();
     });
 
@@ -167,11 +204,18 @@
     const jsonString = JSON.stringify(options);
     // Hàm render row
     function renderRow(item) {
-
+        var date = new Date(item.registerDateOnline);
+        let formatted =
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear() + " " +
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + ":" +
+            String(date.getSeconds()).padStart(2, '0');
         return `
-        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" data-LoadType="${item.loadType}" >
             <td>${item.recordNumber}</td>
-            <td>${item.registerDateOnline}</td>
+            <td>${formatted}</td>
             <td>${item.customerName}</td>
             <td>${item.driverName}</td>
             <td>${item.phoneNumber}</td>
@@ -179,7 +223,7 @@
             <td>${item.loadTypeName}</td>
             <td>
                 <div class="status-dropdown">
-                    <button class="dropdown-toggle status-perfect" data-options='${jsonString}'>
+                    <button class="dropdown-toggle " data-options='${jsonString}'>
                         ${item.vehicleWeighedstatusName}
                     </button>
                 </div>
@@ -203,6 +247,19 @@
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
+    function sortTable_Da_SL2() {
+        const tbody = document.getElementById("dataBody-1");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-LoadType") || 0);
+            const qb = parseInt(b.getAttribute("data-LoadType") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
     function sortTable() {
         const tbody = document.getElementById("dataBody-0");
         const rows = Array.from(tbody.querySelectorAll("tr"));
@@ -216,20 +273,37 @@
         tbody.innerHTML = "";
         rows.forEach(r => tbody.appendChild(r));
     }
+    function sortTable2() {
+        const tbody = document.getElementById("dataBody-0");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const qa = parseInt(a.getAttribute("data-LoadType") || 0);
+            const qb = parseInt(b.getAttribute("data-LoadType") || 0);
+            return qa - qb;
+        });
+
+        tbody.innerHTML = "";
+        rows.forEach(r => tbody.appendChild(r));
+    }
     connection.start()
         .then(() => console.log("✅ Kết nối SignalR thành công"))
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
     connection.on("ListWeighedInput_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+        sortTable_Da_SL2(); // sắp xếp lại ngay khi thêm
     });
 
     connection.on("ListWeighedInput", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
+        sortTable2(); // sắp xếp lại ngay khi thêm
     });
     // Nhận data mới từ gọi xe cân đầu vào
     connection.on("ListCallTheScale_Da_SL", function (item) {
@@ -237,9 +311,24 @@
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable();
     });
-    connection.on("ListCallTheScale", function (item) {
-        $('#dataBody-0').find('.CartoFactory_' + item.id).remove();
-       
+    connection.on("ListCallTheScale_0", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+
+    });
+    connection.on("ListCallTheScale_1", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+
+    });
+    connection.on("ListCarCall_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+
+    });
+    connection.on("ListCarCall", function (item) {
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+        sortTable_Da_SL2(); // sắp xếp lại ngay khi thêm
+
     });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
