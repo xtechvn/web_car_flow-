@@ -250,6 +250,7 @@
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
     connection.on("ListVehicles_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm

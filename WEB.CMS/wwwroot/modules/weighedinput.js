@@ -349,8 +349,8 @@ var _Weighed_Input = {
     },
     ListWeighedInput: function () {
         var model = {
-            VehicleNumber: $('#input_Weighed_Input_Chua_SL').val(),
-            PhoneNumber: $('#input_Weighed_Input_Chua_SL').val(),
+            VehicleNumber: $('#input_Weighed_Input_Chua_SL').val() != undefined && $('#input_Weighed_Input_Chua_SL').val() != "" ? $('#input_Weighed_Input_Chua_SL').val().trim() : "",
+            PhoneNumber: $('#input_Weighed_Input_Chua_SL').val() != undefined && $('#input_Weighed_Input_Chua_SL').val() != "" ? $('#input_Weighed_Input_Chua_SL').val().trim() : "", 
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -376,8 +376,8 @@ var _Weighed_Input = {
     },
     ListWeighedInput_Da_SL: function () {
         var model = {
-            VehicleNumber: $('#input_Weighed_Input_Da_SL').val(),
-            PhoneNumber: $('#input_Weighed_Input_Da_SL').val(),
+            VehicleNumber: $('#input_Weighed_Input_Da_SL').val() != undefined && $('#input_Weighed_Input_Da_SL').val() != "" ? $('#input_Weighed_Input_Da_SL').val().trim() : "",
+            PhoneNumber: $('#input_Weighed_Input_Da_SL').val() != undefined && $('#input_Weighed_Input_Da_SL').val() != "" ? $('#input_Weighed_Input_Da_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,

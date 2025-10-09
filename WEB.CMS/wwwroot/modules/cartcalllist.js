@@ -146,7 +146,7 @@
                 }
 
                 // cập nhật giao diện dropdown
-            
+
 
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
@@ -165,8 +165,8 @@
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
-                    var status_type=await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
-                    
+                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+
                     if (val_TT != 0) {
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
@@ -265,13 +265,21 @@
     const jsonString2 = JSON.stringify(options2);
     // Hàm render row
     function renderRow(item, isProcessed) {
+        var date = new Date(item.vehicleWeighingTimeComeOut);
+        let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear();
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
         <td>${item.customerName}</td>
         <td>${item.driverName}</td>
-        <td>${item.vehicleNumber}</td>
-        <td>${item.vehicleWeighingTimeComplete || ""}</td>
+        <td><a class="btn-detail"
+                           data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
+        <td>${formatted || ""}</td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
@@ -452,8 +460,8 @@ var _cartcalllist = {
     },
     ListCartoFactory: function () {
         var model = {
-            VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(),
+            VehicleNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -481,8 +489,8 @@ var _cartcalllist = {
     ListCartoFactory_Da_SL: function () {
 
         var model = {
-            VehicleNumber: $('#input_da_xu_ly').val(),
-            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -534,12 +542,12 @@ var _cartcalllist = {
                 } else {
                     _msgalert.error(result.msg);
                 }
-               
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
             }
-              
+
         });
         return await status_type;
     }

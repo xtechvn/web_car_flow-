@@ -292,7 +292,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                  $"📞 Hotline hỗ trợ: 1900-1234\n" +
                  $"🌐 Website: https://cargillhanam.com\n\n" +
                  $"Cảm ơn bạn đã sử dụng dịch vụ! ";
-                LogHelper.InsertLogTelegram(message);
+               
                 //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
                 await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
@@ -313,6 +313,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}");
                     }
                 }
+                LogHelper.InsertLogTelegram(message);
                 // Return success response
                 return Ok(new CarRegistrationResponse
                 {

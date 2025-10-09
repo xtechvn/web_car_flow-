@@ -394,8 +394,8 @@ var _Call_The_Scale = {
     },
     ListCallTheScale: function () {
         var model = {
-            VehicleNumber: $('#input_Call_The_Scale_Chua_SL').val(),
-            PhoneNumber: $('#input_Call_The_Scale_Chua_SL').val(),
+            VehicleNumber: $('#input_Call_The_Scale_Chua_SL').val() != undefined && $('#input_Call_The_Scale_Chua_SL').val() != "" ? $('#input_Call_The_Scale_Chua_SL').val().trim() : "",
+            PhoneNumber: $('#input_Call_The_Scale_Chua_SL').val() != undefined && $('#input_Call_The_Scale_Chua_SL').val() != "" ? $('#input_Call_The_Scale_Chua_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: 0,
             VehicleWeighingType: null,
@@ -420,8 +420,8 @@ var _Call_The_Scale = {
     },
     ListCallTheScale_2: function () {
         var model = {
-            VehicleNumber: $('#input_Call_The_Scale_Chua_SL').val(),
-            PhoneNumber: $('#input_Call_The_Scale_Chua_SL').val(),
+            VehicleNumber: $('#input_Call_The_Scale_Chua_SL').val() != undefined && $('#input_Call_The_Scale_Chua_SL').val() != "" ? $('#input_Call_The_Scale_Chua_SL').val().trim() : "",
+            PhoneNumber: $('#input_Call_The_Scale_Chua_SL').val() != undefined && $('#input_Call_The_Scale_Chua_SL').val() != "" ? $('#input_Call_The_Scale_Chua_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: 1,
             VehicleWeighingType: null,
@@ -446,8 +446,8 @@ var _Call_The_Scale = {
     },
     ListCallTheScale_Da_SL: function () {
         var model = {
-            VehicleNumber: $('#input_Call_The_Scale_Da_SL').val(),
-            PhoneNumber: $('#input_Call_The_Scale_Da_SL').val(),
+            VehicleNumber: $('#input_Call_The_Scale_Da_SL').val() != undefined && $('#input_Call_The_Scale_Da_SL').val() != "" ? $('#input_Call_The_Scale_Da_SL').val().trim() : "",
+            PhoneNumber: $('#input_Call_The_Scale_Da_SL').val() != undefined && $('#input_Call_The_Scale_Da_SL').val() != "" ? $('#input_Call_The_Scale_Da_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,

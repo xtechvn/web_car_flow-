@@ -361,8 +361,8 @@ var _processing_is_loading = {
     },
     ListProcessingIsLoading: function () {
         var model = {
-            VehicleNumber: $('#input_Processing_Is_Loading_Chua_SL').val(),
-            PhoneNumber: $('#input_Processing_Is_Loading_Chua_SL').val(),
+            VehicleNumber: $('#input_Processing_Is_Loading_Chua_SL').val() != undefined && $('#input_Processing_Is_Loading_Chua_SL').val() != "" ? $('#input_Processing_Is_Loading_Chua_SL').val().trim() : "",
+            PhoneNumber: $('#input_Processing_Is_Loading_Chua_SL').val() != undefined && $('#input_Processing_Is_Loading_Chua_SL').val() != "" ? $('#input_Processing_Is_Loading_Chua_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,
@@ -387,8 +387,8 @@ var _processing_is_loading = {
     },
     ListProcessingIsLoading_Da_SL: function () {
         var model = {
-            VehicleNumber: $('#input_Processing_Is_Loading_Da_SL').val(),
-            PhoneNumber: $('#input_Processing_Is_Loading_Da_SL').val(),
+            VehicleNumber: $('#input_Processing_Is_Loading_Da_SL').val() != undefined && $('#input_Processing_Is_Loading_Da_SL').val() != "" ? $('#input_Processing_Is_Loading_Da_SL').val().trim() : "",
+            PhoneNumber: $('#input_Processing_Is_Loading_Da_SL').val() != undefined && $('#input_Processing_Is_Loading_Da_SL').val() != "" ? $('#input_Processing_Is_Loading_Da_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,
