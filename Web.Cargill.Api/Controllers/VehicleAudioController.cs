@@ -28,32 +28,33 @@ namespace Web.Cargill.Api.Controllers
         public async Task<IActionResult> UploadAudio([FromForm] int booking_id, [FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("File không hợp lệ.");
+                return BadRequest(new { Status = 1, Msg = "File không hợp lệ." });
 
             try
             {
                 // Gọi helper để upload
                 string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 3);
-                // 3 = type tự quy định, ví dụ: 3 = audio
 
                 if (string.IsNullOrEmpty(audioUrl))
-                    return StatusCode(500, "Upload thất bại");
+                    return StatusCode(500, new { Status = 1, Msg = "Upload thất bại từ UpLoadHelper" });
 
                 // Update DB theo booking_id
                 var booking = _db.VehicleInspection.FirstOrDefault(b => b.Id == booking_id);
                 if (booking == null)
-                    return NotFound("Không tìm thấy booking.");
+                    return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
 
                 booking.AudioPath = audioUrl;
                 await _db.SaveChangesAsync();
 
-                return Ok(new { Status = 0, url = audioUrl });
+                return Ok(new { Status = 0, Url = audioUrl });
             }
-            catch (Exception )
+            catch (Exception ex)
             {
-                return StatusCode(500, new { Status = 1 });
+                // Trả cả message để dễ trace
+                return StatusCode(500, new { Status = 1, Msg = ex.Message, StackTrace = ex.ToString() });
             }
         }
+
 
 
     }
