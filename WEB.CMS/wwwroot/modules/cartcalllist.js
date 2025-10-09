@@ -146,7 +146,7 @@
                 }
 
                 // cập nhật giao diện dropdown
-            
+
 
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
@@ -165,8 +165,8 @@
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
-                    var status_type=await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
-                    
+                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+
                     if (val_TT != 0) {
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
@@ -267,12 +267,11 @@
     function renderRow(item, isProcessed) {
         var date = new Date(item.vehicleWeighingTimeComeOut);
         let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
             String(date.getDate()).padStart(2, '0') + "/" +
             String(date.getMonth() + 1).padStart(2, '0') + "/" +
-            date.getFullYear() + " " +
-            String(date.getHours()).padStart(2, '0') + ":" +
-            String(date.getMinutes()).padStart(2, '0') + ":" +
-            String(date.getSeconds()).padStart(2, '0');
+            date.getFullYear();
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
@@ -542,12 +541,12 @@ var _cartcalllist = {
                 } else {
                     _msgalert.error(result.msg);
                 }
-               
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
             }
-              
+
         });
         return await status_type;
     }
