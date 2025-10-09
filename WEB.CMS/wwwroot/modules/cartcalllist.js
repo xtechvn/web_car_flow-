@@ -265,13 +265,21 @@
     const jsonString2 = JSON.stringify(options2);
     // Hàm render row
     function renderRow(item, isProcessed) {
+        var date = new Date(item.vehicleWeighingTimeComeOut);
+        let formatted =
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear() + " " +
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + ":" +
+            String(date.getSeconds()).padStart(2, '0');
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
         <td>${item.customerName}</td>
         <td>${item.driverName}</td>
         <td>${item.vehicleNumber}</td>
-        <td>${item.vehicleWeighingTimeComplete || ""}</td>
+        <td>${formatted || ""}</td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
