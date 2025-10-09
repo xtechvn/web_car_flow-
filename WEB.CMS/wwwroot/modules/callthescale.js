@@ -49,6 +49,10 @@
             _Call_The_Scale.ListCallTheScale_2();
         }
     });
+    input_Call_The_Scale_Chua_SL.addEventListener("keyup", function (event) {
+        _Call_The_Scale.ListCallTheScale();
+        _Call_The_Scale.ListCallTheScale_2();
+    });
     var input_Call_The_Scale_Da_SL = document.getElementById("input_Call_The_Scale_Da_SL");
     input_Call_The_Scale_Da_SL.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -58,6 +62,9 @@
             // Trigger the button element with a click
             _Call_The_Scale.ListCallTheScale_Da_SL();
         }
+    });
+    input_Call_The_Scale_Da_SL.addEventListener("keyup", function (event) {
+        _Call_The_Scale.ListCallTheScale_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;

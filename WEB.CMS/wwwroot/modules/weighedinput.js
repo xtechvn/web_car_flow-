@@ -10,6 +10,9 @@
             _Weighed_Input.ListWeighedInput();
         }
     });
+    input_Weighed_Input_Chua_SL.addEventListener("keyup", function (event) {
+        _Weighed_Input.ListWeighedInput();
+    });
     var input_Weighed_Input_Da_SL = document.getElementById("input_Weighed_Input_Da_SL");
     input_Weighed_Input_Da_SL.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,9 @@
             // Trigger the button element with a click
             _Weighed_Input.ListWeighedInput_Da_SL();
         }
+    });
+    input_Weighed_Input_Da_SL.addEventListener("keyup", function (event) {
+        _Weighed_Input.ListWeighedInput_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;

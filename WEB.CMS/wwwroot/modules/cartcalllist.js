@@ -10,6 +10,9 @@
             _cartcalllist.ListCartoFactory();
         }
     });
+    input_chua_xu_ly.addEventListener("keyup", function (event) {
+        _cartcalllist.ListCartoFactory();
+    });
     var input_da_xu_ly = document.getElementById("input_da_xu_ly");
     input_da_xu_ly.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,9 @@
             // Trigger the button element with a click
             _cartcalllist.ListCartoFactory_Da_SL();
         }
+    });
+    input_da_xu_ly.addEventListener("keyup", function (event) {
+        _cartcalllist.ListCartoFactory_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
@@ -315,10 +321,36 @@
         const tbody = document.getElementById("dataBody-1");
         const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Chỉ mục của cột "Giờ cân xong đầu vào" (Điều chỉnh nếu cần)
+        const TIME_COLUMN_INDEX = 4;
+
+        // Hàm chuyển đổi chuỗi thời gian "HH:mm dd/MM/yyyy" thành đối tượng Date
+        // Đây là bước quan trọng để so sánh thời gian chính xác
+        const parseDateTime = (timeString) => {
+            if (!timeString) return new Date(0); // Trả về ngày rất cũ nếu chuỗi rỗng
+
+            // Ví dụ: "10:17 09/01/2025"
+            const [timePart, datePart] = timeString.split(' ');
+            if (!datePart || !timePart) return new Date(0);
+
+            const [day, month, year] = datePart.split('/').map(Number);
+            const [hours, minutes] = timePart.split(':').map(Number);
+
+            // Tạo đối tượng Date (Lưu ý: Tháng trong JS bắt đầu từ 0)
+            return new Date(year, month - 1, day, hours, minutes, 0);
+        };
+
         rows.sort((a, b) => {
-            const qa = parseInt(a.getAttribute("data-queue") || 0);
-            const qb = parseInt(b.getAttribute("data-queue") || 0);
-            return qa - qb;
+            // Lấy giá trị chuỗi thời gian từ ô tại chỉ mục đã cho
+            const timeAString = a.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+            const timeBString = b.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+
+            // Chuyển đổi sang đối tượng Date để so sánh
+            const dateA = parseDateTime(timeAString);
+            const dateB = parseDateTime(timeBString);
+
+            // Trả về kết quả so sánh (dateA - dateB cho sắp xếp tăng dần: cũ nhất -> mới nhất)
+            return dateA.getTime() - dateB.getTime();
         });
 
         tbody.innerHTML = "";
@@ -328,10 +360,36 @@
         const tbody = document.getElementById("dataBody-0");
         const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Chỉ mục của cột "Giờ cân xong đầu vào" (Điều chỉnh nếu cần)
+        const TIME_COLUMN_INDEX = 4;
+
+        // Hàm chuyển đổi chuỗi thời gian "HH:mm dd/MM/yyyy" thành đối tượng Date
+        // Đây là bước quan trọng để so sánh thời gian chính xác
+        const parseDateTime = (timeString) => {
+            if (!timeString) return new Date(0); // Trả về ngày rất cũ nếu chuỗi rỗng
+
+            // Ví dụ: "10:17 09/01/2025"
+            const [timePart, datePart] = timeString.split(' ');
+            if (!datePart || !timePart) return new Date(0);
+
+            const [day, month, year] = datePart.split('/').map(Number);
+            const [hours, minutes] = timePart.split(':').map(Number);
+
+            // Tạo đối tượng Date (Lưu ý: Tháng trong JS bắt đầu từ 0)
+            return new Date(year, month - 1, day, hours, minutes, 0);
+        };
+
         rows.sort((a, b) => {
-            const qa = parseInt(a.getAttribute("data-queue") || 0);
-            const qb = parseInt(b.getAttribute("data-queue") || 0);
-            return qa - qb;
+            // Lấy giá trị chuỗi thời gian từ ô tại chỉ mục đã cho
+            const timeAString = a.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+            const timeBString = b.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+
+            // Chuyển đổi sang đối tượng Date để so sánh
+            const dateA = parseDateTime(timeAString);
+            const dateB = parseDateTime(timeBString);
+
+            // Trả về kết quả so sánh (dateA - dateB cho sắp xếp tăng dần: cũ nhất -> mới nhất)
+            return dateA.getTime() - dateB.getTime();
         });
 
         tbody.innerHTML = "";
