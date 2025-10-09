@@ -2,9 +2,10 @@
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech;
 using System;
-using Web.Cargill.Api.Model;
+
 using Microsoft.EntityFrameworkCore;
 using B2B.Utilities.Common;
+using Web.Cargill.Api.Model;
 
 namespace Web.Cargill.Api.Controllers
 {
@@ -43,7 +44,7 @@ namespace Web.Cargill.Api.Controllers
                 if (booking == null)
                     return NotFound("Không tìm thấy booking.");
 
-                booking.AudioUrl = audioUrl;
+                booking.AudioPath = audioUrl;
                 await _db.SaveChangesAsync();
 
                 return Ok(new { message = "Upload audio thành công", url = audioUrl });
