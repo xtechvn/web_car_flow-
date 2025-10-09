@@ -407,6 +407,7 @@ namespace WEB.CMS.Controllers
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
+                                detail.VehicleTroughWeight = weight;
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleTroughStatus);
                                 detail.VehicleTroughStatusName = allcode_detail.Description;

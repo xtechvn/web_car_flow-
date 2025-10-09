@@ -460,8 +460,8 @@ var _cartcalllist = {
     },
     ListCartoFactory: function () {
         var model = {
-            VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(),
+            VehicleNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -489,8 +489,8 @@ var _cartcalllist = {
     ListCartoFactory_Da_SL: function () {
 
         var model = {
-            VehicleNumber: $('#input_da_xu_ly').val(),
-            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
