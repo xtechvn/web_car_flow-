@@ -1,43 +1,53 @@
 ﻿$(document).ready(function () {
     _Call_The_Scale.init();
+   
     $(document).on('click', '.open-audio', function (e) {
         // 'this' chính là phần tử .open-audio được click
         var $row = $(this).closest('tr');          // Tìm <tr> cha gần nhất
-        var $audioCell = $row.find('.td-audio');   // Tìm ô td chứa text
-        var text = $audioCell.text().trim();       // Lấy text trong ô
-
-        if (text) {
-            // Nếu đang nói thì dừng và bỏ disable cho tất cả nút
-            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-                window.speechSynthesis.cancel();
-                $('.open-audio').prop('disabled', false); // Bật lại tất cả nút
-                return;
+        /*const $row = $currentBtn.closest('tr');*/
+        var id = 0;
+        if ($row.length) {
+            const classAttr = $row.attr('class');
+            const match = classAttr.match(/CartoFactory_(\d+)/);
+            if (match && match[1]) {
+                id = match[1];
             }
+        }
+        // Kiểm tra ID hợp lệ
+        if (id === 0) {
+            console.error('Lỗi: Không tìm thấy ID hàng.');
+            return;
+        }
 
-            var utterance = new SpeechSynthesisUtterance("Mời biển số xe"+ text+" vào trạm cân");
-            // Bạn có thể tùy chỉnh ngôn ngữ hoặc tốc độ ở đây, ví dụ:
-             utterance.lang = 'vi-VN'; 
-            //utterance.rate = 1;
-            // Vô hiệu hóa nút trong lúc đang đọc
+        const audioPlayer = document.getElementById('myAudio_' + id);
+
+        if (audioPlayer) {
+            // 3. Vô hiệu hóa và ẩn CHỈ nút hiện tại đang được click
+
+            // Vô hiệu hóa tất cả các nút còn lại (nếu bạn muốn)
             $('.open-audio').prop('disabled', true);
             $('.open-audio').hide();
+            // Phát âm thanh
+            audioPlayer.play();
 
-            // Bật lại nút khi đọc xong
-            utterance.onend = function () {
+            // 4. Bật lại nút khi phát xong (Sử dụng sự kiện 'onended' của Audio HTML5)
+            audioPlayer.onended = function () {
+
+                // Bật lại các nút khác
                 $('.open-audio').prop('disabled', false);
                 $('.open-audio').show();
-                console.log('✅ Đọc xong, nút đã bật lại');
+                console.log(`✅ Đọc xong ID ${id}, nút đã bật lại.`);
             };
 
-            // Nếu có lỗi xảy ra cũng bật lại nút
-            utterance.onerror = function () {
+            // Xử lý lỗi phát (ví dụ: file không tồn tại)
+            audioPlayer.onerror = function () {
                 $('.open-audio').prop('disabled', false);
-                $('.open-audio').show();
-            };
-            window.speechSynthesis.speak(utterance);
+                console.error(`❌ Lỗi phát âm thanh cho ID: ${id}`);
+            }
+        } else {
+            console.error(`Lỗi: Không tìm thấy thẻ audio có ID: myAudio_${id}`);
         }
     });
- 
     var input_Call_The_Scale_Chua_SL = document.getElementById("input_Call_The_Scale_Chua_SL");
     input_Call_The_Scale_Chua_SL.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
