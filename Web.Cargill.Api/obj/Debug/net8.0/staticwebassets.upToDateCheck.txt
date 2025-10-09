@@ -1,4 +1,0 @@
-wwwroot\audio\dynamic\order-1-2dasdsa.wav
-wwwroot\audio\dynamic\order-1-áddsa.wav
-wwwroot\audio\dynamic\order-1-dsaasds.wav
-wwwroot\audio\dynamic\order-1-dssa.wav
