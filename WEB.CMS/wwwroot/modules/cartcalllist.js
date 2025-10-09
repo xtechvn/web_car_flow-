@@ -277,7 +277,8 @@
         <td>${item.recordNumber}</td>
         <td>${item.customerName}</td>
         <td>${item.driverName}</td>
-        <td>${item.vehicleNumber}</td>
+        <td><a class="btn-detail"
+                           data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
         <td>${formatted || ""}</td>
         <td>
             <div class="status-dropdown">
