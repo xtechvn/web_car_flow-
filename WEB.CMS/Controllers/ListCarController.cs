@@ -58,6 +58,7 @@ namespace WEB.CMS.Controllers
                 var AllCode2 = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                 ViewBag.AllCode2 = AllCode2;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
+                data= data.OrderBy(x => x.VehicleWeighingTimeComeOut).ToList();
                 return PartialView(data);
             }
             catch (Exception ex)
