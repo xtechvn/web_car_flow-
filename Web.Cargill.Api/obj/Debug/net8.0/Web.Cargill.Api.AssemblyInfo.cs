@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Web.Cargill.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3174d8eeba669ae065ca6ae133734e30da98ad6f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49cf511a3e057c975ba51cedd3307354dffb2e3b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Web.Cargill.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Web.Cargill.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

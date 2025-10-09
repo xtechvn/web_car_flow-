@@ -1,6 +1,14 @@
+﻿using Web.Cargill.Api.Model;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// 🔹 Add DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration["DataBaseConfig:SqlServer:ConnectionString"])
+);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,6 +27,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+// Cho phép truy cập file trong wwwroot
+app.UseStaticFiles();
 
 app.MapControllers();
 
