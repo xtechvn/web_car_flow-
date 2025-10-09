@@ -10,7 +10,7 @@ namespace LIB.Utilities.Common
 {
     public static class CommonHelper
     {
-        public static bool GetParamWithKey(string Token, out JArray objParr, string EncryptApi)
+        public static bool GetParamWithKey(string Token, out JArray? objParr, string EncryptApi)
         {
             objParr = null;
             try
@@ -169,7 +169,7 @@ namespace LIB.Utilities.Common
                 Regex r = new Regex("(?:[^a-z0-9 ]|(?<=['\"])s)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
                 return r.Replace(input, string.Empty);
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 return input ?? string.Empty;
             }
@@ -206,7 +206,7 @@ namespace LIB.Utilities.Common
                     result = match.Value;
                 }
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException )
             {
                 msg = regExPattern;
             }
@@ -222,19 +222,7 @@ namespace LIB.Utilities.Common
         {
             return Regex.Replace(source, @"<(\w+)\b(?:\s+[\w\-.:]+(?:\s*=\s*(?:""[^""]*""|'[^']*'|[\w\-.:]+))?)*\s*/?>\s*</\1\s*>", string.Empty, RegexOptions.Multiline);
         }
-        public static T ConvertFromJsonString<T>(string jsonString)
-        {
-            try
-            {
-                T rs = JsonConvert.DeserializeObject<T>(jsonString);
-                return rs;
-            }
-            catch
-            {
-                return default;
-            }
-
-        }
+        
         public static string DecodeHTML(string html)
         {
             string result = "";

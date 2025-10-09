@@ -22,7 +22,8 @@ namespace B2B.Utilities.Common
                 AppSettings _appconfig = new AppSettings();
                 string json = r.ReadToEnd();
                 _appconfig = JsonConvert.DeserializeObject<AppSettings>(json);
-                enviromment = _appconfig.BotSetting.environment;
+                string? environment = _appconfig.BotSetting.environment;
+                enviromment = environment;
                 botToken = _appconfig.BotSetting.bot_token;
                 group_Id = _appconfig.BotSetting.bot_group_id;
                 string company_type = _appconfig.CompanyType;
@@ -59,7 +60,7 @@ namespace B2B.Utilities.Common
                 TelegramBotClient alertMsgBot = new TelegramBotClient(botToken);
                 var rs_push=  alertMsgBot.SendTextMessageAsync(group_Id, "[" + enviromment + "-"+CompanyType+"] - " + message).Result;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 rs = -1;
             }
@@ -174,26 +175,26 @@ namespace B2B.Utilities.Common
     }
     public class AppSettings
     {
-        public BotSetting BotSetting { get; set; }
-        public string CompanyType { get; set; }
+        public BotSetting? BotSetting { get; set; }
+        public string? CompanyType { get; set; }
       
     }
 
     public class BotSetting
     {
-        public string bot_token { get; set; }
-        public string bot_group_id { get; set; }
-        public string environment { get; set; }
+        public string? bot_token { get; set; }
+        public string? bot_group_id { get; set; }
+        public string? environment { get; set; }
     }
     public class SystemLog
     {
 
         public int SourceID { get; set; } // log từ nguồn nào, quy định trong SystemLogSourceID
-        public string Type { get; set; } // nội dung: booking, order,....
-        public string KeyID { get; set; } // Key: mã đơn, mã khách hàng, mã booking,....
-        public string ObjectType { get; set; } // ObjectType: Dùng để phân biệt các đối tượng cần log với nhau. Ví dụ: log cho đơn hàng, khách hàng, hợp đồng, Phiếu thu...
+        public string? Type { get; set; } // nội dung: booking, order,....
+        public string? KeyID { get; set; } // Key: mã đơn, mã khách hàng, mã booking,....
+        public string? ObjectType { get; set; } // ObjectType: Dùng để phân biệt các đối tượng cần log với nhau. Ví dụ: log cho đơn hàng, khách hàng, hợp đồng, Phiếu thu...
         public int CompanyType { get; set; }//dùng để phân biệt company nào
-        public string Log { get; set; } // nội dung log
+        public string? Log { get; set; } // nội dung log
         public DateTime CreatedTime { get; set; } // thời gian tạo
     }
 

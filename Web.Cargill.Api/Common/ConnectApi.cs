@@ -41,7 +41,7 @@ namespace B2B.Utilities.Common
 
                 return responseFromServer;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
               
                 return string.Empty;

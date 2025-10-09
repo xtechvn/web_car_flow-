@@ -53,7 +53,7 @@ namespace LIB.Utilities.Common
             }
             return new byte[0];
         }
-        public static string ConvertByteToBase64String(byte[] data)
+        public static string? ConvertByteToBase64String(byte[] data)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace LIB.Utilities.Common
 
             // Declare the string used to hold
             // the decrypted text.
-            string plaintext = null;
+            string? plaintext = null;
 
             // Create an Aes object
             // with the specified key and IV.
@@ -149,7 +149,7 @@ namespace LIB.Utilities.Common
         }
 
 
-        public static string FormatKey(string unformattedKey)
+        public static string? FormatKey(string unformattedKey)
         {
             try
             {

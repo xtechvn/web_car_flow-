@@ -32,7 +32,7 @@ namespace Web.Cargill.Api.Controllers
 
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(record);
                 string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
-                record.Bookingid = id;
+                record.Id = id;
                 var client = new HttpClient();
                 var request = new HttpRequestMessage(HttpMethod.Post, url_n8n);
                 request.Content = new StringContent(JsonConvert.SerializeObject(record), null, "application/json");

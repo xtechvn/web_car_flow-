@@ -10,7 +10,7 @@ namespace B2B.Utilities.Common
     {
         public static void WriteLog(string AppPath, string sFunction, string sAction)
         {
-            StreamWriter sLogFile = null;
+            StreamWriter? sLogFile = null;
             try
             {
                 //Ghi lại hành động của người sử dụng vào log file
@@ -65,7 +65,7 @@ namespace B2B.Utilities.Common
 
         public static void WirteFile(string AppPath, string sContent)
         {
-            StreamWriter sLogFile = null;
+            StreamWriter? sLogFile = null;
             try
             {
                 sLogFile = new StreamWriter(AppPath);

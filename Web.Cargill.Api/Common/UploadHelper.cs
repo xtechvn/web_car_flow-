@@ -30,7 +30,7 @@ namespace B2B.Utilities.Common
         static string AES_KEY = "bXny0OMniop5U1fpZ6u7zAHg7KxRdUcp7OuhU7L9Oo62k+FLShyDuwjBGuXWtRMK";
         static string AES_IV = "KFavGEDPdhddqjl9CQVC2c0jYoMJKzmqlBDS+JBbSK6QwgG79XWs9ltH0i5DaJm2";
 
-        public static async Task<string> UploadFileOrImage(IFormFile file, long dataId, int type)
+        public static async Task<string?> UploadFileOrImage(IFormFile file, long dataId, int type)
         {
             if (file == null || file.Length <= 0)
                 throw new Exception("File không hợp lệ.");
@@ -90,7 +90,7 @@ namespace B2B.Utilities.Common
 
 
 
-        private static string GenerateToken(byte[] AESKey, byte[] AESIV)
+        private static string? GenerateToken(byte[] AESKey, byte[] AESIV)
         {
             try
             {
