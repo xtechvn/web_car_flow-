@@ -33,7 +33,6 @@ namespace WEB.CMS.Services
                     record.CreateTime = record.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss");
                     await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
                 }
-                LogHelper.InsertLogTelegram("ExecuteAsync:1 ");
             });
 
             await Task.CompletedTask;
