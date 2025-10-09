@@ -47,11 +47,11 @@ namespace Web.Cargill.Api.Controllers
                 booking.AudioPath = audioUrl;
                 await _db.SaveChangesAsync();
 
-                return Ok(new { message = "Upload audio thành công", url = audioUrl });
+                return Ok(new { Status = 0, url = audioUrl });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Lỗi: {ex.Message}");
+                return StatusCode(500, new { Status = 1 });
             }
         }
 

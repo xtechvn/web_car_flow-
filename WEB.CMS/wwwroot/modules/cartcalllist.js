@@ -131,8 +131,8 @@
 
     // ✅ Xác nhận – đổi text + class cho button
     // Khi chọn máng xuất trong dropdown (type=1)
+    // ✅ Xác nhận – đổi text + class cho button
     $(document).on('click', '#dropdown-container .actions .confirm', async function (e) {
-        debugger
         e.stopPropagation();
 
         if ($menu && $currentBtn) {
@@ -151,10 +151,8 @@
                     }
                 }
 
-                // cập nhật giao diện dropdown
-
-
                 var type = $currentBtn.attr('data-type');
+
                 if (type == '1') {
                     // update máng xuất
                     var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 4);
@@ -166,11 +164,39 @@
                             })
                             .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
                     }
-                    // gọi SignalR thông báo cho tất cả client
                     connection.invoke("BroadcastUpdateMang", val_TT, "Đang xử lý")
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
+
+                    // 👉 Nếu chọn Hoàn thành mà chưa nhập trọng lượng → hiển thị input phụ
+                    if (val_TT == 0 && (weight == 0 || weight === "")) {
+                        if ($menu.find(".extra-weight").length === 0) {
+                            let $extra = $('<div class="extra-weight" style="margin:10px 0;">' +
+                                '<input type="number" class="weight-input" ' +
+                                'placeholder="Vui lòng nhập trọng lượng (kg)" ' +
+                                'style="width:100%;padding:5px;" ' +
+                                'min="0" max="99999999" ' +
+                                'oninput="if(this.value.length>8)this.value=this.value.slice(0,8);" />' +
+                                '</div>');
+
+                            $extra.insertBefore($menu.find('.actions'));
+
+                            // 👉 Focus vào input ngay khi nó xuất hiện
+                            $extra.find("input").focus();
+                            return; // dừng, chờ user nhập
+                        } else {
+                            weight = $menu.find(".extra-weight .weight-input").val();
+                            if (!weight || weight == 0) {
+                                alert("Vui lòng nhập trọng lượng!");
+                                return;
+                            }
+                            // đồng bộ lại vào input chính trong row
+                            $row.find('input.weight').val(weight);
+                        }
+                    }
+
+                    // ✅ Gọi API update
                     var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
 
                     if (val_TT != 0) {
@@ -185,14 +211,12 @@
                             .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
                     }
 
-                    // nếu trạng thái kết thúc → giải phóng máng
+                    // ✅ xử lý máng trống / đang xử lý
                     if (val_TT == 0) {
                         let mangName = $row.find('button[data-type="1"]').text().trim();
                         let match = mangName.match(/\d+/);
                         if (match) {
                             let mangIndex = parseInt(match[0]);
-
-                            // 🔎 Check còn xe nào khác trong cùng máng này không
                             let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
                                 let btnText = $(tr).find("button[data-type='1']").text().trim();
                                 let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
@@ -200,17 +224,14 @@
                             });
 
                             if (stillHasCar) {
-                                // ✅ Nếu còn xe khác chưa hoàn thành → máng vẫn đang xử lý
                                 $("#input" + mangIndex).val("Đang xử lý")
                                     .removeClass("empty").addClass("processing");
                             } else {
-                                // ✅ Nếu không còn xe nào → máng trống
                                 $("#input" + mangIndex).val("Trống")
                                     .removeClass("processing").addClass("empty");
                             }
                         }
                     } else {
-                        // ✅ nếu không phải hoàn thành => máng đó đang xử lý
                         let mangName = $row.find('button[data-type="1"]').text().trim();
                         let match = mangName.match(/\d+/);
                         if (match) {
@@ -219,13 +240,17 @@
                                 .removeClass("empty").addClass("processing");
                         }
                     }
-
-
                 }
             }
         }
         closeMenu();
     });
+
+    // 🚫 Chặn đóng menu khi click vào input phụ
+    $(document).on('click', '#dropdown-container .extra-weight input', function (e) {
+        e.stopPropagation();
+    });
+
 
     // Đóng menu khi click ra ngoài
     $(document).on('click', function () {

@@ -1,5 +1,7 @@
 ﻿using Web.Cargill.Api.Model;
 using Microsoft.EntityFrameworkCore;
+using Repositories.IRepositories;
+using Repositories.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
