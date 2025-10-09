@@ -40,7 +40,7 @@ namespace B2B.Utilities.Common
                 // Danh sách phần mở rộng hợp lệ
                 var validImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
                 var validFileExtensions = new[] { ".pdf", ".doc", ".docx", ".txt", ".xls", ".xlsx" };
-                var validAudioExtensions = new[] { ".mp3", ".wav", ".m4a" }; // thêm audio
+                var validAudioExtensions = new[] { ".mp3", ".wav", ".m4a", ".mpga" }; // thêm audio
 
                 var extension = Path.GetExtension(file.FileName).ToLower();
 
