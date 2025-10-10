@@ -289,7 +289,9 @@
             </td>
             <td> <button class="open-audio">
                                 <span class="icon "><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
-
+                            <audio id="myAudio_${item.id}" controls style="display:none!important;">
+                                                                    <source src="${item.audioPath}" type="audio/mpeg" />
+                                                                </audio>
                             </button></td>
         </tr>`;
     }
@@ -311,7 +313,9 @@
             </td>
             <td> <button class="open-audio">
                                 <span class="icon "><img src="/images/graphics/SpeakerHigh.png" height="25" alt=""></span>
-
+                                 <audio id="myAudio_${item.id}" controls style="display:none!important;">
+                                                                    <source src="${item.audioPath}" type="audio/mpeg" />
+                                                                </audio>
                             </button></td>
         </tr>`;
     }
