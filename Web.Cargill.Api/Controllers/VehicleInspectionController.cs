@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repositories.IRepositories;
 using Utilities.Contants;
+using Web.Cargill.Api.Services;
 
 namespace Web.Cargill.Api.Controllers
 {
@@ -12,10 +13,13 @@ namespace Web.Cargill.Api.Controllers
     public class VehicleInspectionController : ControllerBase
     {
         private readonly IVehicleInspectionRepository _vehicleInspectionRepository;
-        public VehicleInspectionController(IVehicleInspectionRepository vehicleInspectionRepository)
+        private readonly RedisConn redisService;
+        private readonly IConfiguration _configuration;
+        public VehicleInspectionController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
-
+            redisService = new RedisConn(configuration);
+            redisService.Connect();
 
         }
         [HttpPost("Insert")]
@@ -27,27 +31,39 @@ namespace Web.Cargill.Api.Controllers
                 
 
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
-                string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
-                request.Bookingid = id;
-                var client = new HttpClient();
-                var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
-                request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
-                var response = await client.SendAsync(request_n8n);
-                if (response.IsSuccessStatusCode)
+                if(id> 0)
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
+                    request.Id = id;
+                    string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
+                    await redisService.PublishAsync("Add_ReceiveRegistration", request);
+                    request.Bookingid = id;
+                    var client = new HttpClient();
+                    var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
+                    request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
+                    var response = await client.SendAsync(request_n8n);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
 
-                }
-                else
-                {
-                    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
+                    }
+                    else
+                    {
+                        LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
+                    }
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        message = "Upload audio thành công",
+                        data = id
+                    });
                 }
                 return Ok(new
-                { 
-                    status= (int)ResponseType.SUCCESS,
-                    message = "Upload audio thành công",
-                    data = id
+                {
+                    status = (int)ResponseType.ERROR,
+                    message = "Thêm mới lỗi",
+                   
                 });
+
             }
             catch (Exception ex)
             {
