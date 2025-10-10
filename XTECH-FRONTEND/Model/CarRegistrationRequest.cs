@@ -24,6 +24,8 @@ namespace XTECH_FRONTEND.Model
         public int? RemainingTimeMinutes { get; set; }
         public string? ZaloStatus { get; set; }
         public string? Camp { get; set; }
+        public string GPLX { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
     }
 
     public class RegistrationRecord
