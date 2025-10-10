@@ -71,24 +71,16 @@ var _menu = {
 
     ShowAddOrUpdate: function (id, parent_id = 0) {
         let title = `${id > 0 ? "Cập nhật" : "Thêm mới"} menu`;
-        let url = '/menu/AddOrUpdate';
-        _menu.modal_element.find('.modal-title').html(title);
-        _menu.modal_element.find('.modal-dialog').css('max-width', '680px');
-        _ajax_caller.get(url, { id: id, parent_id: parent_id }, function (result) {
-            _menu.modal_element.find('.modal-body').html(result);
-            _menu.modal_element.modal('show');
-        });
+        let url = '/Menu/AddOrUpdate';
+        let param = { id: id, parent_id: parent_id};
+        _magnific.OpenSmallPopup(title, url, param);
     },
 
     ShowPermision: function (id) {
         let title = `Cập nhật các quyền thuộc menu`;
-        let url = '/menu/Permission';
-        _menu.modal_element.find('.modal-title').html(title);
-        _menu.modal_element.find('.modal-dialog').css('max-width', '680px');
-        _ajax_caller.get(url, { id: id }, function (result) {
-            _menu.modal_element.find('.modal-body').html(result);
-            _menu.modal_element.modal('show');
-        });
+        let url = '/Menu/Permission';
+        let param = { id: id };
+        _magnific.OpenSmallPopup(title, url, param);
     },
 
     OnSave: function () {
@@ -109,16 +101,23 @@ var _menu = {
 
         let formData = this.GetFormData(Form);
 
-        let url = "/menu/AddOrUpdate";
-        _ajax_caller.post(url, { model: formData }, function (result) {
-            if (result.isSuccess) {
-                _msgalert.success(result.message);
-                _menu.modal_element.modal('hide');
-                _menu.ReLoad();
-            } else {
-                _msgalert.error(result.message);
+        let url = "/menu/AddOrUpdateMenu";
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: { model: formData },
+            success: function (result) {
+                if (result.isSuccess) {
+                    _msgalert.success(result.message);               
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1000);
+                } else {
+                    _msgalert.error(result.message);
+                }
             }
         });
+
     },
 
     OnSavePermission: function () {
@@ -144,7 +143,9 @@ var _menu = {
             if (result.isSuccess) {
                 _msgalert.success(result.message);
                 _menu.modal_element.modal('hide');
-                _menu.ReLoad();
+                setTimeout(function () {
+                    window.location.reload()
+                }, 1000); 
             } else {
                 _msgalert.error(result.message);z
             }
@@ -160,7 +161,9 @@ var _menu = {
             _ajax_caller.get(url, { Id: id, Status: status }, function (result) {
                 if (result.isSuccess) {
                     _msgalert.success(result.message);
-                    _menu.ReLoad();
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1000); 
                 } else {
                     _msgalert.error(result.message);
                 }
@@ -187,5 +190,6 @@ $("#ip_search_name").keyup(function (e) {
 $(document).ready(function () {
     $('input').attr('autocomplete', 'off');
     _menu.Init();
+    
 });
 

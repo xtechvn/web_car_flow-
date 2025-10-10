@@ -11,8 +11,9 @@
         var childDatas = Model.Where(s => s.ParentId == item.Id).ToList();
         <tr>
             <td class="color-main">
-                <a class="cursor-pointer" onclick="_menu.ShowAddOrUpdate(0,'@item.Id')" title="Thêm menu con">
-                    <i class="fa fa-plus"></i>
+
+                <a style="text-decoration:auto!important;font-size:20px!important;" onclick="_menu.ShowAddOrUpdate(0,'@item.Id')" title="Thêm menu con">
+                    +
                 </a>
             </td>
             <td class="text-center" style="background:black;"><img src="@item.Icon"></td>
@@ -42,12 +43,12 @@
                     <i class="icon-edit"></i>
                 </a> &nbsp;&nbsp;
                 <a class="cursor-pointer" onclick="_menu.OnChangeStatus('@item.Id','@(item.Status == 0? 1: 0)')" title="Chuyển trạng thái">
-                    <i class="fa fa-exchange"></i>
+                    <i class="icon-del"></i>
                 </a> &nbsp;&nbsp;
                 @if (!string.IsNullOrEmpty(item.Link))
                 {
                     <a class="cursor-pointer" onclick="_menu.ShowPermision('@item.Id')" title="Xem quyền thuộc menu">
-                        <i class="fa fa-user"></i>
+                        <i class="icon-edit"></i>
                     </a>
                 }
             </td>

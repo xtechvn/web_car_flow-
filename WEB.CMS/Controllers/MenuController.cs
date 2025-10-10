@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Repositories.IRepositories;
 using Repositories.Repositories;
+using Utilities.Contants;
 using WEB.CMS.Customize;
 
 namespace WEB.CMS.Controllers
@@ -111,7 +112,7 @@ namespace WEB.CMS.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddOrUpdate(MenuUpsertViewModel model)
+        public async Task<IActionResult> AddOrUpdateMenu(MenuUpsertViewModel model)
         {
             try
             {
@@ -130,24 +131,26 @@ namespace WEB.CMS.Controllers
 
                 if (result > 0)
                 {
-                    return new JsonResult(new
+                    return Ok(new
                     {
                         isSuccess = true,
                         message = $"{ActionName} menu thành công"
                     });
+               
                 }
                 else
                 {
-                    return new JsonResult(new
+                    return Ok(new
                     {
                         isSuccess = false,
                         message = $"{ActionName} menu thất bại"
                     });
+                   
                 }
             }
             catch (Exception ex)
             {
-                return new JsonResult(new
+                return Ok(new
                 {
                     isSuccess = false,
                     message = ex.Message
