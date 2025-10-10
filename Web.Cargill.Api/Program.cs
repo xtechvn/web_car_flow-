@@ -10,8 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration["DataBaseConfig:SqlServer:ConnectionString"])
 );
+ConfigurationManager configuration = builder.Configuration; // allows both to access and to set up the config
 
-
+builder.Services.Configure<Entities.ConfigModels.DataBaseConfig>(configuration.GetSection("DataBaseConfig"));
+builder.Services.Configure<Entities.ConfigModels.DomainConfig>(configuration.GetSection("DomainConfig"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
