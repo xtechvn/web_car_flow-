@@ -109,7 +109,7 @@
     <script>
         // API Configuration
         const API_BASE_URL = 'https://cargillhanam.com/api'; // Change to your API URL
-        const API_URL = 'https://cargillhanam.com/api'; // Change to your API URL
+        const API_URL = 'http://qc-api.cargillhanam.com'; // Change to your API URL
         const ENDPOINTS = {
             REGISTER: '/carregistration/registerV2',
             QUEUE_STATUS: '/carregistration/queue-status',
@@ -224,7 +224,7 @@
             });
         }
         async function registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, QueueNumber, RegistrationTime) {
-            return await makeAPICall(ENDPOINTS.Insert, 'POST', {
+            return await CallAPI(ENDPOINTS.Insert, 'POST', {
                 plateNumber: plateNumber,
                 phoneNumber: phoneNumber,
                 Name: name,
@@ -258,7 +258,14 @@
                 document.getElementById('outputDate').textContent = '---';
                 document.getElementById('outputTime').textContent = '---';
             }
-            await registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, data.queueNumber, data.registrationTime);
+
+            const plateNumber = document.getElementById('plateNumber').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const referee = document.getElementById('referee').value.trim();
+            const GPLX = document.getElementById('GPLX').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const Camp = document.getElementById('Camp').value.trim();
+            registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, data.queueNumber, data.registrationTime);
         }
 
         function startCountdown(remainingMinutes) {

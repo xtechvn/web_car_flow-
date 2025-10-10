@@ -294,7 +294,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                  $"Cảm ơn bạn đã sử dụng dịch vụ! ";
                
                 //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-                await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
+               // await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)
