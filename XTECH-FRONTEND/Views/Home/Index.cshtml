@@ -109,12 +109,11 @@
     <script>
         // API Configuration
         const API_BASE_URL = 'https://cargillhanam.com/api'; // Change to your API URL
-        const API_URL = 'https://cargillhanam.com/api'; // Change to your API URL
         const ENDPOINTS = {
             REGISTER: '/carregistration/registerV2',
             QUEUE_STATUS: '/carregistration/queue-status',
             CHECK_ZALO: '/carregistration/check-zalo-user',
-            Insert: '/api/VehicleInspection/Insert'
+            Insert: '/carregistration/insert'
         };
 
         // Global variables
@@ -258,7 +257,14 @@
                 document.getElementById('outputDate').textContent = '---';
                 document.getElementById('outputTime').textContent = '---';
             }
-            await registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, data.queueNumber, data.registrationTime);
+
+            const plateNumber = document.getElementById('plateNumber').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const referee = document.getElementById('referee').value.trim();
+            const GPLX = document.getElementById('GPLX').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const Camp = document.getElementById('Camp').value.trim();
+            registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, data.queueNumber, data.registrationTime);
         }
 
         function startCountdown(remainingMinutes) {
