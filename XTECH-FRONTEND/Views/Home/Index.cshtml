@@ -109,12 +109,11 @@
     <script>
         // API Configuration
         const API_BASE_URL = 'https://cargillhanam.com/api'; // Change to your API URL
-        const API_URL = 'http://qc-api.cargillhanam.com'; // Change to your API URL
         const ENDPOINTS = {
             REGISTER: '/carregistration/registerV2',
             QUEUE_STATUS: '/carregistration/queue-status',
             CHECK_ZALO: '/carregistration/check-zalo-user',
-            Insert: '/api/VehicleInspection/Insert'
+            Insert: '/carregistration/insert'
         };
 
         // Global variables
@@ -224,7 +223,7 @@
             });
         }
         async function registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, QueueNumber, RegistrationTime) {
-            return await CallAPI(ENDPOINTS.Insert, 'POST', {
+            return await makeAPICall(ENDPOINTS.Insert, 'POST', {
                 plateNumber: plateNumber,
                 phoneNumber: phoneNumber,
                 Name: name,

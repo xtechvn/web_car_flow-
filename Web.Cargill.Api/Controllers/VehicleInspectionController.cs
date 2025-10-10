@@ -27,22 +27,21 @@ namespace Web.Cargill.Api.Controllers
                 
 
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
-                LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
-                //string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
-                //request.Bookingid = id;
-                //var client = new HttpClient();
-                //var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
-                //request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
-                //var response = await client.SendAsync(request_n8n);
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    var responseContent = await response.Content.ReadAsStringAsync();
-                   
-                //}
-                //else
-                //{
-                //    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
-                //}
+                string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
+                request.Bookingid = id;
+                var client = new HttpClient();
+                var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
+                request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
+                var response = await client.SendAsync(request_n8n);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                }
+                else
+                {
+                    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
+                }
                 return Ok(new
                 { 
                     status= (int)ResponseType.SUCCESS,
