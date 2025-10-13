@@ -37,6 +37,7 @@ namespace Web.Cargill.Api.Controllers
                     string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
                     await redisService.PublishAsync("Add_ReceiveRegistration", request);
                     request.Bookingid = id;
+                    request.text_voice = "Mời biển số xe "+request.PlateNumber+" vào trạm cân";
                     var client = new HttpClient();
                     var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
                     request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
