@@ -437,7 +437,8 @@
     connection.on("UpdateMangStatus", function (oldMangId, newMangId, carId) {
         // ✅ Update máng mới thành "Đang xử lý"
         if (newMangId !== null && newMangId !== undefined) {
-            $("#input" + (parseInt(newMangId) + 1)).val("Đang xử lý")
+            $("#input" + (parseInt(newMangId) + 3)).val("Đang xử lý")
+
                 .removeClass("empty").addClass("processing");
         }
 
@@ -448,7 +449,8 @@
             });
 
             if (!hasOtherCars) {
-                $("#input" + (parseInt(oldMangId) + 1)).val("Trống")
+                $("#input" + (parseInt(oldMangId) + 3)).val("Trống")
+
                     .removeClass("processing").addClass("empty");
             }
         }
@@ -505,7 +507,7 @@ var _cartcalllist = {
     // ✅ Đồng bộ trạng thái máng khi load trang hoặc reload data
     initMangStatus: function () {
         // Giả sử có 5 máng, bạn thay bằng số máng thực tế
-        for (let mangIndex = 1; mangIndex <= 5; mangIndex++) {
+        for (let mangIndex = 3; mangIndex <= 7; mangIndex++) {
             let mangName = "Máng " + mangIndex;
 
             // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không
