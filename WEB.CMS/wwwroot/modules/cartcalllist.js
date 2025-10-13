@@ -269,11 +269,11 @@
         .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
         .build();
     const AllCode = [
-        { Description: "Máng 1", CodeValue: "0" },
-        { Description: "Máng 2", CodeValue: "1" },
-        { Description: "Máng 3", CodeValue: "2" },
-        { Description: "Máng 4", CodeValue: "3" },
-        { Description: "Máng 5", CodeValue: "4" },
+        { Description: "Máng 3", CodeValue: "3" },
+        { Description: "Máng 4", CodeValue: "4" },
+        { Description: "Máng 5", CodeValue: "5" },
+        { Description: "Máng 6", CodeValue: "6" },
+        { Description: "Máng 7", CodeValue: "7" },
         // Add more objects as needed
     ];
     const AllCode2 = [

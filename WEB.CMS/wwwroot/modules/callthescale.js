@@ -300,8 +300,8 @@
         return `
         <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
             <td>${item.recordNumber}</td>
+           <td>${item.vehicleNumber}</td>
             <td>${item.phoneNumber}</td>
-            <td>${item.vehicleNumber}</td>
             <td>${item.loadTypeName}</td>
             <td>
                 <div class="status-dropdown">

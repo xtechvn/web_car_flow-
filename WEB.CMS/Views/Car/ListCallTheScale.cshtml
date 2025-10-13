@@ -40,13 +40,13 @@
                         <td>
                             <div class="status-dropdown">
                                 <button class="dropdown-toggle " data-options='[
-                                @foreach (var allcode in AllCode)
-                                {
+                                            @foreach (var allcode in AllCode)
+                                            {
 
-                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+                                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
-                                }
-                                                            ]'>
+                                            }
+                                                                        ]'>
                                     @item.VehicleWeighingTypeName
                                 </button>
                             </div>
@@ -94,8 +94,8 @@ else
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Số điện thoại</th>
                     <th>Biển số xe</th>
+                    <th>Số điện thoại</th>
                     <th>Nhóm tài</th>
                     <th>Tình trạng</th>
                     <th></th>
@@ -106,21 +106,22 @@ else
                 {
                     <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
                         <td>@item.RecordNumber</td>
-                        <td>@item.PhoneNumber</td>
                         <td class="td-audio">
                             @item.VehicleNumber
                         </td>
+                        <td>@item.PhoneNumber</td>
+
                         <td>@item.LoadTypeName</td>
                         <td>
                             <div class="status-dropdown">
                                 <button class="dropdown-toggle " data-options='[
-                                @foreach (var allcode in AllCode)
-                                {
+                                            @foreach (var allcode in AllCode)
+                                            {
 
-                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+                                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
-                                }
-                                                                        ]'>
+                                            }
+                                                                                    ]'>
                                     @item.VehicleWeighingTypeName
                                 </button>
                             </div>
@@ -145,8 +146,8 @@ else
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Số điện thoại</th>
                     <th>Biển số xe</th>
+                    <th>Số điện thoại</th>
                     <th>Nhóm tài</th>
                     <th>Tình trạng</th>
                 </tr>

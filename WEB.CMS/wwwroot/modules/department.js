@@ -59,15 +59,17 @@ var _department = {
     ShowAddOrUpdate: function (id, parent_id = 0) {
         let title = `${id > 0 ? "Cập nhật" : "Thêm mới"} phòng ban`;
         let url = '/Department/AddOrUpdate';
-        _department.modal_element.find('.modal-title').html(title);
-        _department.modal_element.find('.modal-dialog').css('max-width', '680px');
-        _ajax_caller.get(url, { id: id, parent_id: parent_id }, function (result) {
-            _department.modal_element.find('.modal-body').html(result);
-            _department.modal_element.modal('show');
-            $('#branch-code').select2({
-                minimumResultsForSearch: Infinity
-            });
-        });
+        //_department.modal_element.find('.modal-title').html(title);
+        //_department.modal_element.find('.modal-dialog').css('max-width', '680px');
+        //_ajax_caller.get(url, { id: id, parent_id: parent_id }, function (result) {
+        //    _department.modal_element.find('.modal-body').html(result);
+        //    _department.modal_element.modal('show');
+        //    $('#branch-code').select2({
+        //        minimumResultsForSearch: Infinity
+        //    });
+        //});
+        let param = { id: id, parent_id: parent_id };
+        _magnific.OpenSmallPopup(title, url, param);
     },
 
     OnSave: function () {
