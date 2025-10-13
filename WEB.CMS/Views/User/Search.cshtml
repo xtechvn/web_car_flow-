@@ -34,7 +34,14 @@
                 counter++;
                 <tr class="@((counter % 2 == 0)? "line-item bg-gray" : "line-item")" data-id="@item.Id" data-ajaxdetail="false">
                     <td>@counter</td>
-                    <td>@item.UserName</td>
+                    <td>
+
+                        <a href="javascript:void(0);"
+                           onclick="_user.OnOpenEditForm('@item.Id')"
+                           class="link-edit">
+                            @item.UserName
+                        </a>
+                    </td>
                     <td class="name_img">
                         <div class="flex align-center">
                             @*<div class="ava">

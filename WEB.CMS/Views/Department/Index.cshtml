@@ -1,4 +1,10 @@
-﻿<main class="main-section">
+﻿@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+<head>
+    <link href="~/lib/magnific-popup/magnific-popup.css" rel="stylesheet" />
+</head>
+<main class="main-section">
 
 
     <div class="table-head">
@@ -16,31 +22,19 @@
             <button class="btn" onclick="_department.ShowAddOrUpdate(0)"><span class="plus">✕</span> Thêm mới</button>
         </div>
     </div>
-    <div class="dropdown-modern">
-        <label class="label">Trạng thái</label>
+    
 
-        <div class="status-dropdown">
-            <button class="dropdown-toggle" data-options="[
-      {&quot;text&quot;:&quot;Tất cả&quot;,&quot;class&quot;:&quot;status-all&quot;},
-      {&quot;text&quot;:&quot;Đang hoạt động&quot;,&quot;class&quot;:&quot;status-active&quot;},
-      {&quot;text&quot;:&quot;Ngừng hoạt động&quot;,&quot;class&quot;:&quot;status-close&quot;}
-    ]">
-                Tất cả
-            </button>
-        </div>
-    </div>
 
-    <p class="">
-        <a class="open-popup-link" href="#popup">Popup thêm người dùng</a>
-
-    </p>
     <div id="magnific-popup-small" class="popup-form  white-popup mfp-hide">
         <div class="round_lighbox">
             <div class="content_lightbox">
-                <div class="title-popup magnific-title" id="Data_Tile"></div>
+                <div class="title-popup" id="Data_Tile"></div>
                 <div class="form-user-modern  magnific-body" id="Data_Body">
+                    
                 </div>
+
             </div>
+           
         </div>
     </div>
     <div class="table-wrapper simple-scrollbar ss-container" style="height: 310px;">

@@ -240,7 +240,7 @@ var _user = {
         let url = '/user/AddOrUpdate';
 
         let param = { Id: id };
-        _magnific.OpenLargerPopup(title, url, param);
+        _magnific.OpenSmallPopup(title, url, param);
     },
     OnOpenGenQrFrom: function (id) {
         let url = '/User/ViewConfirm';
@@ -397,7 +397,12 @@ var _user = {
             })
             formData.set("CompanyType", company_type);
             formData.set("UserName", $('#UserName').val());
-            formData.set("BirthDay", _global_function.GetDayText($('#datepicker').data('daterangepicker').startDate._d, true));
+            let birth = $('#datepicker').val();
+            if (birth) {
+                let parts = birth.split('-'); // YYYY-MM-DD
+                formData.set("BirthDay", parts[1] + '/' + parts[2] + '/' + parts[0]);
+            }
+
             formData.set("OldCompanyType", $('#form-create-user').attr('data-companytype'))
 
             /*
@@ -435,6 +440,7 @@ var _user = {
                         _msgalert.success(result.message);
                         _user.ReLoad();
                         _user.modal_element.modal('hide');
+                        $.magnificPopup.close();
                     } else {
                         _msgalert.error(result.message);
                     }

@@ -1,5 +1,6 @@
 @{
     Layout = null;
+    List<Entities.Models.AllCode> branch = (List<Entities.Models.AllCode>)ViewBag.Branch;
 }
 @using Entities.Models
 @{
@@ -34,72 +35,38 @@
     }
 </style>
 <form id="form_department">
-    <input type="hidden" asp-for="@Model.Id" name="Id" />
-    
+    <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+    <input type="hidden" id="ParentId" name="ParentId" value="@Model.ParentId" />
+
     <div class="form-grid">
-        <!-- Tên phòng ban -->
         <div class="form-group">
             <label>Tên phòng ban <span>*</span></label>
-            <input type="text" asp-for="@Model.DepartmentName" id="DepartmentName" name="DepartmentName" placeholder="Nhập tên phòng ban">
+            <input type="text" id="DepartmentName" name="DepartmentName" class="form-control"
+                   value="@Model.DepartmentName" />
         </div>
 
-        <!-- Mã phòng ban -->
-        <div class="form-group">
-            <label>Mã phòng ban</label>
-            <input type="text" asp-for="@Model.DepartmentCode" id="DepartmentCode" name="DepartmentCode" placeholder="Nhập mã phòng ban">
-        </div>
-
-        <!-- Phòng ban cha -->
-        <div class="form-group">
-            <label>Phòng ban cha</label>
-            <select asp-for="@Model.ParentId" id="ParentId" name="ParentId">
-                <option value="0">-- Chọn phòng ban cha --</option>
-                @if (_DepartmentList != null && _DepartmentList.Any())
-                {
-                    var parents = _DepartmentList.Where(s => s.ParentId == 0).ToList();
-                    foreach (var item in parents)
-                    {
-                        await ShowDepartment(item);
-                    }
-                }
-            </select>
-        </div>
-
-        <!-- Chi nhánh -->
         <div class="form-group">
             <label>Chi nhánh</label>
-            <select asp-for="@Model.Branch" id="branch-code" name="Branch">
-                <option value="">-- Chọn chi nhánh --</option>
-                @if (_BranchList != null && _BranchList.Any())
+            <select id="branch-code" name="Branch" class="form-control">
+                <option value="-1" @(Model.Branch == -1 ? "selected" : "")>———— Tất cả ————</option>
+                @if (branch != null && branch.Count > 0)
                 {
-                    foreach (var item in _BranchList)
+                    foreach (var item in branch)
                     {
-                        <option value="@item.CodeValue">@item.Description</option>
+                        <option value="@item.CodeValue" @(Model.Branch == item.CodeValue ? "selected" : "")>
+                            @item.Description
+                        </option>
                     }
                 }
             </select>
         </div>
 
-        <!-- Thứ tự sắp xếp -->
-        <div class="form-group">
-            <label>Thứ tự sắp xếp</label>
-            <input type="number" asp-for="@Model.Sort" id="Sort" name="Sort" placeholder="Nhập thứ tự sắp xếp" min="0">
-        </div>
-
-        <!-- Cho phép báo cáo -->
-        <div class="form-group">
-            <label>Cho phép báo cáo</label>
-            <select asp-for="@Model.IsReport" id="IsReport" name="IsReport">
-                <option value="true">Có</option>
-                <option value="false">Không</option>
-            </select>
-        </div>
-
-        <!-- Mô tả -->
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label>Mô tả</label>
-            <textarea asp-for="@Model.Description" id="Description" name="Description" placeholder="Nhập mô tả phòng ban" rows="3"></textarea>
-        </div>
+        
+    </div>
+    <div class="form-group" style="margin-top:25px;">
+        <label>Mô tả</label>
+        <input type="text" style="margin-bottom:25px;" id="Description" name="Description" class="form-control"
+               placeholder="Vui lòng nhập" value="@Model.Description" />
     </div>
 
     <div class="actions">
@@ -107,6 +74,7 @@
         <button type="button" class="confirm" onclick="_department.OnSave()">@(Model.Id == 0 ? "Thêm mới" : "Cập nhật")</button>
     </div>
 </form>
+
 
 <script>
 $(document).ready(function() {

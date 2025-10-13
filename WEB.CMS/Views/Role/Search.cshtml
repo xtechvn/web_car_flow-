@@ -27,7 +27,13 @@
                 counter++;
                 <tr class="@((counter % 2 == 0)?"line-item bg-gray":"line-item")" data-id="@item.Id" data-ajaxdetail="false">
                     <td>@counter</td>
-                    <td>@item.Name</td>
+                    <td>
+                        <a href="javascript:void(0);"
+                           onclick="_role.OnOpenEditForm('@item.Id')"
+                           class="link-edit">
+                            @item.Name
+                        </a>
+                    </td>
                     <td>@item.Description</td>
                     <td>
                         @(item.Status == 0 ? "Bình thường": "Khóa/tạm dừng")
