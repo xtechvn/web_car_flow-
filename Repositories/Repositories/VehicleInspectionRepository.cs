@@ -3,6 +3,7 @@ using Entities.ConfigModels;
 using Entities.Models;
 using Entities.ViewModels.Car;
 using Microsoft.Extensions.Options;
+using Nest;
 using Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,16 @@ namespace Repositories.Repositories
         {
             try
             {
+                var now = DateTime.Now;
+                var expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
+                if (now >= expireAt)
+                {
+                    searchModel.RegistrationTime = expireAt;
+                }
+                else
+                {
+                    searchModel.RegistrationTime = expireAt.AddDays(-1);
+                }
                 return await _VehicleInspectionDAL.GetListCartoFactory(searchModel);
             }
             catch (Exception ex)

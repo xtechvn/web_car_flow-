@@ -19,6 +19,7 @@ namespace Entities.ViewModels.Car
         public int? type { get; set; }                    // Loại 1 đã sử lý,0 chưa sl
         public int? LoadingStatus { get; set; }           // Trạng sử lý đang tải
         public int? VehicleWeighedstatus { get; set; }    // Trạng thái xe đã được cân đầu vào
+        public DateTime? RegistrationTime { get; set; } // Thời gian đăng ký
     }
     public class RegistrationRecord
     {
