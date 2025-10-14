@@ -10,6 +10,9 @@
             _cartofactory.ListCartoFactory();
         }
     });
+    input_chua_xu_ly.addEventListener("keyup", function (event) {
+        _cartofactory.ListCartoFactory();
+    });
     var input_da_xu_ly = document.getElementById("input_da_xu_ly");
     input_da_xu_ly.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,10 @@
             // Trigger the button element with a click
             _cartofactory.ListCartoFactory_Da_SL();
         }
+    });
+    input_da_xu_ly.addEventListener("keyup", function (event) {
+        // Kích hoạt hàm khi giá trị thay đổi và người dùng thoát khỏi input
+        _cartofactory.ListCartoFactory_Da_SL();
     });
 
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
@@ -324,8 +331,8 @@ var _cartofactory = {
     },
     ListCartoFactory: function () {
         var model = {
-            VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(),
+            VehicleNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
             VehicleStatus: null,
             LoadType: null,
             VehicleWeighingType: null,
@@ -349,8 +356,8 @@ var _cartofactory = {
     },
     ListCartoFactory_Da_SL: function () {
         var model = {
-            VehicleNumber: $('#input_da_xu_ly').val(),
-            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,

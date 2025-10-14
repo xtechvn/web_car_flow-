@@ -1,6 +1,10 @@
 ﻿@{
     Layout = null;
 }
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+
 @using Entities.Models
 @model IEnumerable<Department>
 
@@ -10,9 +14,10 @@
         var childDatas = Model.Where(s => s.ParentId == item.Id).ToList();
         <tr>
             <td>
-                <a class="cursor-pointer" onclick="_department.ShowAddOrUpdate(0,'@item.Id')" title="Thêm phòng ban con">
-                    <i class="fa fa-plus"></i>
+                <a style="text-decoration:auto!important;font-size:20px!important;" onclick="_department.ShowAddOrUpdate(0,'@item.Id')" title="Thêm phòng ban con">
+                    +
                 </a>
+             
             </td>
             <td>
                 <div class="department_name" style="padding-left:@(level*20)px;">

@@ -25,15 +25,10 @@ namespace WEB.CMS.Services
 
             await _redisService.SubscribeAsync("Add_ReceiveRegistration", async (RegistrationRecord record) =>
             {
-                // Forward tới tất cả client qua SignalR
-                var id = _vehicleInspectionRepository.SaveVehicleInspection(record);
-                if (id > 0)
-                {
-                    record.Id = id;
-                    record.CreateTime = record.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss");
-                    await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
-                }
-                LogHelper.InsertLogTelegram("ExecuteAsync:1 ");
+
+                record.CreateTime = record.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss");
+                await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
+
             });
 
             await Task.CompletedTask;

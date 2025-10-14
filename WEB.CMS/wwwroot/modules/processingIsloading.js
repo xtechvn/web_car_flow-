@@ -10,6 +10,9 @@
             _processing_is_loading.ListProcessingIsLoading();
         }
     });
+    input_Processing_Is_Loading_Chua_SL.addEventListener("keyup", function (event) {
+        _processing_is_loading.ListProcessingIsLoading();
+    });
     var input_Processing_Is_Loading_Da_SL = document.getElementById("input_Processing_Is_Loading_Da_SL");
     input_Processing_Is_Loading_Da_SL.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,9 @@
             // Trigger the button element with a click
             _processing_is_loading.ListProcessingIsLoading_Da_SL();
         }
+    });
+    input_Processing_Is_Loading_Da_SL.addEventListener("keyup", function (event) {
+        _processing_is_loading.ListProcessingIsLoading_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
@@ -361,8 +367,8 @@ var _processing_is_loading = {
     },
     ListProcessingIsLoading: function () {
         var model = {
-            VehicleNumber: $('#input_Processing_Is_Loading_Chua_SL').val(),
-            PhoneNumber: $('#input_Processing_Is_Loading_Chua_SL').val(),
+            VehicleNumber: $('#input_Processing_Is_Loading_Chua_SL').val() != undefined && $('#input_Processing_Is_Loading_Chua_SL').val() != "" ? $('#input_Processing_Is_Loading_Chua_SL').val().trim() : "",
+            PhoneNumber: $('#input_Processing_Is_Loading_Chua_SL').val() != undefined && $('#input_Processing_Is_Loading_Chua_SL').val() != "" ? $('#input_Processing_Is_Loading_Chua_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,
@@ -387,8 +393,8 @@ var _processing_is_loading = {
     },
     ListProcessingIsLoading_Da_SL: function () {
         var model = {
-            VehicleNumber: $('#input_Processing_Is_Loading_Da_SL').val(),
-            PhoneNumber: $('#input_Processing_Is_Loading_Da_SL').val(),
+            VehicleNumber: $('#input_Processing_Is_Loading_Da_SL').val() != undefined && $('#input_Processing_Is_Loading_Da_SL').val() != "" ? $('#input_Processing_Is_Loading_Da_SL').val().trim() : "",
+            PhoneNumber: $('#input_Processing_Is_Loading_Da_SL').val() != undefined && $('#input_Processing_Is_Loading_Da_SL').val() != "" ? $('#input_Processing_Is_Loading_Da_SL').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: null,

@@ -35,6 +35,8 @@ namespace Entities.ViewModels.Car
         public string Camp { get; set; } = string.Empty;
         public int Type { get; set; } = 0;
         public string CreateTime { get; set; }
+        public int Bookingid { get; set; }
+        public string text_voice { get; set; }
     }
 
 }

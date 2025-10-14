@@ -59,50 +59,58 @@ var _department = {
     ShowAddOrUpdate: function (id, parent_id = 0) {
         let title = `${id > 0 ? "Cập nhật" : "Thêm mới"} phòng ban`;
         let url = '/Department/AddOrUpdate';
-        _department.modal_element.find('.modal-title').html(title);
-        _department.modal_element.find('.modal-dialog').css('max-width', '680px');
-        _ajax_caller.get(url, { id: id, parent_id: parent_id }, function (result) {
-            _department.modal_element.find('.modal-body').html(result);
-            _department.modal_element.modal('show');
-            $('#branch-code').select2({
-                minimumResultsForSearch: Infinity
-            });
-        });
+        
+        let param = { id: id, parent_id: parent_id };
+        _magnific.OpenSmallPopup(title, url, param);
     },
 
     OnSave: function () {
+        debugger;
         let Form = $('#form_department');
+
+        // Validation
         Form.validate({
             rules: {
-                //DepartmentCode: "required",
                 DepartmentName: "required"
             },
             messages: {
-                // DepartmentCode: "Vui lòng nhập mã phòng ban",
                 DepartmentName: "Vui lòng nhập tên phòng ban"
             }
         });
 
-        if (!Form.valid()) { return; }
+        if (!Form.valid()) {
+            return;
+        }
 
+        // ✅ Tạo object chứa dữ liệu form
+        let formData = {
+            Id: $('input[name="Id"]').val() || 0,
+            DepartmentName: $('#DepartmentName').val().trim(),
+            Description: $('#Description').val().trim(),
+            ParentId: $('#ParentId').val() || 0,
+            Branch: $('#branch-code').val() || -1
+        };
 
-        let formData = this.GetFormData(Form);
-        console.log(formData);
-        formData['Branch'] = $('#branch-code').find(':selected').val();
+        console.log("📦 formData gửi lên:", formData);
 
-        let url = "/Department/AddOrUpdate";
+        // ✅ Gửi Ajax
+        let url = "/Department/AddOrUpdate2";
         _ajax_caller.post(url, { model: formData }, function (result) {
+            debugger;
             if (result.isSuccess) {
                 _msgalert.success(result.message);
                 _department.modal_element.modal('hide');
                 _department.ReLoad();
+                $.magnificPopup.close();
             } else {
                 _msgalert.error(result.message);
             }
         });
     },
 
+
     OnDelete: function (id) {
+        debugger
         let title = 'Xác nhận xóa phòng ban';
         let description = 'Bạn xác nhận muốn xóa phòng ban này?';
         _msgconfirm.openDialog(title, description, function () {

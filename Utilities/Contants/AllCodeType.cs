@@ -11,6 +11,7 @@
         public static string VEHICLEWEIGHINGSTATUS = "VEHICLEWEIGHINGSTATUS";//7
         public static string LOADINGSTATUS = "LOADINGSTATUS";//8
         public static string VEHICLEWEIGHEDSTATUS = "VEHICLEWEIGHEDSTATUS";//8
+        public static string BRANCH_CODE = "BRANCH_CODE";
 
 
     }

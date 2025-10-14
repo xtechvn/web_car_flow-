@@ -292,9 +292,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                  $"📞 Hotline hỗ trợ: 1900-1234\n" +
                  $"🌐 Website: https://cargillhanam.com\n\n" +
                  $"Cảm ơn bạn đã sử dụng dịch vụ! ";
-                LogHelper.InsertLogTelegram(message);
+               
                 //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-                await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
+               // await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)
@@ -313,6 +313,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}");
                     }
                 }
+                LogHelper.InsertLogTelegram(message);
                 // Return success response
                 return Ok(new CarRegistrationResponse
                 {
@@ -337,7 +338,33 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 });
             }
         }
-        
-       
+        [HttpPost("insert")]
+        public async Task<ActionResult<object>> Insert([FromBody] CarRegistrationResponse request)
+        {
+            try
+            {
+                string url = "http://qc-api.cargillhanam.com/api/vehicleInspection/insert";
+                var client = new HttpClient();
+                var request_api = new HttpRequestMessage(HttpMethod.Post, url);
+                request_api.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
+                var response = await client.SendAsync(request_api);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    LogHelper.InsertLogTelegram("Insert - lỗi " );
+                }
+                return StatusCode(200, "thành công");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CarRegistrationController - GetQueueStatus: " + ex.Message);
+                _logger.LogError(ex, "Error getting queue status");
+                return StatusCode(500, "Lỗi hệ thống");
+            }
+        }
+
     }
 }

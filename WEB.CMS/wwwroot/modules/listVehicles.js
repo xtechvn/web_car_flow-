@@ -10,6 +10,9 @@
             _listVehicles.ListCartoFactory();
         }
     });
+    input_chua_xu_ly.addEventListener("keyup", function (event) {
+        _listVehicles.ListCartoFactory();
+    });
     var input_da_xu_ly = document.getElementById("input_da_xu_ly");
     input_da_xu_ly.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,9 @@
             // Trigger the button element with a click
             _listVehicles.ListCartoFactory_Da_SL();
         }
+    });
+    input_da_xu_ly.addEventListener("keyup", function (event) {
+        _listVehicles.ListCartoFactory_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
@@ -250,6 +256,7 @@
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
     connection.on("ListVehicles_Da_SL", function (item) {
+        $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm

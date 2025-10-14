@@ -22,14 +22,19 @@
             <button class="btn" onclick="_user.OnOpenCreateForm()" ><span class="plus">✕</span> Thêm mới</button>
         </div>
     </div>
-    <div class="dropdown-modern">
+   <div class="dropdown-modern">
+    <label class="label">Trạng thái</label>
 
+    <div class="status-dropdown">
+        <button class="dropdown-toggle" data-options='[
+      {"text":"Tất cả","class":"status-all"},
+      {"text":"Đang hoạt động","class":"status-active"},
+      {"text":"Ngừng hoạt động","class":"status-close"}
+    ]'>Tất cả</button>
     </div>
+</div>
 
-    <p class="">
-        <a class="open-popup-link" href="#popup">Popup thêm người dùng</a>
-
-    </p>
+   
     
     <div id="magnific-popup-small" class="popup-form  white-popup mfp-hide">
         <div class="round_lighbox">
@@ -141,6 +146,171 @@
 </main>
 @section scripts {
     <script src="~/modules/user.js?v=2" asp-append-version="true"></script>
-    <script src="~/modules/user.js?v=2" asp-append-version="true"></script>
+    @* <script src="~/modules/user.js?v=2" asp-append-version="true"></script> *@
+    @* <script> *@
+    @*             $('.open-popup-link').magnificPopup({ *@
+    @*                 type: 'inline', *@
+    @*                 midClick: true, // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href. *@
+    @*                 mainClass: 'mfp-with-zoom', *@
+    @*                 fixedContentPos: false, *@
+    @*                 fixedBgPos: true, *@
+    @*                 overflowY: 'auto', *@
+    @*                 closeBtnInside: true, *@
+    @*                 preloader: false, *@
+    @*                 removalDelay: 300, *@
+    @*             }); *@
+
+    @*            // js dropdown (cải tiến: tọa độ viewport + đo kích thước chính xác + đóng khi scroll) *@
+    @*     $(function () { *@
+    @*         const container = $('<div id="dropdown-container"></div>').appendTo('body'); *@
+    @*         let $menu = null; *@
+    @*         let $currentBtn = null; *@
+
+    @*         $(document).on('click', '.status-dropdown .dropdown-toggle', function (e) { *@
+    @*             e.stopPropagation(); *@
+    @*             const $btn = $(this); *@
+    @*             const optsData = $btn.data('options'); // mảng [{text, class}] *@
+    @*             const options = Array.isArray(optsData) ? optsData : JSON.parse(optsData); *@
+    @*             const currentText = $.trim($btn.text()); *@
+
+    @*             // Đóng menu cũ (nếu có) *@
+    @*             if ($menu) { *@
+    @*                 $menu.remove(); *@
+    @*                 $menu = null; *@
+    @*             } *@
+
+    @*             $currentBtn = $btn; *@
+
+    @*             // Tạo menu + danh sách li *@
+    @*             $menu = $('<div class="dropdown-menu"><ul></ul></div>'); *@
+    @*             const $ul = $menu.find('ul'); *@
+
+    @*             options.forEach(opt => { *@
+    @*                 $('<li>') *@
+    @*                     .text(opt.text) *@
+    @*                     .addClass(opt.class) *@
+    @*                     .toggleClass('active', opt.text === currentText) *@
+    @*                     .appendTo($ul); *@
+    @*             }); *@
+
+    @*             const $actions = $('<div class="actions"></div>'); *@
+    @*             $('<button class="cancel">Bỏ qua</button>').appendTo($actions); *@
+    @*             $('<button class="confirm">Xác nhận</button>').appendTo($actions); *@
+    @*             $menu.append($actions); *@
+    @*             container.append($menu); *@
+
+    @*             // --- 🔧 Tính toán vị trí dropdown (dùng viewport coords) --- *@
+    @*             const rect = $btn[0].getBoundingClientRect(); // viewport coordinates *@
+    @*             const btnHeight = rect.height; *@
+    @*             const winWidth = $(window).width(); *@
+    @*             const winHeight = $(window).height(); *@
+    @*             const paddingScreen = 15; // chừa khoảng 15px mỗi bên *@
+
+    @*             // Nếu cần dropdown có width theo wrapper .dropdown-modern (nếu tồn tại), *@
+    @*             // bạn có thể bỏ comment đoạn sau (mình giữ commented để KHÔNG thay đổi hành vi cũ). *@
+    @*             // const $modern = $btn.closest('.dropdown-modern'); *@
+    @*             // if ($modern.length) { *@
+    @*             //     $menu.css('width', $modern.outerWidth()); *@
+    @*             // } *@
+
+    @*             // Để đo chính xác kích thước (menu có thể đang display:none trong CSS), *@
+    @*             // ta tạm hiện menu nhưng ẩn bằng visibility để không gây flicker. *@
+    @*             $menu.css({ *@
+    @*                 position: 'absolute', *@
+    @*                 left: 0, *@
+    @*                 top: 0, *@
+    @*                 display: 'block', *@
+    @*                 visibility: 'hidden' *@
+    @*             }); *@
+
+    @*             const menuWidth = $menu.outerWidth(); *@
+    @*             const menuHeight = $menu.outerHeight(); *@
+
+    @*             // Vị trí mặc định: bên dưới button (viewport coords) *@
+    @*             let left = rect.left; *@
+    @*             let top = rect.top + btnHeight; *@
+
+    @*             // Nếu dropdown tràn phải -> dịch sang trái *@
+    @*             if (left + menuWidth + paddingScreen > winWidth) { *@
+    @*                 left = winWidth - menuWidth - paddingScreen; *@
+    @*             } *@
+
+    @*             // Nếu tràn trái -> giữ cách paddingScreen *@
+    @*             if (left < paddingScreen) { *@
+    @*                 left = paddingScreen; *@
+    @*             } *@
+
+    @*             // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button) *@
+    @*             if (top + menuHeight > winHeight) { *@
+    @*                 top = rect.top - menuHeight; *@
+    @*                 $menu.addClass('drop-up'); *@
+    @*             } else { *@
+    @*                 $menu.removeClass('drop-up'); *@
+    @*             } *@
+
+    @*             // Áp vị trí cuối cùng và hiển thị menu *@
+    @*             $menu.css({ *@
+    @*                 left: left, *@
+    @*                 top: top, *@
+    @*                 visibility: 'visible' // hiện lên *@
+    @*             }); *@
+    @*         }); *@
+
+    @*         // Click chọn item *@
+    @*         $(document).on('click', '#dropdown-container .dropdown-menu li', function (e) { *@
+    @*             e.stopPropagation(); *@
+    @*             $('#dropdown-container .dropdown-menu li').removeClass('active'); *@
+    @*             $(this).addClass('active'); *@
+    @*         }); *@
+
+    @*         // Bỏ qua *@
+    @*         $(document).on('click', '#dropdown-container .actions .cancel', function (e) { *@
+    @*             e.stopPropagation(); *@
+    @*             closeMenu(); *@
+    @*         }); *@
+
+    @*         // ✅ Xác nhận – đổi text + class cho button *@
+    @*         $(document).on('click', '#dropdown-container .actions .confirm', function (e) { *@
+    @*             e.stopPropagation(); *@
+    @*             if ($menu && $currentBtn) { *@
+    @*                 const $active = $menu.find('li.active'); *@
+    @*                 if ($active.length) { *@
+    @*                     const text = $active.text(); *@
+    @*                     const cls = $active.attr('class').split(/\s+/) *@
+    @*                         .filter(c => c !== 'active')[0] || ''; *@
+
+    @*                     $currentBtn *@
+    @*                         .text(text) *@
+    @*                         .removeClass(function (_, old) { *@
+    @*                             return (old.match(/(^|\s)status-\S+/g) || []).join(' '); *@
+    @*                         }) *@
+    @*                         .addClass(cls); *@
+    @*                 } *@
+    @*             } *@
+    @*             closeMenu(); *@
+    @*         }); *@
+
+    @*         // Đóng menu khi click ra ngoài *@
+    @*         $(document).on('click', function () { *@
+    @*             closeMenu(); *@
+    @*         }); *@
+
+    @*         // Đóng dropdown khi scroll (nếu muốn mượt hơn, có thể debounce) *@
+    @*         $(window).on('scroll', function () { *@
+    @*             if ($menu) { *@
+    @*                 closeMenu(); *@
+    @*             } *@
+    @*         }); *@
+
+    @*         function closeMenu() { *@
+    @*             if ($menu) { *@
+    @*                 $menu.remove(); *@
+    @*                 $menu = null; *@
+    @*                 $currentBtn = null; *@
+    @*             } *@
+    @*         } *@
+    @*     }); *@
+
+    @* </script> *@
 
 }

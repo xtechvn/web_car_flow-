@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Cargill.CMS", "WEB.CMS\Web.Cargill.CMS.csproj", "{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Cargill.Api", "Web.Cargill.Api\Web.Cargill.Api.csproj", "{7F61479A-7385-418B-A3BD-CC56935AD6EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A108CDC6-9339-45EF-8FEB-1A2747B06BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F61479A-7385-418B-A3BD-CC56935AD6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F61479A-7385-418B-A3BD-CC56935AD6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F61479A-7385-418B-A3BD-CC56935AD6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F61479A-7385-418B-A3BD-CC56935AD6EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

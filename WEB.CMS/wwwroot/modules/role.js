@@ -186,42 +186,49 @@ var _role = {
         _magnific.OpenSmallPopup(title, url, param);
     },
 
-    OnUpsert() {
-        let FromCreate = $('#form-role');
-        FromCreate.validate({
-            rules: {
-                Name: "required",
+    OnUpsert: function () {
+        debugger;
+
+        // Validate cơ bản
+        let Name = $('#Name').val()?.trim();
+        if (!Name) {
+            _msgalert.error('Vui lòng nhập tên nhóm quyền');
+            return;
+        }
+
+        // Chuẩn bị dữ liệu gửi đi
+        var formData = new FormData();
+        formData.append("Id", $('#Id').val() || 0);
+        formData.append("Name", Name);
+        formData.append("Description", $('#Description').val()?.trim() || '');
+        formData.append("Status", $('#Status').val() || 0);
+
+        _global_function.AddLoading();
+
+        $.ajax({
+            url: '/role/upsert',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                debugger
+                _global_function.RemoveLoading();
+                if (data.isSuccess) {
+                    _msgalert.success(data.message);
+                    _role.ReLoad();
+                    $.magnificPopup.close();
+                } else {
+                    _msgalert.error(data.message);
+                }
             },
-            messages: {
-                Name: "Vui lòng nhập tên nhóm quyền",
+            error: function (xhr) {
+                _global_function.RemoveLoading();
+                _msgalert.error('Lỗi trong quá trình cập nhật');
             }
         });
-
-        if (FromCreate.valid()) {
-            let form = document.getElementById('form-role');
-            var formData = new FormData(form);
-            $.ajax({
-                url: '/role/upsert',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.isSuccess) {
-                        _msgalert.success(data.message);
-                        _role.ReLoad();
-                        $.magnificPopup.close();
-                    } else {
-                        _msgalert.error(data.message);
-                    }
-                },
-                error: function (jqXHR) {
-                },
-                complete: function (jqXHR, status) {
-                }
-            });
-        }
     },
+
 
     OnLoadUserData: function (id, callback) {
         $.ajax({

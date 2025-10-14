@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Web.Cargill.CMS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5380159929c92a99cb5ebbcb9fedefe681884207")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ea872d275e2a67f40da4cfc24a1675391585753")]
 [assembly: System.Reflection.AssemblyProductAttribute("Web.Cargill.CMS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Web.Cargill.CMS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,20 @@
+{
+  "Version": 1,
+  "Hash": "DoQB0f7asuYixuL7Hm0b5IDUBesFXH2HAQj0TSJe3CU=",
+  "Source": "Web.Cargill.Api",
+  "BasePath": "_content/Web.Cargill.Api",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Web.Cargill.Api\\wwwroot",
+      "Source": "Web.Cargill.Api",
+      "ContentRoot": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Web.Cargill.Api\\wwwroot\\",
+      "BasePath": "_content/Web.Cargill.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [],
+  "Endpoints": []
+}

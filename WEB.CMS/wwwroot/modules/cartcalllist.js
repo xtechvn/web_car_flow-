@@ -10,6 +10,9 @@
             _cartcalllist.ListCartoFactory();
         }
     });
+    input_chua_xu_ly.addEventListener("keyup", function (event) {
+        _cartcalllist.ListCartoFactory();
+    });
     var input_da_xu_ly = document.getElementById("input_da_xu_ly");
     input_da_xu_ly.addEventListener("keypress", function (event) {
         // If the user presses the "Enter" key on the keyboard
@@ -19,6 +22,9 @@
             // Trigger the button element with a click
             _cartcalllist.ListCartoFactory_Da_SL();
         }
+    });
+    input_da_xu_ly.addEventListener("keyup", function (event) {
+        _cartcalllist.ListCartoFactory_Da_SL();
     });
     const container = $('<div id="dropdown-container"></div>').appendTo('body');
     let $menu = null;
@@ -125,8 +131,8 @@
 
     // ✅ Xác nhận – đổi text + class cho button
     // Khi chọn máng xuất trong dropdown (type=1)
+    // ✅ Xác nhận – đổi text + class cho button
     $(document).on('click', '#dropdown-container .actions .confirm', async function (e) {
-        debugger
         e.stopPropagation();
 
         if ($menu && $currentBtn) {
@@ -145,10 +151,8 @@
                     }
                 }
 
-                // cập nhật giao diện dropdown
-            
-
                 var type = $currentBtn.attr('data-type');
+
                 if (type == '1') {
                     // update máng xuất
                     var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 4);
@@ -160,13 +164,41 @@
                             })
                             .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
                     }
-                    // gọi SignalR thông báo cho tất cả client
                     connection.invoke("BroadcastUpdateMang", val_TT, "Đang xử lý")
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
-                    var status_type=await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
-                    
+
+                    // 👉 Nếu chọn Hoàn thành mà chưa nhập trọng lượng → hiển thị input phụ
+                    if (val_TT == 0 && (weight == 0 || weight === "")) {
+                        if ($menu.find(".extra-weight").length === 0) {
+                            let $extra = $('<div class="extra-weight" style="margin:10px 0;">' +
+                                '<input type="number" class="weight-input" ' +
+                                'placeholder="Vui lòng nhập trọng lượng (kg)" ' +
+                                'style="width:100%;padding:5px;" ' +
+                                'min="0" max="99999999" ' +
+                                'oninput="if(this.value.length>8)this.value=this.value.slice(0,8);" />' +
+                                '</div>');
+
+                            $extra.insertBefore($menu.find('.actions'));
+
+                            // 👉 Focus vào input ngay khi nó xuất hiện
+                            $extra.find("input").focus();
+                            return; // dừng, chờ user nhập
+                        } else {
+                            weight = $menu.find(".extra-weight .weight-input").val();
+                            if (!weight || weight == 0) {
+                                alert("Vui lòng nhập trọng lượng!");
+                                return;
+                            }
+                            // đồng bộ lại vào input chính trong row
+                            $row.find('input.weight').val(weight);
+                        }
+                    }
+
+                    // ✅ Gọi API update
+                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+
                     if (val_TT != 0) {
                         $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
                     }
@@ -179,14 +211,12 @@
                             .addClass($active.attr('class').split(/\s+/).filter(c => c !== 'active')[0] || '');
                     }
 
-                    // nếu trạng thái kết thúc → giải phóng máng
+                    // ✅ xử lý máng trống / đang xử lý
                     if (val_TT == 0) {
                         let mangName = $row.find('button[data-type="1"]').text().trim();
                         let match = mangName.match(/\d+/);
                         if (match) {
                             let mangIndex = parseInt(match[0]);
-
-                            // 🔎 Check còn xe nào khác trong cùng máng này không
                             let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
                                 let btnText = $(tr).find("button[data-type='1']").text().trim();
                                 let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
@@ -194,17 +224,14 @@
                             });
 
                             if (stillHasCar) {
-                                // ✅ Nếu còn xe khác chưa hoàn thành → máng vẫn đang xử lý
                                 $("#input" + mangIndex).val("Đang xử lý")
                                     .removeClass("empty").addClass("processing");
                             } else {
-                                // ✅ Nếu không còn xe nào → máng trống
                                 $("#input" + mangIndex).val("Trống")
                                     .removeClass("processing").addClass("empty");
                             }
                         }
                     } else {
-                        // ✅ nếu không phải hoàn thành => máng đó đang xử lý
                         let mangName = $row.find('button[data-type="1"]').text().trim();
                         let match = mangName.match(/\d+/);
                         if (match) {
@@ -213,13 +240,17 @@
                                 .removeClass("empty").addClass("processing");
                         }
                     }
-
-
                 }
             }
         }
         closeMenu();
     });
+
+    // 🚫 Chặn đóng menu khi click vào input phụ
+    $(document).on('click', '#dropdown-container .extra-weight input', function (e) {
+        e.stopPropagation();
+    });
+
 
     // Đóng menu khi click ra ngoài
     $(document).on('click', function () {
@@ -238,11 +269,11 @@
         .withAutomaticReconnect([0, 2000, 10000, 30000]) // retry sau 0s, 2s, 10s, 30s
         .build();
     const AllCode = [
-        { Description: "Máng 1", CodeValue: "0" },
-        { Description: "Máng 2", CodeValue: "1" },
-        { Description: "Máng 3", CodeValue: "2" },
-        { Description: "Máng 4", CodeValue: "3" },
-        { Description: "Máng 5", CodeValue: "4" },
+        { Description: "Máng 3", CodeValue: "3" },
+        { Description: "Máng 4", CodeValue: "4" },
+        { Description: "Máng 5", CodeValue: "5" },
+        { Description: "Máng 6", CodeValue: "6" },
+        { Description: "Máng 7", CodeValue: "7" },
         // Add more objects as needed
     ];
     const AllCode2 = [
@@ -265,13 +296,21 @@
     const jsonString2 = JSON.stringify(options2);
     // Hàm render row
     function renderRow(item, isProcessed) {
+        var date = new Date(item.vehicleWeighingTimeComeOut);
+        let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear();
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
         <td>${item.recordNumber}</td>
         <td>${item.customerName}</td>
         <td>${item.driverName}</td>
-        <td>${item.vehicleNumber}</td>
-        <td>${item.vehicleWeighingTimeComplete || ""}</td>
+        <td><a class="btn-detail"
+                           data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
+        <td>${formatted || ""}</td>
         <td>
             <div class="status-dropdown">
                 <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
@@ -307,10 +346,36 @@
         const tbody = document.getElementById("dataBody-1");
         const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Chỉ mục của cột "Giờ cân xong đầu vào" (Điều chỉnh nếu cần)
+        const TIME_COLUMN_INDEX = 4;
+
+        // Hàm chuyển đổi chuỗi thời gian "HH:mm dd/MM/yyyy" thành đối tượng Date
+        // Đây là bước quan trọng để so sánh thời gian chính xác
+        const parseDateTime = (timeString) => {
+            if (!timeString) return new Date(0); // Trả về ngày rất cũ nếu chuỗi rỗng
+
+            // Ví dụ: "10:17 09/01/2025"
+            const [timePart, datePart] = timeString.split(' ');
+            if (!datePart || !timePart) return new Date(0);
+
+            const [day, month, year] = datePart.split('/').map(Number);
+            const [hours, minutes] = timePart.split(':').map(Number);
+
+            // Tạo đối tượng Date (Lưu ý: Tháng trong JS bắt đầu từ 0)
+            return new Date(year, month - 1, day, hours, minutes, 0);
+        };
+
         rows.sort((a, b) => {
-            const qa = parseInt(a.getAttribute("data-queue") || 0);
-            const qb = parseInt(b.getAttribute("data-queue") || 0);
-            return qa - qb;
+            // Lấy giá trị chuỗi thời gian từ ô tại chỉ mục đã cho
+            const timeAString = a.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+            const timeBString = b.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+
+            // Chuyển đổi sang đối tượng Date để so sánh
+            const dateA = parseDateTime(timeAString);
+            const dateB = parseDateTime(timeBString);
+
+            // Trả về kết quả so sánh (dateA - dateB cho sắp xếp tăng dần: cũ nhất -> mới nhất)
+            return dateA.getTime() - dateB.getTime();
         });
 
         tbody.innerHTML = "";
@@ -320,10 +385,36 @@
         const tbody = document.getElementById("dataBody-0");
         const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Chỉ mục của cột "Giờ cân xong đầu vào" (Điều chỉnh nếu cần)
+        const TIME_COLUMN_INDEX = 4;
+
+        // Hàm chuyển đổi chuỗi thời gian "HH:mm dd/MM/yyyy" thành đối tượng Date
+        // Đây là bước quan trọng để so sánh thời gian chính xác
+        const parseDateTime = (timeString) => {
+            if (!timeString) return new Date(0); // Trả về ngày rất cũ nếu chuỗi rỗng
+
+            // Ví dụ: "10:17 09/01/2025"
+            const [timePart, datePart] = timeString.split(' ');
+            if (!datePart || !timePart) return new Date(0);
+
+            const [day, month, year] = datePart.split('/').map(Number);
+            const [hours, minutes] = timePart.split(':').map(Number);
+
+            // Tạo đối tượng Date (Lưu ý: Tháng trong JS bắt đầu từ 0)
+            return new Date(year, month - 1, day, hours, minutes, 0);
+        };
+
         rows.sort((a, b) => {
-            const qa = parseInt(a.getAttribute("data-queue") || 0);
-            const qb = parseInt(b.getAttribute("data-queue") || 0);
-            return qa - qb;
+            // Lấy giá trị chuỗi thời gian từ ô tại chỉ mục đã cho
+            const timeAString = a.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+            const timeBString = b.cells[TIME_COLUMN_INDEX]?.textContent.trim() || '';
+
+            // Chuyển đổi sang đối tượng Date để so sánh
+            const dateA = parseDateTime(timeAString);
+            const dateB = parseDateTime(timeBString);
+
+            // Trả về kết quả so sánh (dateA - dateB cho sắp xếp tăng dần: cũ nhất -> mới nhất)
+            return dateA.getTime() - dateB.getTime();
         });
 
         tbody.innerHTML = "";
@@ -346,7 +437,8 @@
     connection.on("UpdateMangStatus", function (oldMangId, newMangId, carId) {
         // ✅ Update máng mới thành "Đang xử lý"
         if (newMangId !== null && newMangId !== undefined) {
-            $("#input" + (parseInt(newMangId) + 1)).val("Đang xử lý")
+            $("#input" + (parseInt(newMangId) + 3)).val("Đang xử lý")
+
                 .removeClass("empty").addClass("processing");
         }
 
@@ -357,7 +449,8 @@
             });
 
             if (!hasOtherCars) {
-                $("#input" + (parseInt(oldMangId) + 1)).val("Trống")
+                $("#input" + (parseInt(oldMangId) + 3)).val("Trống")
+
                     .removeClass("processing").addClass("empty");
             }
         }
@@ -414,7 +507,7 @@ var _cartcalllist = {
     // ✅ Đồng bộ trạng thái máng khi load trang hoặc reload data
     initMangStatus: function () {
         // Giả sử có 5 máng, bạn thay bằng số máng thực tế
-        for (let mangIndex = 1; mangIndex <= 5; mangIndex++) {
+        for (let mangIndex = 3; mangIndex <= 7; mangIndex++) {
             let mangName = "Máng " + mangIndex;
 
             // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không
@@ -452,8 +545,8 @@ var _cartcalllist = {
     },
     ListCartoFactory: function () {
         var model = {
-            VehicleNumber: $('#input_chua_xu_ly').val(),
-            PhoneNumber: $('#input_chua_xu_ly').val(),
+            VehicleNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_chua_xu_ly').val() != undefined && $('#input_chua_xu_ly').val() != "" ? $('#input_chua_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -481,8 +574,8 @@ var _cartcalllist = {
     ListCartoFactory_Da_SL: function () {
 
         var model = {
-            VehicleNumber: $('#input_da_xu_ly').val(),
-            PhoneNumber: $('#input_da_xu_ly').val(),
+            VehicleNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
+            PhoneNumber: $('#input_da_xu_ly').val() != undefined && $('#input_da_xu_ly').val() != "" ? $('#input_da_xu_ly').val().trim() : "",
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
@@ -534,12 +627,12 @@ var _cartcalllist = {
                 } else {
                     _msgalert.error(result.msg);
                 }
-               
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
             }
-              
+
         });
         return await status_type;
     }
