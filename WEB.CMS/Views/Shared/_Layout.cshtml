@@ -94,41 +94,42 @@
         <!--await Component.InvokeAsync("Menu")-->
         <!--HEADER-->
         <header class="header">
-            <div class="header__logo">
-                <img src="/images/graphics/logo.svg" alt="Cargill">
-            </div>
-            <div class="header__right">
-                <div class="header-actions">
-                    <a href="/" class="action-btn menu-btn">
-                        <img src="/images/icons/menu.svg" alt="Menu">
+            @*<div class="header__logo">
+            <img src="/images/graphics/logo.svg" alt="Cargill">
+        </div>
+        <div class="header__right">
+            <div class="header-actions">
+                <a href="/" class="action-btn menu-btn">
+                    <img src="/images/icons/menu.svg" alt="Menu">
+                </a>
+
+                <div class="settings-dropdown">
+                    <a class="settings-btn" id="settingsDropdown" href="#">
+                        <img src="/images/icons/settings.svg" alt="Cài đặt" width="24" height="24">
                     </a>
-
-                    <div class="settings-dropdown">
-                        <a class="settings-btn" id="settingsDropdown" href="#">
-                            <img src="/images/icons/settings.svg" alt="Cài đặt" width="24" height="24">
-                        </a>
-                        <ul class="settings-menu">
-                            <li><a href="/User">👤 Quản lý người dùng</a></li>
-                            <li><a href="/Role">⚙️ Quản lý nhóm quyền</a></li>
-                            <li><a href="/Department">🏢 Quản lý phòng ban</a></li>
-                        </ul>
-                    </div>
-
-
-
-
-                    <a href="" class="action-btn">
-                        <img src="/images/icons/bell.svg" alt="Thông báo">
-                        <span class="badge">00+</span>
-
-                    </a>
-                    <div class="user-box">
-                        <img src="/images/icons/user.svg" alt="">
-                        <span>Chào, BinhDT</span>
-                    </div>
+                    <ul class="settings-menu">
+                        <li><a href="/User">👤 Quản lý người dùng</a></li>
+                        <li><a href="/Role">⚙️ Quản lý nhóm quyền</a></li>
+                        <li><a href="/Department">🏢 Quản lý phòng ban</a></li>
+                    </ul>
                 </div>
 
+
+
+
+                <a href="" class="action-btn">
+                    <img src="/images/icons/bell.svg" alt="Thông báo">
+                    <span class="badge">00+</span>
+
+                </a>
+                <div class="user-box">
+                    <img src="/images/icons/user.svg" alt="">
+                    <span>Chào, BinhDT</span>
+                </div>
             </div>
+
+        </div>*@
+            @await Component.InvokeAsync("TopBar")
         </header>
         <!--END HEADER-->
         @RenderBody()
