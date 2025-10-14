@@ -48,7 +48,7 @@
             <!-- Ngày sinh -->
             <div class="form-group">
                 <label>Ngày sinh <span>*</span></label>
-                <input id="datepicker" class="datepicker-input form-control" type="text" name="BirthDayPicker" value="@(Model.BirthDay == null ? "" : ((DateTime)Model.BirthDay).ToString("dd/MM/yyyy"))">
+                <input id="datepicker" class="datepicker-input form-control" type="date" name="BirthDayPicker" value="@(Model.BirthDay == null ? "" : ((DateTime)Model.BirthDay).ToString("dd/MM/yyyy"))">
             </div>
 
             <!-- Số điện thoại -->
