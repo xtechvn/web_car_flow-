@@ -1,7 +1,9 @@
-﻿using Entities.ViewModels;
+﻿using Entities.Models;
+using Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repositories.IRepositories;
+using Repositories.Repositories;
 using Utilities;
 
 namespace WEB.CMS.Controllers
@@ -9,11 +11,12 @@ namespace WEB.CMS.Controllers
     public class RoleController : Controller
     {
         private readonly IRoleRepository _RoleRepository;
+        private readonly IMenuRepository _MenuRepository;
 
-        public RoleController(IRoleRepository roleRepository)
+        public RoleController(IRoleRepository roleRepository, IMenuRepository menuRepository)
         {
             _RoleRepository = roleRepository;
-
+            _MenuRepository = menuRepository;
         }
 
         public IActionResult Index()
@@ -109,6 +112,87 @@ namespace WEB.CMS.Controllers
                 LogHelper.InsertLogTelegram("Search - RoleController: " + ex);
             }
             return PartialView(model);
+        }
+        public async Task<IActionResult> RolePermission(int Id)
+        {
+            var memuList = await _MenuRepository.GetAll(String.Empty, String.Empty);
+            var permissionList = await _MenuRepository.GetPermissionList();
+            var rolePermission = await _RoleRepository.GetRolePermissionById(Id);
+
+            ViewBag.MenuList = memuList;
+            ViewBag.MenuPermission = await _MenuRepository.GetAllMenuHasPermission();
+            ViewBag.RoleId = Id;
+            ViewBag.PermissionList = permissionList;
+
+            return View(rolePermission);
+        }
+        public async Task<IActionResult> UpdateRolePermission(string data, int type)
+        {
+            try
+            {
+                var rs = await _RoleRepository.AddOrDeleteRolePermission(data, type);
+                if (rs)
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = true,
+                        message = "Cập nhật thành công"
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Cập nhật thất bại"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateRolePermission - RoleController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                });
+            }
+        }
+        public async Task<IActionResult> GetDetail(int Id, int tabActive = 1)
+        {
+            var model = new Role();
+            var userRoleModel = new RoleUserViewModel();
+            try
+            {
+                model = await _RoleRepository.GetById(Id);
+                if (tabActive == 2)
+                {
+                    userRoleModel.RoleId = Id;
+                    userRoleModel.ListUser = await _RoleRepository.GetListUserOfRole(Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetDetail - RoleController: " + ex);
+            }
+            ViewBag.TabActive = tabActive;
+            ViewBag.ListUserInRole = userRoleModel;
+            return View(model);
+        }
+
+        public async Task<IActionResult> RoleListUser(int Id)
+        {
+            var model = new RoleUserViewModel();
+            try
+            {
+                model.RoleId = Id;
+                model.ListUser = await _RoleRepository.GetListUserOfRole(Id);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("RoleListUser - RoleController: " + ex);
+            }
+            return View(model);
         }
     }
 }
