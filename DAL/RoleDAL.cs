@@ -54,14 +54,19 @@ namespace DAL
                     }
 
                     totalRecord = datalist.Count();
-                    var data = datalist.Select(a => new RoleDataModel
-                    {
-                        Id = a.Id,
-                        Name = a.Name,
-                        Description = a.Description,
-                        Status = a.Status,
-                        CountUser = _DbContext.UserRoles.Where(s => s.RoleId == a.Id).Count()
-                    }).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+                    var data = datalist
+                         .OrderByDescending(a => a.Id)   // 🔥 thêm dòng này
+                         .Select(a => new RoleDataModel
+                         {
+                             Id = a.Id,
+                             Name = a.Name,
+                             Description = a.Description,
+                             Status = a.Status,
+                             CountUser = _DbContext.UserRoles.Where(s => s.RoleId == a.Id).Count()
+                         })
+                         .Skip((currentPage - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
                     return data;
                 }
             }
