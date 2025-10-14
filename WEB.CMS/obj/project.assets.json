@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net8.0": {
       "Aspose.Cells/20.10.0": {
         "type": "package",
         "dependencies": {
@@ -481,17 +481,17 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.9": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets": {}
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "Microsoft.Extensions.DependencyModel/2.0.4": {
@@ -599,22 +599,20 @@
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.9",
-          "System.Buffers": "4.5.1",
-          "System.Diagnostics.DiagnosticSource": "9.0.9",
-          "System.Memory": "4.5.5"
+          "System.Diagnostics.DiagnosticSource": "9.0.9"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
+          "buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
       "Microsoft.Extensions.Options/6.0.0": {
@@ -960,12 +958,12 @@
       "RestSharp/112.1.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/RestSharp.dll": {
+          "lib/net8.0/RestSharp.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/RestSharp.dll": {
+          "lib/net8.0/RestSharp.dll": {
             "related": ".xml"
           }
         }
@@ -1646,12 +1644,12 @@
           "runtime.native.System.Data.SqlClient.sni": "4.4.0"
         },
         "compile": {
-          "lib/net6.0/System.Data.SqlClient.dll": {
+          "lib/net8.0/System.Data.SqlClient.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/System.Data.SqlClient.dll": {
+          "lib/net8.0/System.Data.SqlClient.dll": {
             "related": ".xml"
           }
         },
@@ -1659,11 +1657,11 @@
           "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/unix/lib/net6.0/System.Data.SqlClient.dll": {
+          "runtimes/unix/lib/net8.0/System.Data.SqlClient.dll": {
             "assetType": "runtime",
             "rid": "unix"
           },
-          "runtimes/win/lib/net6.0/System.Data.SqlClient.dll": {
+          "runtimes/win/lib/net8.0/System.Data.SqlClient.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -1684,22 +1682,18 @@
       },
       "System.Diagnostics.DiagnosticSource/9.0.9": {
         "type": "package",
-        "dependencies": {
-          "System.Memory": "4.5.5",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
         "compile": {
-          "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll": {
+          "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll": {
+          "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp2.0/System.Diagnostics.DiagnosticSource.targets": {}
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "System.Diagnostics.Tracing/4.3.0": {
@@ -2870,10 +2864,10 @@
       "ZstdSharp.Port/0.7.3": {
         "type": "package",
         "compile": {
-          "lib/net6.0/ZstdSharp.dll": {}
+          "lib/net7.0/ZstdSharp.dll": {}
         },
         "runtime": {
-          "lib/net6.0/ZstdSharp.dll": {}
+          "lib/net7.0/ZstdSharp.dll": {}
         }
       },
       "DAL/1.0.0": {
@@ -8566,7 +8560,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net8.0": [
       "DAL >= 1.0.0",
       "Entities >= 1.0.0",
       "MongoDB.Driver >= 3.0.0",
@@ -8579,48 +8573,48 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Users\\trang\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "I:\\web_car_flow\\WEB.CMS\\Web.Cargill.CMS.csproj",
+      "projectUniqueName": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\Web.Cargill.CMS.csproj",
       "projectName": "Web.Cargill.CMS",
-      "projectPath": "I:\\web_car_flow\\WEB.CMS\\Web.Cargill.CMS.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "I:\\web_car_flow\\WEB.CMS\\obj\\",
+      "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\Web.Cargill.CMS.csproj",
+      "packagesPath": "C:\\Users\\trang\\.nuget\\packages\\",
+      "outputPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\trang\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net8.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {
-            "I:\\web_car_flow\\DAL\\DAL.csproj": {
-              "projectPath": "I:\\web_car_flow\\DAL\\DAL.csproj"
+            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\DAL\\DAL.csproj": {
+              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\DAL\\DAL.csproj"
             },
-            "I:\\web_car_flow\\Entities\\Entities.csproj": {
-              "projectPath": "I:\\web_car_flow\\Entities\\Entities.csproj"
+            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Entities\\Entities.csproj": {
+              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Entities\\Entities.csproj"
             },
-            "I:\\web_car_flow\\Repositories\\Repositories.csproj": {
-              "projectPath": "I:\\web_car_flow\\Repositories\\Repositories.csproj"
+            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Repositories\\Repositories.csproj": {
+              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Repositories\\Repositories.csproj"
             },
-            "I:\\web_car_flow\\Utilities\\Utilities.csproj": {
-              "projectPath": "I:\\web_car_flow\\Utilities\\Utilities.csproj"
+            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Utilities\\Utilities.csproj": {
+              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Utilities\\Utilities.csproj"
             }
           }
         }
@@ -8635,11 +8629,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "dependencies": {
           "MongoDB.Driver": {
             "target": "Package",
@@ -8681,7 +8675,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
