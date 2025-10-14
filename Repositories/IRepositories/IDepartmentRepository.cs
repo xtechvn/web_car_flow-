@@ -12,6 +12,7 @@ namespace Repositories.IRepositories
         Task<long> Create(Department model);
         Task<long> Update(Department model);
         Task<IEnumerable<Department>> GetAll(string name);
-
+        Task<Department> GetById(int id);
+        Task<long> Delete(int id);
     }
 }

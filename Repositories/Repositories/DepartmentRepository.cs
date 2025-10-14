@@ -121,5 +121,23 @@ namespace Repositories.Repositories
                 throw;
             }
         }
+        public async Task<long> Delete(int id)
+        {
+            try
+            {
+                var child_datas = await _DepartmentDAL.GetByConditionAsync(s => s.ParentId == id && s.IsDelete == false);
+                if (child_datas != null && child_datas.Any())
+                    throw new Exception("Phòng ban đang chứa phòng ban con đang hoạt động. Bạn không thể xóa phòng ban đã chọn.");
+
+                var data = await GetById(id);
+                data.IsDelete = true;
+                await _DepartmentDAL.UpdateAsync(data);
+                return id;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

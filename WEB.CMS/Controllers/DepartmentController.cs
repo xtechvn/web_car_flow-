@@ -1,4 +1,4 @@
-﻿using Entities.ViewModels.Department;
+﻿using Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.IRepositories;
 using Utilities.Contants;
