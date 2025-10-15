@@ -17,3 +17,7 @@
 /App_Push_Consummer/obj
 /XTECH-FRONTEND/bin
 /XTECH-FRONTEND/obj
+# Ignore appsettings.json files
+WEB.CMS/appsettings.json
+Web.Cargill.Api/appsettings.json
+XTECH-FRONTEND/appsettings.json
