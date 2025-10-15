@@ -353,21 +353,19 @@ namespace WEB.CMS.Controllers
                                 model.VehicleTroughStatus = (int)VehicleTroughStatus.Da_goi;
                             }
                             
-                            var oldTrough = detail.TroughType; // giữ lại máng cũ
                             model.TimeCallVehicleTroughTimeComeIn = DateTime.Now;
                             model.TroughType = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
 
                             if (UpdateCar > 0)
                             {
-                                var so_mang = status + 1;
-                                LogHelper.InsertLogTelegram("Xin mời xe biển số " + detail.VehicleNumber + " của tài xế "+ detail.DriverName + " di chuyển vào máng số " + so_mang+". Trân trọng!");
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
                                 detail.TroughTypeName = allcode_detail?.Description ?? "";
-
                                 // ✅ bắn cả máng cũ + máng mới
-                                await _hubContext.Clients.All.SendAsync("UpdateMangStatus", oldTrough, model.TroughType, detail.Id);
+                                await _hubContext.Clients.All.SendAsync("UpdateMangStatus", detail.TroughType, model.TroughType, detail.Id);
+                                LogHelper.InsertLogTelegram("Xin mời xe biển số " + detail.VehicleNumber + " của tài xế " + detail.DriverName + " di chuyển vào máng số " + status + ". Trân trọng!");
+
                             }
 
                         }

@@ -155,7 +155,39 @@
 
                 if (type == '1') {
                     // update máng xuất
-                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 4);
+                    var status_type = 0;
+                    $.ajax({
+                        url: "/Car/UpdateStatus",
+                        type: "post",
+                        data: { id: id_row, status: val_TT, type: 4, weight: 0 },
+                        success: function (result) {
+                            status_type = result.status;
+                            if (result.status == 0) {
+                                _msgalert.success(result.msg);
+
+                                // ✅ chỉ remove row nếu cập nhật thành công
+                                if (type == 6) {
+                                    if (parseInt(status) == 0) {
+                                        $('#dataBody-0').find('.CartoFactory_' + id).remove();
+                                    } else {
+                                        $('#dataBody-1').find('.CartoFactory_' + id).remove();
+                                    }
+                                }
+
+                                // 🔥 Sau khi update → reload lại dữ liệu cả 2 bảng
+                                //_cartcalllist.ListCartoFactory();
+                                //_cartcalllist.ListCartoFactory_Da_SL();
+
+                            } else {
+                                _msgalert.error(result.msg);
+                            }
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("Status: " + textStatus);
+                        }
+
+                    });
                     if (status_type == 0) {
                         $currentBtn
                             .text(text)
@@ -197,11 +229,40 @@
                     }
 
                     // ✅ Gọi API update
-                    var status_type = await _cartcalllist.UpdateStatus(id_row, val_TT, 6, weight);
+                    var status_type = 0;
+                    $.ajax({
+                        url: "/Car/UpdateStatus",
+                        type: "post",
+                        data: { id: id_row, status: val_TT, type: 6, weight: weight },
+                        success: function (result) {
+                            status_type = result.status;
+                            if (result.status == 0) {
+                                _msgalert.success(result.msg);
 
-                    if (val_TT != 0) {
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
-                    }
+                                // ✅ chỉ remove row nếu cập nhật thành công
+                                if (type == 6) {
+                                    if (parseInt(status) == 0) {
+                                        $('#dataBody-0').find('.CartoFactory_' + id).remove();
+                                    } else {
+                                        $('#dataBody-1').find('.CartoFactory_' + id).remove();
+                                    }
+                                }
+
+                                // 🔥 Sau khi update → reload lại dữ liệu cả 2 bảng
+                                //_cartcalllist.ListCartoFactory();
+                                //_cartcalllist.ListCartoFactory_Da_SL();
+
+                            } else {
+                                _msgalert.error(result.msg);
+                            }
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("Status: " + textStatus);
+                        }
+
+                    });
+                  
                     if (status_type == 0) {
                         $currentBtn
                             .text(text)
@@ -438,7 +499,7 @@
     connection.on("UpdateMangStatus", function (oldMangId, newMangId, carId) {
         // ✅ Update máng mới thành "Đang xử lý"
         if (newMangId !== null && newMangId !== undefined) {
-            $("#input" + (parseInt(newMangId) + 3)).val("Đang xử lý")
+            $("#input" + (parseInt(newMangId))).val("Đang xử lý")
 
                 .removeClass("empty").addClass("processing");
         }
@@ -446,11 +507,11 @@
         // ✅ Kiểm tra máng cũ: nếu không còn xe nào ở máng đó thì reset về "Trống"
         if (oldMangId !== null && oldMangId !== undefined && oldMangId != newMangId) {
             const hasOtherCars = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
-                return $(tr).find("button[data-type='1']").text().trim() === "Máng " + (parseInt(oldMangId) + 1);
+                return $(tr).find("button[data-type='1']").text().trim() === "Máng " + (parseInt(oldMangId));
             });
 
             if (!hasOtherCars) {
-                $("#input" + (parseInt(oldMangId) + 3)).val("Trống")
+                $("#input" + (parseInt(oldMangId))).val("Trống")
 
                     .removeClass("processing").addClass("empty");
             }
@@ -459,7 +520,7 @@
         // ✅ Update luôn dropdown text trong bảng cho xe đó
         const $row = $(".CartoFactory_" + carId);
         if ($row.length) {
-            $row.find(".dropdown-toggle[data-type='1']").text("Máng " + (parseInt(newMangId) + 1));
+            $row.find(".dropdown-toggle[data-type='1']").text("Máng " + (parseInt(newMangId)));
         }
     });
 
@@ -468,6 +529,7 @@
 
     connection.on("ListCarCall", function (item) {
         const tbody = document.getElementById("dataBody-0");
+        $('.CartoFactory_' + item.id).remove();
         tbody.insertAdjacentHTML("beforeend", renderRow(item, false));
         sortTable(); // sắp xếp lại ngay khi thêm
     });
