@@ -7,59 +7,22 @@
 *.userosscache
 *.sln.docstates
 
-###############################################################
-# Thư mục Build và Compilation (Bắt buộc phải bỏ qua)
-###############################################################
-[Bb]in/
-[Oo]bj/
-[Dd]ebug/
-[Rr]elease/
-
-# Thư mục phát sinh theo framework
-*/[Bb]in/
-*/[Oo]bj/
-*/[Dd]ebug/
-*/[Rr]elease/
-
-###############################################################
-# Packages và Cache
-###############################################################
-*.nupkg
-*.snupkg
-*.swp
-*.bak
-[Tt]emp/
-# File cache của nuget (cũng nên được bỏ qua)
-.nuget/
-project.assets.json
-project.nuget.cache
-*.nuget.g.props
-*.nuget.g.targets
-
-###############################################################
-# Thư mục Cụ thể và File Cấu hình (theo yêu cầu của bạn)
-###############################################################
-
-# Bỏ qua các file appsettings.json nếu không nằm trong thư mục gốc
-**/appsettings.json 
-# Nếu bạn chỉ muốn bỏ qua các file appsettings.json TRONG các thư mục con
-# Web.Cargill.Api/appsettings.json
-# XTECH-FRONTEND/appsettings.json
-
-# Bỏ qua các thư mục bin/ và obj/ cụ thể nếu chúng không nằm trong cấu trúc đã nêu trên
-App_Push_Consummer/[Bb]in/
-App_Push_Consummer/[Oo]bj/
-XTECH-FRONTEND/[Bb]in/
-XTECH-FRONTEND/[Oo]bj/
-WEB.CMS/[Bb]in/
-WEB.CMS/[Oo]bj/
-Web.Cargill.Api/[Bb]in/
-Web.Cargill.Api/[Oo]bj/
-DAL/[Bb]in/
-DAL/[Oo]bj/
-Entities/[Bb]in/
-Entities/[Oo]bj/
-Repositories/[Bb]in/
-Repositories/[Oo]bj/
-Utilities/[Bb]in/
-Utilities/[Oo]bj/
+/DAL/bin
+/DAL/obj
+/Entities/bin
+/Entities/obj
+/Repositories/bin
+/Repositories/obj
+/Utilities/bin
+/Utilities/obj
+/Web.Cargill.CMS/bin
+/Web.Cargill.CMS/obj
+/.vs
+/App_Push_Consummer/bin
+/App_Push_Consummer/obj
+/XTECH-FRONTEND/bin
+/XTECH-FRONTEND/obj
+# Ignore appsettings.json files
+WEB.CMS/appsettings.json
+Web.Cargill.Api/appsettings.json
+XTECH-FRONTEND/appsettings.json
