@@ -35,17 +35,30 @@ namespace Web.Cargill.Api.Controllers
 
             try
             {
-                // Gọi helper để upload
-                string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 999);
-
-                if (string.IsNullOrEmpty(audioUrl))
-                    return StatusCode(500, new { Status = 1, Msg = "Upload thất bại từ UpLoadHelper" });
-
-                // Update DB theo booking_id
                 var booking = _db.VehicleInspection.FirstOrDefault(b => b.Id == booking_id);
                 if (booking == null)
                     return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
 
+                // Lấy biển số xe, loại bỏ toàn bộ ký tự đặc biệt, khoảng trắng
+                string vehicleNumber = booking.VehicleNumber ?? "unknown";
+                vehicleNumber = new string(vehicleNumber
+                    .Where(char.IsLetterOrDigit)
+                    .ToArray())
+                    .ToLower(); // viết thường cho nhất quán
+
+                // Lấy số thứ tự (RecordNumber) nếu có, mặc định = 1
+                int recordNumber = booking.RecordNumber ?? 1;
+
+                // Tạo tên file: audio + bookingId + vehicleNumber + recordNumber (viết liền)
+                string customFileName = $"audio{booking_id}{vehicleNumber}{recordNumber}";
+
+                // Gọi helper upload
+                string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 999, customFileName);
+
+                if (string.IsNullOrEmpty(audioUrl))
+                    return StatusCode(500, new { Status = 1, Msg = "Upload thất bại từ UpLoadHelper" });
+
+                // Cập nhật DB
                 booking.AudioPath = audioUrl;
                 await _db.SaveChangesAsync();
 
@@ -53,26 +66,26 @@ namespace Web.Cargill.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Trả cả message để dễ trace
                 return StatusCode(500, new { Status = 1, Msg = ex.Message, StackTrace = ex.ToString() });
             }
         }
+
         /// <summary>
         /// Fallback: nhận link Zalo (.wav) -> download -> convert MP3 (in-memory) -> upload -> update DB
         /// form-data: booking_id (Text), link_audio_zalo_ai (Text)
         /// </summary>
         [HttpPost("download-zalo-audio")]
         public async Task<IActionResult> DownloadZaloAudio(
-            [FromForm] int booking_id,
-            [FromForm] string link_audio_zalo_ai,
-            CancellationToken ct)
+    [FromForm] int booking_id,
+    [FromForm] string link_audio_zalo_ai,
+    CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(link_audio_zalo_ai))
                 return BadRequest(new { Status = 1, Msg = "Link audio không hợp lệ." });
 
             try
             {
-                // 1) Download WAV về MemoryStream (không dùng _httpFactory nữa)
+                // 1) Download WAV về MemoryStream
                 var wavStream = await DownloadWavToStreamAsync(link_audio_zalo_ai, maxBytes: 20 * 1024 * 1024, ct: ct);
                 if (wavStream == null || wavStream.Length == 0)
                     return StatusCode(502, new { Status = 1, Msg = "Không tải được file từ Zalo AI" });
@@ -80,24 +93,32 @@ namespace Web.Cargill.Api.Controllers
                 // 2) Convert WAV -> MP3 (in-memory)
                 var mp3Stream = ConvertWavStreamToMp3Stream(wavStream);
 
-                // 3) Bọc thành IFormFile để upload qua helper
+                // 3) Lấy thông tin booking để đặt tên file
+                var booking = await _db.VehicleInspection.FirstOrDefaultAsync(b => b.Id == booking_id);
+                if (booking == null)
+                    return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
+
+                string vehicleNumber = booking.VehicleNumber ?? "unknown";
+                vehicleNumber = new string(vehicleNumber.Where(char.IsLetterOrDigit).ToArray()).ToLower();
+
+                int recordNumber = booking.RecordNumber ?? 1;
+
+                // Format tên file: audio + bookingId + vehicleNumber + recordNumber (viết liền)
+                string customFileName = $"audio{booking_id}{vehicleNumber}{recordNumber}";
+
+                // 4) Tạo IFormFile và upload
                 mp3Stream.Position = 0;
-                var fileName = $"{Guid.NewGuid()}.mp3";
-                var formFile = new FormFile(mp3Stream, 0, mp3Stream.Length, "file", fileName)
+                var formFile = new FormFile(mp3Stream, 0, mp3Stream.Length, "file", $"{customFileName}.mp3")
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = "audio/mpeg"
                 };
 
-                string? audioUrl = await UpLoadHelper.UploadFileOrImage(formFile, booking_id, 999);
+                string? audioUrl = await UpLoadHelper.UploadFileOrImage(formFile, booking_id, 999, customFileName);
                 if (string.IsNullOrEmpty(audioUrl))
                     return StatusCode(500, new { Status = 1, Msg = "Upload thất bại sau khi convert" });
 
-                // 4) Update DB
-                var booking = await _db.VehicleInspection.FirstOrDefaultAsync(b => b.Id == booking_id);
-                if (booking == null)
-                    return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
-
+                // 5) Update DB
                 booking.AudioPath = audioUrl;
                 await _db.SaveChangesAsync();
 
@@ -108,6 +129,7 @@ namespace Web.Cargill.Api.Controllers
                 return StatusCode(500, new { Status = 1, Msg = ex.Message });
             }
         }
+
 
         // ===== Helpers =====
 

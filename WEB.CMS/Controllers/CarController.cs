@@ -431,7 +431,10 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             if (status == (int)VehicleWeighingStatus.DA_Can_Ra)
+                            {
+                                model.VehicleWeighingTimeComplete = DateTime.Now;
                                 detail.VehicleWeighingTimeComplete = DateTime.Now;
+                            }
                             model.VehicleWeighingStatus = status;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLEWEIGHINGSTATUS);
