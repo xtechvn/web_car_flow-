@@ -142,7 +142,7 @@ var _menu = {
         _ajax_caller.post(url, { model: obj }, function (result) {
             if (result.isSuccess) {
                 _msgalert.success(result.message);
-                _menu.modal_element.modal('hide');
+                $.magnificPopup.close();
                 setTimeout(function () {
                     window.location.reload()
                 }, 1000); 

@@ -18,6 +18,8 @@ function ConvertToJSONDate(strdate) {
     return jsdate.toJSON();
 }
 
+
+
 function ConvertToJSONDateTime(strdatetime) {
     if (strdatetime == null || strdatetime == "") {
         return null;

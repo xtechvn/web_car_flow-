@@ -16,6 +16,7 @@
                 <th>Mô tả</th>
                 <th>Trạng thái</th>
                 <th>Số thành viên</th>
+                <th>Chức năng</th>
             </tr>
         </thead>
         <tbody id="dataBody-@ViewBag.type">
@@ -38,7 +39,12 @@
                     <td>
                         @(item.Status == 0 ? "Bình thường": "Khóa/tạm dừng")
                     </td>
-                    <td class="count-user"><strong class="blue">@item.CountUser</strong></td>
+                    <td class="count-user"><strong class="blue">@item.CountUser</strong></td> 
+                    <td>
+                        <a class="cursor-pointer" onclick="_role.OnOpenPQ('@item.Id')" title="Phân quyền">
+                            <i class="icon-edit"></i>
+                        </a>
+                    </td>
                 </tr>
             }
 

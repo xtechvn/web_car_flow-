@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Repositories.IRepositories;
 using Repositories.Repositories;
+using WEB.CMS.Customize;
 using WEB.CMS.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +47,7 @@ builder.Services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddSingleton<IMenuRepository, MenuRepository>();
 builder.Services.AddSingleton<RedisConn>();
 builder.Services.AddHostedService<RedisSubscriberService>();
+builder.Services.AddSingleton<ManagementUser>();
 // Add SignalR với cấu hình KeepAlive
 builder.Services.AddSignalR(options =>
 {

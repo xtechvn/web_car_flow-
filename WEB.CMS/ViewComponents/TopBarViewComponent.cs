@@ -1,74 +1,61 @@
 ﻿using Entities.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
 using WEB.CMS.Customize;
 
-namespace WEB.CMS.Controllers
+namespace WEB.CMS.ViewComponents
 {
-    [CustomAuthorize]
-    public class HomeController : Controller
+    public class TopBarViewComponent : ViewComponent
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IMenuRepository _MenuRepository;
         private ManagementUser _ManagementUser;
-        private IMenuRepository _MenuRepository;
-        public HomeController(ILogger<HomeController> logger, ManagementUser managementUser, IMenuRepository menuRepository)
+        public TopBarViewComponent(IMenuRepository menuRepository, ManagementUser managementUser)
         {
-            _logger = logger;
-            _ManagementUser = managementUser;
             _MenuRepository = menuRepository;
-        }
+            _ManagementUser = managementUser;
 
-        public async Task<IActionResult> Index()
+        }
+        public async Task<IViewComponentResult> InvokeAsync()
         {
+            var _UserName = string.Empty;
+            var _UserId = string.Empty;
             try
             {
+
+                if (HttpContext.User.FindFirst(ClaimTypes.Name) != null)
+                {
+                    _UserName = HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+                    _UserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                }
+
                 IEnumerable<int> menu_ids = new List<int>();
                 var current_user = _ManagementUser.GetCurrentUser();
                 if (current_user != null && current_user.Permissions != null && current_user.Permissions.Any())
                 {
-                    menu_ids = current_user.Permissions.Where(s => s.PermissionId == (int)PermissionType.TRUY_CAP ).Select(s => s.MenuId).ToList();
+                    menu_ids = current_user.Permissions.Where(s => s.PermissionId == (int)PermissionType.TRUY_CAP).Select(s => s.MenuId);
 
                 }
+
                 var menus = await _MenuRepository.GetMenuPermissionOfUser(menu_ids);
                 var path = (string)HttpContext.Request.Path;
                 var actived = menus.FirstOrDefault(s => path.ToLower() == (s.Link ?? string.Empty).ToLower());
-                var menu_id = 115;
+                var menu_id = 122;
                 var parent_id = GetRootParentId(menus, menu_id);
+
                 ViewBag.MenuId = menu_id;
                 ViewBag.ParentId = parent_id;
                 ViewBag.Menu = menus;
+
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex.Message);
-                LogHelper.InsertLogTelegram("Index - HomeController: " + ex);
+
             }
-            return View();
-        }
 
-        public IActionResult DataMonitor()
-        {
-            return RedirectToAction("Index", "Error");
-        }
-
-        public IActionResult ExecuteQuery(string dataQuery)
-        {
-
-            return RedirectToAction("Index", "Error");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Error()
-        {
-            ViewBag.UserName = "";
+            ViewBag.UserId = _UserId;
+            ViewBag.UserName = _UserName;
             return View();
         }
         private int GetRootParentId(IEnumerable<Menu> datas, int child_id)
@@ -91,5 +78,5 @@ namespace WEB.CMS.Controllers
             }
         }
     }
-    
 }
+    

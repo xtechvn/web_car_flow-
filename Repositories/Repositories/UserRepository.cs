@@ -198,9 +198,13 @@ namespace Repositories.Repositories
                     Password = EncodeHelpers.MD5Hash(model.Password),
                     ResetPassword = EncodeHelpers.MD5Hash(model.Password),
                     Phone = model.Phone ?? "",
-                    BirthDay = !string.IsNullOrEmpty(model.BirthDayPicker) ?
-                                DateTime.ParseExact(model.BirthDayPicker, "dd/MM/yyyy", CultureInfo.InvariantCulture)
-                              : model.BirthDay,
+                    BirthDay = !string.IsNullOrEmpty(model.BirthDayPicker)
+           ? DateTime.ParseExact(model.BirthDayPicker,
+                                 new[] { "dd/MM/yyyy", "yyyy-MM-dd", "MM/dd/yyyy" },
+                                 CultureInfo.InvariantCulture,
+                                 DateTimeStyles.None)
+           : model.BirthDay,
+
                     Gender = model.Gender,
                     Email = model.Email,
                     Avata = model.Avata,
@@ -214,12 +218,14 @@ namespace Repositories.Repositories
                     ModifiedBy = user_id,
                     UserPositionId = model.UserPositionId,
                     Level = model.Level,
-                    Id = model.Id,
+                    //Id = model.Id,
                     Manager = model.Manager,
                     UserMapId = model.UserMapId,
                     NickName = model.NickName,
                     DebtLimit = model.DebtLimit
                 };
+                // ✅ BỔ SUNG DÒNG NÀY
+                //entity.Id = 0;
 
                 // Check exist User Name or Email
                 var exmodel = await _UserDAL.GetByUserName(model.UserName);

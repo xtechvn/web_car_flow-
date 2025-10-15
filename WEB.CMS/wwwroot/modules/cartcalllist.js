@@ -274,6 +274,7 @@
         { Description: "Máng 5", CodeValue: "5" },
         { Description: "Máng 6", CodeValue: "6" },
         { Description: "Máng 7", CodeValue: "7" },
+        { Description: "Máng 8", CodeValue: "8" },
         // Add more objects as needed
     ];
     const AllCode2 = [

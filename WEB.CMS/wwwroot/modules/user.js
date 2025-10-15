@@ -4,7 +4,7 @@
         strRoleId: '',
         status: null,
         currentPage: 1,
-        pageSize: 20
+        pageSize: 20000
     };
     _user.Init(_searchData);
 
@@ -49,6 +49,17 @@
                     $.magnificPopup.close();
                 });
             }
+        }
+    });
+    $("#ip-kup-search-user").keyup(function (e) {
+        if (e.which === 13) {
+            _user.OnChangeUser(e.target.value);
+        } else {
+            clearInterval(_changeInterval);
+            _changeInterval = setInterval(function () {
+                _user.OnChangeUser(e.target.value);
+                clearInterval(_changeInterval);
+            }, 500);
         }
     });
 });

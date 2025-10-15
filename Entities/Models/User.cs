@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Models
 {
@@ -9,7 +11,8 @@ namespace Entities.Models
         {
             UserRoles = new HashSet<UserRole>();
         }
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int? UserMapId { get; set; }
         public string UserName { get; set; }

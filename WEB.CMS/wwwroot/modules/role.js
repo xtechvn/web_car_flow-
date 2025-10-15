@@ -7,6 +7,18 @@
     };
     _role.Init(_searchData);
 
+    $(document).on('click', '.ckb-role-permission', function () {
+        let seft = $(this);
+        var seftParent = seft.closest('li');
+        var _checkParent = false;
+        let _param = seft.data('param');
+        let _type = seft.is(":checked") ? 1 : 0;
+        if (seftParent.find('.ckb-role-permission:checked').length > 0) {
+            _checkParent = true;
+        }
+        _role.OnUpdateRolePermission(_param, _type);
+        seftParent.find('.ckb-item-menu').prop('checked', _checkParent);
+    });
 });
 
 var _changeInterval = null;
@@ -41,11 +53,11 @@ $('#grid-data').on('click', 'tr.line-item td', function () {
         seftparent.siblings('tr.line-item').removeClass('active');
         seftparent.addClass('active');
         if (!isloadajax) {
-            _role.OnGetDetail(id, _tabActive, function (result) {
-                seftparent.data('ajaxdetail', "true");
-                seftparent.siblings('.info-detail').addClass('mfp-hide');
-                seftparent.after(result);
-            });
+            //_role.OnGetDetail(id, _tabActive, function (result) {
+            //    seftparent.data('ajaxdetail', "true");
+            //    seftparent.siblings('.info-detail').addClass('mfp-hide');
+            //    seftparent.after(result);
+            //});
         } else {
             seftparent.siblings('.info-detail').addClass('mfp-hide');
             seftparent.next().find('.tab-default a[data-tab="' + _tabActive + '"]').trigger('click');
@@ -115,18 +127,6 @@ $('#grid-data').on('click', '.ckb-item-menu', function () {
     _role.OnUpdateRolePermission(_arrayParam, _updateType);
 });
 
-$('#grid-data').on('click', '.ckb-role-permission', function () {
-    let seft = $(this);
-    var seftParent = seft.closest('li');
-    var _checkParent = false;
-    let _param = seft.data('param');
-    let _type = seft.is(":checked") ? 1 : 0;
-    if (seftParent.find('.ckb-role-permission:checked').length > 0) {
-        _checkParent = true;
-    }
-    _role.OnUpdateRolePermission(_param, _type);
-    seftParent.find('.ckb-item-menu').prop('checked', _checkParent);
-});
 
 var _role = {
     Init: function (data) {
@@ -336,5 +336,11 @@ var _role = {
             success: function (result) {
             }
         });
+    },
+    OnOpenPQ: function ( id) {
+        let title = 'Phân quyền';
+        let url = '/Role/RolePermission';
+        let param = { Id: id };
+        _magnific.OpenSmallPopup(title, url, param);
     }
 };
