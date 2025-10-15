@@ -45,11 +45,24 @@
             <span class="badge">00+</span>
 
         </a>
-        <div class="user-box">
-            <img src="/images/icons/user.svg" alt="">
-            <span>Chào: @ViewBag.UserName</span>
+        <div class="settings-dropdown">
+            <div class="settings-btn user-box">
+                <img src="/images/icons/user.svg" alt="">
+                <span>Chào: @ViewBag.UserName</span>
+            </div>
+            <ul class="settings-menu">
+                <li><a href="/Account/Profile"><img src="/images/icons/user-outline.svg" alt=""> Thông tin tài khoản</a></li>
+                <li><a href="/Account/ChangePassword"><img src="/images/icons/lock.svg" alt=""> Đổi mật khẩu</a></li>
+                <li>
+                    <a href="javascript:void(0)" class="btn-logout">
+                        <img src="/images/icons/logout.svg" alt=""> Đăng xuất
+                    </a>
+                </li>
+            </ul>
         </div>
+
     </div>
 
 </div>
+
 
