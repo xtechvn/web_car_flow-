@@ -25,6 +25,7 @@ namespace XTECH_FRONTEND.Model
         public string? ZaloStatus { get; set; }
         public string? Camp { get; set; }
         public string GPLX { get; set; } 
+        public string Referee { get; set; } 
         public string Name { get; set; } 
     }
 
