@@ -294,7 +294,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                  $"Cảm ơn bạn đã sử dụng dịch vụ! ";
                
                 //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
-               // await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
+                await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
                 if (stopwatch.ElapsedMilliseconds > 1000)
@@ -343,7 +343,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         {
             try
             {
-                string url = "http://qc-api.cargillhanam.com/api/vehicleInspection/insert";
+                string url = "https://api-cargillhanam.adavigo.com/api/vehicleInspection/insert";
                 var client = new HttpClient();
                 var request_api = new HttpRequestMessage(HttpMethod.Post, url);
                 request_api.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
