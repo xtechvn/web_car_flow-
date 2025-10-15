@@ -508,7 +508,7 @@ var _cartcalllist = {
     // ✅ Đồng bộ trạng thái máng khi load trang hoặc reload data
     initMangStatus: function () {
         // Giả sử có 5 máng, bạn thay bằng số máng thực tế
-        for (let mangIndex = 3; mangIndex <= 7; mangIndex++) {
+        for (let mangIndex = 3; mangIndex <= 8; mangIndex++) {
             let mangName = "Máng " + mangIndex;
 
             // 🔎 Kiểm tra xem có xe nào trong máng này chưa hoàn thành không
