@@ -28,10 +28,12 @@
         }
         if (model.UserName == undefined || model.UserName.trim() == '') {
             $('#validate-username').html('Tài khoản không được để trống, vui lòng thử lại')
+            _login.LoginSucess = true
             return false;
         }
         if (model.Password == undefined || model.Password.trim() == '') {
             $('#validate-password').html('Mật khẩu không được để trống, vui lòng thử lại')
+            _login.LoginSucess = true
             return false;
         }
         $.ajax({
@@ -61,6 +63,7 @@
             if (!_login.LoginSucess) _login.LoopDisplayLoading()
             else {
                 $('.btn-login').html('<i class="fa fa-sign-in"></i>Đăng nhập');
+                $('.btn-login').attr('disabled', false);
             }
         }, 1000)
     },

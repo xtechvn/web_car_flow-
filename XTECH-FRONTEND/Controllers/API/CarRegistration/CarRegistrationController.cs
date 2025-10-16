@@ -269,31 +269,15 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     RegistrationTime = DateTime.Now,
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp,
-                    Type = 0
                 };
-                //var InsertMG = await _mongoService.Insert(registrationRecord); 
-                //if (InsertMG == 0)
-                //{
-                //    InsertMG = await _mongoService.Insert(registrationRecord);
-                //}
-                var message = $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
-                 $" Tên khách hàng: {registrationRecord.Name}\n" +
-                 $"📱 Số điện thoại: {registrationRecord.PhoneNumber}\n" +
-                 $"🚗 Biển số xe: {registrationRecord.PlateNumber}\n" +
-                 $"🚗 Trọng tải xe: {registrationRecord.Referee}\n" +
-                 $"🎫 Hoàn hảo/Trại : {registrationRecord.GPLX}\n" +
-                 $"🎫 Số thứ tự của bạn: {registrationRecord.QueueNumber:D3}\n" +
-                 $"⏰ Thời gian đăng ký: {registrationRecord.RegistrationTime:dd/MM/yyyy HH:mm}\n\n" +
-                 $"📍 VUI LÒNG:\n" +
-                 $"• Chuẩn bị đầy đủ giấy tờ xe\n" +
-                 $"• Có mặt đúng giờ theo thứ tự\n" +
-                 $"• Theo dõi cập nhật qua Zalo\n\n" +
-                 $"🔔 Chúng tôi sẽ thông báo khi đến lượt bạn!\n\n" +
-                 $"📞 Hotline hỗ trợ: 1900-1234\n" +
-                 $"🌐 Website: https://cargillhanam.com\n\n" +
-                 $"Cảm ơn bạn đã sử dụng dịch vụ! ";
+                var InsertMG = await _mongoService.Insert(registrationRecord);
+                if (InsertMG == 0)
+                {
+                    InsertMG = await _mongoService.Insert(registrationRecord);
+                }
                
-                //await _hubContext.Clients.All.SendAsync("ReceiveRegistration", registrationRecord);
+               
+                await _hubContext.Clients.All.SendAsync("ReceiveRegistration_FE", registrationRecord);
                 await redisService.PublishAsync("Add_ReceiveRegistration", registrationRecord);
                 stopwatch.Stop(); // Dừng đo thời gian
                 
@@ -313,7 +297,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}");
                     }
                 }
-                LogHelper.InsertLogTelegram(message);
+          
                 // Return success response
                 return Ok(new CarRegistrationResponse
                 {
@@ -343,6 +327,22 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         {
             try
             {
+                var message = $"✅ ĐĂNG KÝ XE THÀNH CÔNG!\n\n" +
+                $" Tên khách hàng: {request.Name}\n" +
+                $"📱 Số điện thoại: {request.PhoneNumber}\n" +
+                $"🚗 Biển số xe: {request.PlateNumber}\n" +
+                $"🚗 Trọng tải xe: {request.Referee}\n" +
+                $"🎫 Hoàn hảo/Trại : {request.GPLX}\n" +
+                $"🎫 Số thứ tự của bạn: {request.QueueNumber:D3}\n" +
+                $"⏰ Thời gian đăng ký: {request.RegistrationTime:dd/MM/yyyy HH:mm}\n\n" +
+                $"📍 VUI LÒNG:\n" +
+                $"• Chuẩn bị đầy đủ giấy tờ xe\n" +
+                $"• Có mặt đúng giờ theo thứ tự\n" +
+                $"• Theo dõi cập nhật qua Zalo\n\n" +
+                $"🔔 Chúng tôi sẽ thông báo khi đến lượt bạn!\n\n" +
+                $"📞 Hotline hỗ trợ: 1900-1234\n" +
+                $"🌐 Website: https://cargillhanam.com\n\n" +
+                $"Cảm ơn bạn đã sử dụng dịch vụ! ";
                 string url = "https://api-cargillhanam.adavigo.com/api/vehicleInspection/insert";
                 var client = new HttpClient();
                 var request_api = new HttpRequestMessage(HttpMethod.Post, url);
@@ -356,6 +356,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 {
                     LogHelper.InsertLogTelegram("Insert - lỗi " );
                 }
+                LogHelper.InsertLogTelegram(message);
                 return StatusCode(200, "thành công");
             }
             catch (Exception ex)

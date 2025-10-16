@@ -359,11 +359,16 @@ namespace WEB.CMS.Controllers
 
                             if (UpdateCar > 0)
                             {
+                                var allcode_VehicleTrough = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
+                                var allcode_detail_VehicleTrough = allcode_VehicleTrough.FirstOrDefault(s => s.CodeValue == model.VehicleTroughStatus);
+                                detail.VehicleTroughStatusName = allcode_detail_VehicleTrough.Description;
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.TROUGH_TYPE);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.TroughType);
                                 detail.TroughTypeName = allcode_detail?.Description ?? "";
                                 // ✅ bắn cả máng cũ + máng mới
                                 await _hubContext.Clients.All.SendAsync("UpdateMangStatus", detail.TroughType, model.TroughType, detail.Id);
+                                if (model.VehicleTroughStatus == null || detail.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
+                                    await _hubContext.Clients.All.SendAsync("ListCarCall", detail);
                                 LogHelper.InsertLogTelegram("Xin mời xe biển số " + detail.VehicleNumber + " của tài xế " + detail.DriverName + " di chuyển vào máng số " + status + ". Trân trọng!");
 
                             }
