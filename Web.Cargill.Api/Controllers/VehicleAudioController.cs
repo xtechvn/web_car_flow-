@@ -50,7 +50,7 @@ namespace Web.Cargill.Api.Controllers
                 int recordNumber = booking.RecordNumber ?? 1;
 
                 // Tạo tên file: audio + bookingId + vehicleNumber + recordNumber (viết liền)
-                string customFileName = $"audio{booking_id}{vehicleNumber}{recordNumber}";
+                string customFileName = $"audio{booking_id}_{vehicleNumber}_{recordNumber}";
 
                 // Gọi helper upload
                 string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 999, customFileName);
@@ -104,7 +104,7 @@ namespace Web.Cargill.Api.Controllers
                 int recordNumber = booking.RecordNumber ?? 1;
 
                 // Format tên file: audio + bookingId + vehicleNumber + recordNumber (viết liền)
-                string customFileName = $"audio{booking_id}{vehicleNumber}{recordNumber}";
+                string customFileName = $"audio{booking_id}_{vehicleNumber}_{recordNumber}";
 
                 // 4) Tạo IFormFile và upload
                 mp3Stream.Position = 0;
