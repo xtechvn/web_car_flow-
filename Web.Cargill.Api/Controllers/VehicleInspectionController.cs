@@ -34,6 +34,7 @@ namespace Web.Cargill.Api.Controllers
                 if(id> 0)
                 {
                     request.Id = id;
+                    await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
                     string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
                     await redisService.PublishAsync("Add_ReceiveRegistration", request);
                     request.Bookingid = id;
