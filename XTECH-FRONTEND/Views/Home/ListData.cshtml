@@ -104,7 +104,7 @@
         .then(() => console.log("✅ Kết nối SignalR thành công"))
         .catch(err => console.error("❌ Lỗi kết nối:", err));
     // Nhận data mới từ server
-    connection.on("ReceiveRegistration", function (item) {
+    connection.on("ReceiveRegistration_FE", function (item) {
         const tbody = document.getElementById("dataBody");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable(); // sắp xếp lại ngay khi thêm
