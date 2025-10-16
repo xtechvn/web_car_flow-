@@ -20,6 +20,7 @@ namespace Web.Cargill.Api.Controllers
             _vehicleInspectionRepository = vehicleInspectionRepository;
             redisService = new RedisConn(configuration);
             redisService.Connect();
+            _configuration = configuration;
 
         }
         [HttpPost("Insert")]
