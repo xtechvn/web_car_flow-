@@ -28,7 +28,7 @@ namespace WEB.CMS.Services
             await _redisService.SubscribeAsync("Add_ReceiveRegistration"+_configuration["CompanyType"], async (RegistrationRecord record) =>
             {
 
-                record.CreateTime = record.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss");
+                record.CreateTime = record.RegistrationTime.ToString("HH:mm dd/MM/yyyy");
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration", record);
 
             });
