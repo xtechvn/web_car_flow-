@@ -13,5 +13,6 @@ namespace Repositories.IRepositories
         Task<CartoFactoryModel> GetDetailtVehicleInspection(int id);
         Task<int> UpdateCar(VehicleInspectionUpdateModel model);
         int SaveVehicleInspection(RegistrationRecord model);
+        Task<string> GetAudioPathByVehicleNumber(string VehicleNumber);
     }
 }
