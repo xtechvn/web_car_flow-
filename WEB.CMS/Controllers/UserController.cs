@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
+using WEB.CMS.Customize;
 
 namespace WEB.CMS.Controllers
 {
@@ -17,12 +18,14 @@ namespace WEB.CMS.Controllers
         private readonly IWebHostEnvironment _WebHostEnvironment;
         private readonly IRoleRepository _RoleRepository;
         private readonly IDepartmentRepository _DepartmentRepository;
-        public UserController(IUserRepository userRepository, IConfiguration configuration, IWebHostEnvironment hostEnvironment, IRoleRepository roleRepository, IDepartmentRepository departmentRepository)
+        private ManagementUser _ManagementUser;
+        public UserController(IUserRepository userRepository, ManagementUser managementUser, IConfiguration configuration, IWebHostEnvironment hostEnvironment, IRoleRepository roleRepository, IDepartmentRepository departmentRepository)
         {
             _UserRepository = userRepository;
             _configuration = configuration;
             _WebHostEnvironment = hostEnvironment;
             _RoleRepository = roleRepository;
+            _ManagementUser = managementUser;
             _DepartmentRepository = departmentRepository;
         }
 
@@ -166,6 +169,71 @@ namespace WEB.CMS.Controllers
             }
             return PartialView(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(UserPasswordModel model)
+        {
+            try
+            {
+                var rs = await _UserRepository.ChangePassword(model);
+                //var current_user = await _UserRepository.GetById(model.Id);
+                //var user = await _aPIService.GetByUserDetail(current_user.Id, current_user.UserName, current_user.Email);
+                //var NewPassword = EncodeHelpers.MD5Hash(model.NewPassword);
+                //var result_2 = _aPIService.ChangePassword(current_user.UserName, NewPassword);
+                if (rs > 0)
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = true,
+                        message = "Cập nhật thành công",
+                        result = rs
+                    });
+                }
+                else if (rs == -1)
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Mật khẩu hiện tại không chính xác",
+                        result = rs
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        isSuccess = false,
+                        message = "Cập nhật thất bại"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("ChangePassword - UserController: " + ex);
+                return new JsonResult(new
+                {
+                    isSuccess = false,
+                    message = ex.Message.ToString()
+                });
+            }
+        }
+        public async Task<IActionResult> UserProfile()
+        {
+            try
+            {
+                var current_user = _ManagementUser.GetCurrentUser();
+                var model = await _UserRepository.GetUser(current_user.Id);
+                ViewBag.RoleList = await _RoleRepository.GetRoleListByUserId(current_user.Id);
+                ViewBag.UserPosition = _UserRepository.GetUserPositions();
+                return PartialView(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UserProfile - UserController: " + ex);
+                return Content("");
+            }
+
+        }
+
         public async Task<string> GetUserSuggestionList(string name)
         {
             try

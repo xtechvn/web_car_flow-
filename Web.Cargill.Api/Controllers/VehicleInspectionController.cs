@@ -26,20 +26,23 @@ namespace Web.Cargill.Api.Controllers
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] RegistrationRecord request)
         {
-           
+
             try
             {
-                
-
+                var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumber(request.PlateNumber);
+                if (!string.IsNullOrEmpty(audio))
+                {
+                    request.AudioPath = audio;
+                }
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
-                if(id> 0)
+                if (id > 0 && (request.AudioPath == null || request.AudioPath == ""))
                 {
                     request.Id = id;
                     await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
                     string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
                     await redisService.PublishAsync("Add_ReceiveRegistration", request);
                     request.Bookingid = id;
-                    request.text_voice = "Mời biển số xe "+request.PlateNumber+" vào trạm cân";
+                    request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào trạm cân";
                     var client = new HttpClient();
                     var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
                     request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
@@ -60,13 +63,24 @@ namespace Web.Cargill.Api.Controllers
                         data = id
                     });
                 }
-                return Ok(new
+                if (id > 0)
                 {
-                    status = (int)ResponseType.ERROR,
-                    message = "Thêm mới lỗi",
-                   
-                });
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        message = "Thêm mới thành công",
+                        data = id
+                    });
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.ERROR,
+                        message = "Thêm mới lỗi",
 
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -75,7 +89,7 @@ namespace Web.Cargill.Api.Controllers
                 {
                     status = (int)ResponseType.ERROR,
                     message = "đã xẩy ra lỗi vui lòng liên hệ IT",
-                   
+
                 });
             }
         }

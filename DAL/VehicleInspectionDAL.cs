@@ -127,7 +127,7 @@ namespace DAL
         {
             try
             {
-                SqlParameter[] objParam_order = new SqlParameter[23];
+                SqlParameter[] objParam_order = new SqlParameter[24];
                 objParam_order[0] = new SqlParameter("@RecordNumber", model.QueueNumber);
                 objParam_order[1] = new SqlParameter("@CustomerName", model.Name);
                 objParam_order[2] = new SqlParameter("@VehicleNumber", model.PlateNumber);
@@ -151,6 +151,7 @@ namespace DAL
                 objParam_order[20] = new SqlParameter("@VehicleTroughStatus", DBNull.Value);
                 objParam_order[21] = new SqlParameter("@CreatedBy", 0);
                 objParam_order[22] = new SqlParameter("@CreatedDate", DBNull.Value);
+                objParam_order[23] = new SqlParameter("@AudioPath", model.AudioPath);
 
 
 
@@ -162,6 +163,29 @@ namespace DAL
                 LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionDAL: " + ex);
                 return -1;
             }
+        }
+        public async Task<string> GetAudioPathByVehicleNumber(string VehicleNumber)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+                    new SqlParameter("@VehicleNumber", VehicleNumber),
+
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionByVehicleNumber, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var data = dt.ToList<CartoFactoryModel>();
+                    var detail= data.FirstOrDefault();
+                    return detail.AudioPath;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetAudioPathByVehicleNumber - VehicleInspectionDAL: " + ex);
+            }
+            return null;
         }
     }
 }

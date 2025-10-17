@@ -65,7 +65,7 @@ var _department = {
     },
 
     OnSave: function () {
-        debugger;
+        
         let Form = $('#form_department');
 
         // Validation
@@ -96,7 +96,7 @@ var _department = {
         // ✅ Gửi Ajax
         let url = "/Department/AddOrUpdate2";
         _ajax_caller.post(url, { model: formData }, function (result) {
-            debugger;
+            ;
             if (result.isSuccess) {
                 _msgalert.success(result.message);
                 _department.modal_element.modal('hide');
@@ -110,7 +110,7 @@ var _department = {
 
 
     OnDelete: function (id) {
-        debugger
+        
         let title = 'Xác nhận xóa phòng ban';
         let description = 'Bạn xác nhận muốn xóa phòng ban này?';
         _msgconfirm.openDialog(title, description, function () {

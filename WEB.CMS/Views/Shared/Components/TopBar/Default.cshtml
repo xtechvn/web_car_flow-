@@ -1,4 +1,5 @@
 ﻿@using Entities.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     var userId = !string.IsNullOrEmpty(ViewBag.UserId) ? int.Parse(ViewBag.UserId) : 0;
     var _ListMenu = (List<Menu>)ViewBag.Menu;
@@ -27,7 +28,7 @@
                         @foreach (var subMenu in childDatas)
                         {
                             <li>
-                                <a href="@subMenu.Link" class="card">
+                                <a href="@subMenu.Link" >
                                     
                                     @subMenu.Name
                                 </a>
@@ -51,8 +52,13 @@
                 <span>Chào: @ViewBag.UserName</span>
             </div>
             <ul class="settings-menu">
-                @* <li><a href="/Account/Profile"><img src="/images/icons/user-outline.svg" alt=""> Thông tin tài khoản</a></li> *@
-                @* <li><a href="/Account/ChangePassword"><img src="/images/icons/lock.svg" alt=""> Đổi mật khẩu</a></li> *@
+                <li><a class="menu-change-pass" onclick="_account.OnGetDatailUser()" style="cursor:pointer"><img src="/images/icons/user-outline.svg" alt=""> Thông tin tài khoản</a></li>
+                <li>
+                    <a class="menu-change-pass" onclick="_account.OnGetChangePassUser()" style="cursor:pointer">
+                        <img src="/images/icons/lock.svg" alt=""> Đổi mật khẩu
+                    </a>
+                </li>
+
                 <li>
                     <a href="javascript:void(0)" class="btn-logout">
                         <img src="/images/icons/logout.svg" alt=""> Đăng xuất

@@ -187,7 +187,7 @@ var _role = {
     },
 
     OnUpsert: function () {
-        debugger;
+        
 
         // Validate cơ bản
         let Name = $('#Name').val()?.trim();
@@ -212,7 +212,7 @@ var _role = {
             processData: false,
             contentType: false,
             success: function (data) {
-                debugger
+                
                 _global_function.RemoveLoading();
                 if (data.isSuccess) {
                     _msgalert.success(data.message);

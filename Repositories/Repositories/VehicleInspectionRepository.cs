@@ -78,6 +78,18 @@ namespace Repositories.Repositories
                 LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionRepository: " + ex);
             }
             return 0;
+        }  
+        public Task<string> GetAudioPathByVehicleNumber(string VehicleNumber)
+        {
+            try
+            {
+                return  _VehicleInspectionDAL.GetAudioPathByVehicleNumber(VehicleNumber);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionRepository: " + ex);
+            }
+            return null;
         }
     }
 }
