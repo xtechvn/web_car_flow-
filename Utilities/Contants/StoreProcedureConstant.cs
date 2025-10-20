@@ -36,5 +36,6 @@ namespace Utilities.Contants
         public static string sp_UpdateAllCode = "sp_UpdateAllCode";
         public static string SP_GetDetailtVehicleInspection = "SP_GetDetailtVehicleInspection";
         public static string SP_GetListVehicleInspectionByVehicleNumber = "SP_GetListVehicleInspectionByVehicleNumber";
+        public static string SP_GetDetailVehicleAudioByPlateNumber = "SP_GetDetailVehicleAudioByPlateNumber";
     }
 }
