@@ -3,7 +3,7 @@
     public class VehicleAudio
     {
         public int Id { get; set; }
-        public int OrderNumber { get; set; }
+       
         public string PlateNumber { get; set; }
         public string AudioPath { get; set; }
         public DateTime CreatedAt { get; set; }
