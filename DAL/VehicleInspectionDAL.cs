@@ -176,7 +176,7 @@ namespace DAL
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionByVehicleNumber, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    var AudioPath = dt.Rows[0]["AudioPath"].Equals(DBNull.Value) ? null : dt.Rows[0]["AudioPath"].ToString()-; 
+                    var AudioPath = dt.Rows[0]["AudioPath"].Equals(DBNull.Value) ? null : dt.Rows[0]["AudioPath"].ToString(); 
                     return AudioPath;
                 }
             }
