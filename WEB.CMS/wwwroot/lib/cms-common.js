@@ -577,6 +577,7 @@ var _ajax_caller = {
 
 var _account = {
     OnGetDatailUser: function () {
+
         let title = 'Thông tin cá nhân';
         let url = '/user/userprofile';
         _magnific.OpenLargerPopup(title, url);
@@ -595,12 +596,14 @@ var _account = {
     },
 
     OnGetChangePassUser: function () {
+        
         let title = 'Thay đổi mật khẩu cá nhân';
-        let url = '/user/UserChangePass';
+        let url = '/home/UserChangePass';
         _magnific.OpenLargerPopup(title, url);
     },
 
     OnUpdate: function () {
+        
         let FromValid = $('#form-user-profile');
         FromValid.validate({
             rules: {
@@ -650,6 +653,7 @@ var _account = {
     },
 
     OnChangePassword: function () {
+        
         let FormValid = $('#form-user-change-password');
         FormValid.validate({
             rules: {
@@ -692,10 +696,11 @@ var _account = {
                 processData: false,
                 contentType: false,
                 success: function (result) {
+                    
                     if (result.isSuccess) {
-                        var title = "Thông báo đổi mật khẩu";
+                    
                         var content = "Mật khẩu của bạn đã được đổi thành công";
-                        _msgalert.success(content, title);
+                        _msgalert.success(result.message);
                         FormValid.trigger("reset");
                         $.magnificPopup.close();
                     } else {

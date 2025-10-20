@@ -39,27 +39,39 @@ namespace Web.Cargill.Api.Controllers
                 if (booking == null)
                     return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
 
-                // Lấy biển số xe, loại bỏ toàn bộ ký tự đặc biệt, khoảng trắng
+                // Lấy biển số xe, loại bỏ ký tự đặc biệt, khoảng trắng
                 string vehicleNumber = booking.VehicleNumber ?? "unknown";
                 vehicleNumber = new string(vehicleNumber
                     .Where(char.IsLetterOrDigit)
                     .ToArray())
-                    .ToLower(); // viết thường cho nhất quán
+                    .ToLower();
 
-                // Lấy số thứ tự (RecordNumber) nếu có, mặc định = 1
+                // Lấy số thứ tự nếu có
                 int recordNumber = booking.RecordNumber ?? 1;
 
-                // Tạo tên file: audio + bookingId + vehicleNumber + recordNumber (viết liền)
+                // Tạo tên file
                 string customFileName = $"audio{booking_id}_{vehicleNumber}_{recordNumber}";
 
-                // Gọi helper upload
+                // Upload file
                 string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 999, customFileName);
 
                 if (string.IsNullOrEmpty(audioUrl))
                     return StatusCode(500, new { Status = 1, Msg = "Upload thất bại từ UpLoadHelper" });
 
-                // Cập nhật DB
+                // Cập nhật cột AudioPath trong bảng VehicleInspection
                 booking.AudioPath = audioUrl;
+
+                // ✅ Thêm record vào bảng VehicleAudio
+                var newAudio = new VehicleAudio
+                {
+                  
+                    PlateNumber = booking.VehicleNumber,
+                    AudioPath = audioUrl,
+                    CreatedAt = DateTime.Now
+                };
+
+                _db.VehicleAudio.Add(newAudio);
+
                 await _db.SaveChangesAsync();
 
                 return Ok(new { Status = 0, Url = audioUrl });
@@ -69,6 +81,7 @@ namespace Web.Cargill.Api.Controllers
                 return StatusCode(500, new { Status = 1, Msg = ex.Message, StackTrace = ex.ToString() });
             }
         }
+
 
         /// <summary>
         /// Fallback: nhận link Zalo (.wav) -> download -> convert MP3 (in-memory) -> upload -> update DB

@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.IRepositories;
@@ -90,6 +91,25 @@ namespace WEB.CMS.Controllers
                 return -1;
             }
         }
+        public IActionResult UserChangePass()
+        {
+            try
+            {
+                var current_user = _ManagementUser.GetCurrentUser();
+                var model = new UserDataViewModel()
+                {
+                    Id = current_user.Id
+                };
+                return PartialView(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UserChangePass - UserController: " + ex);
+                return Content("");
+            }
+
+        }
+
     }
     
 }

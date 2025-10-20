@@ -38,6 +38,7 @@ namespace Entities.ViewModels.Car
         public string CreateTime { get; set; }
         public int Bookingid { get; set; }
         public string text_voice { get; set; }
+        public string AudioPath { get; set; }
     }
 
 }
