@@ -15,12 +15,14 @@ namespace Web.Cargill.Api.Controllers
         private readonly IVehicleInspectionRepository _vehicleInspectionRepository;
         private readonly RedisConn redisService;
         private readonly IConfiguration _configuration;
+        private readonly WorkQueueClient _workQueueClient;
         public VehicleInspectionController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
             redisService = new RedisConn(configuration);
             redisService.Connect();
             _configuration = configuration;
+            _workQueueClient = new WorkQueueClient(configuration);
 
         }
         [HttpPost("Insert")]
@@ -38,26 +40,31 @@ namespace Web.Cargill.Api.Controllers
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
                 if (id > 0 && (request.AudioPath == null || request.AudioPath == ""))
                 {
-                    LogHelper.InsertLogTelegram("n8n :"+ request.PlateNumber);
-                    request.Id = id;
-                    await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
-                    string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
-                    await redisService.PublishAsync("Add_ReceiveRegistration", request);
-                    request.Bookingid = id;
-                    request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào trạm cân";
-                    var client = new HttpClient();
-                    var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
-                    request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
-                    var response = await client.SendAsync(request_n8n);
-                    if (response.IsSuccessStatusCode)
+                    LogHelper.InsertLogTelegram("Queue :" + request.PlateNumber);
+                    var Queue = _workQueueClient.SyncQueue(request);
+                    if (!Queue)
                     {
-                        var responseContent = await response.Content.ReadAsStringAsync();
+                        Queue = _workQueueClient.SyncQueue(request);
+                    }
+                    //request.Id = id;
+                    //await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
+                    //string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
+                    //await redisService.PublishAsync("Add_ReceiveRegistration", request);
+                    //request.Bookingid = id;
+                    //request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào trạm cân";
+                    //var client = new HttpClient();
+                    //var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
+                    //request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
+                    //var response = await client.SendAsync(request_n8n);
+                    //if (response.IsSuccessStatusCode)
+                    //{
+                    //    var responseContent = await response.Content.ReadAsStringAsync();
 
-                    }
-                    else
-                    {
-                        LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
-                    }
+                    //}
+                    //else
+                    //{
+                    //    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
+                    //}
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
