@@ -33,10 +33,12 @@ namespace Web.Cargill.Api.Controllers
                 if (!string.IsNullOrEmpty(audio))
                 {
                     request.AudioPath = audio;
+                    LogHelper.InsertLogTelegram("sql:" + request.PlateNumber);
                 }
                 var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
                 if (id > 0 && (request.AudioPath == null || request.AudioPath == ""))
                 {
+                    LogHelper.InsertLogTelegram("n8n :"+ request.PlateNumber);
                     request.Id = id;
                     await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
                     string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
