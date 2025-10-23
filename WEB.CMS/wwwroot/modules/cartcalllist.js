@@ -102,7 +102,7 @@
 
         // Nếu tràn dưới -> bật drop-up (hiển thị phía trên button)
         if (top + menuHeight > winHeight) {
-            top = rect.top - menuHeight;
+           top = menuHeight;
             $menu.addClass('drop-up');
         } else {
             $menu.removeClass('drop-up');
