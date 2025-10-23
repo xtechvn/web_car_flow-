@@ -42,7 +42,7 @@ namespace Web.Cargill.Api.Controllers
                 {
                     request.Id = id;
                     request.Bookingid = id;
-                    request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào trạm cân";
+                    request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào cân";
                     await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
                     LogHelper.InsertLogTelegram("Queue :" + request.PlateNumber);
                     var Queue = _workQueueClient.SyncQueue(request);
