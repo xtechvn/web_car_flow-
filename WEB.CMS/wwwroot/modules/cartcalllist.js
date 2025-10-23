@@ -300,7 +300,7 @@
                             let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
                                 let btnText = $(tr).find("button[data-type='1']").text().trim();
                                 let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
-                                return btnText === mangName && trangThai !== "Hoàn thành";
+                                return btnText === mangName && trangThai !== "Hoàn thành" && trangThai !== "Bỏ lượt";
                             });
 
                             if (stillHasCar) {
@@ -312,13 +312,35 @@
                             }
                         }
                     } else {
-                        let mangName = $row.find('button[data-type="1"]').text().trim();
-                        let match = mangName.match(/\d+/);
-                        if (match) {
-                            let mangIndex = parseInt(match[0]);
-                            $("#input" + mangIndex).val("Đang xử lý")
-                                .removeClass("empty").addClass("processing");
+                        if (val_TT == 4) {
+                            let mangName = $row.find('button[data-type="1"]').text().trim();
+                            let match = mangName.match(/\d+/);
+                            if (match) {
+                                let mangIndex = parseInt(match[0]);
+                                let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
+                                    let btnText = $(tr).find("button[data-type='1']").text().trim();
+                                    let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
+                                    return btnText === mangName && trangThai !== "Hoàn thành" && trangThai !== "Bỏ lượt";
+                                });
+
+                                if (stillHasCar) {
+                                    $("#input" + mangIndex).val("Đang xử lý")
+                                        .removeClass("empty").addClass("processing");
+                                } else {
+                                    $("#input" + mangIndex).val("Trống")
+                                        .removeClass("processing").addClass("empty");
+                                }
+                            }
+                        } else {
+                            let mangName = $row.find('button[data-type="1"]').text().trim();
+                            let match = mangName.match(/\d+/);
+                            if (match) {
+                                let mangIndex = parseInt(match[0]);
+                                $("#input" + mangIndex).val("Đang xử lý")
+                                    .removeClass("empty").addClass("processing");
+                            }
                         }
+                       
                     }
                 }
             }
@@ -689,7 +711,7 @@ var _cartcalllist = {
             let stillHasCar = $("#dataBody-0 tr, #dataBody-1 tr").toArray().some(tr => {
                 let btnText = $(tr).find("button[data-type='1']").text().trim();
                 let trangThai = $(tr).find("td:last .dropdown-toggle").text().trim();
-                return btnText === mangName && trangThai !== "Hoàn thành";
+                return btnText === mangName && trangThai !== "Hoàn thành" && trangThai !== "Bỏ lượt" ;
             });
 
             if (stillHasCar) {
