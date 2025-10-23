@@ -29,7 +29,7 @@
         <tbody id="dataBody-@ViewBag.type">
             @foreach (var item in Model)
             {
-                <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber">
+                <tr class="CartoFactory_@item.Id" data-queue="@item.RecordNumber" style="@(item.VehicleTroughStatus == 4 ?"background:antiquewhite;": "" )">
                     <td>@item.RecordNumber</td>
                     <td>@item.CustomerName</td>
                     <td>@item.DriverName</td>

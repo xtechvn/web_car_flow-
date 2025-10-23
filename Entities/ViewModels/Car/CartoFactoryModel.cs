@@ -18,5 +18,6 @@ namespace Entities.ViewModels.Car
         public string LoadingStatusName { get; set; }
         public string VehicleWeighedstatusName { get; set; }
         public string AudioPath { get; set; }
+        public string Note { get; set; }
     }
 }
