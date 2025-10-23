@@ -93,6 +93,54 @@ namespace Web.Cargill.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Lấy danh sách booking chưa có file Audio (AudioPath == null hoặc rỗng)
+        /// </summary>
+        [HttpGet("GetListNoAudio")]
+        public async Task<IActionResult> GetListNoAudio()
+        {
+            try
+            {
+               
+
+                var list = await _db.VehicleInspection
+                    .Where(v => string.IsNullOrEmpty(v.AudioPath))
+                    .OrderByDescending(v => v.CreatedDate)
+                    .Select(v => new
+                    {
+                        v.Id,
+                        v.RecordNumber,
+                        v.CustomerName,
+                        v.VehicleNumber,
+                        v.RegisterDateOnline,
+                        v.DriverName,
+                        v.PhoneNumber,
+                        v.VehicleStatus,
+                        v.CreatedDate,
+                        v.UpdatedDate
+                    })
+                    .ToListAsync();
+
+              
+
+                return Ok(new
+                {
+                    Status = 0,
+                    Count = list.Count,
+                    Data = list
+                });
+            }
+            catch (Exception ex)
+            {
+              
+                return StatusCode(500, new
+                {
+                    Status = 1,
+                    Msg = "Lỗi hệ thống: " + ex.Message
+                });
+            }
+        }
+
 
 
         /// <summary>
