@@ -41,6 +41,12 @@
                         <td class="value highlight">
                             @(Model.VehicleTroughTimeComeOut?.ToString("HH:mm dd/MM/yyyy"))
                         </td>
+                    </tr> 
+                    <tr>
+                        <td class="label">Lý do bỏ lượt</td>
+                        <td style="color:red">
+                            @(Model.Note)
+                        </td>
                     </tr>
                 </tbody>
             </table>

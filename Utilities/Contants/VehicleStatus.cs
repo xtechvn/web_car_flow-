@@ -36,6 +36,7 @@
         Blank = 3,
         Da_goi = 1,
         Boc_Hang = 2,
+        Bo_Luot = 4,
       
     }
 }

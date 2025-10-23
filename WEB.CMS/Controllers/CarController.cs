@@ -205,7 +205,7 @@ namespace WEB.CMS.Controllers
             }
             return PartialView();
         }
-        public async Task<IActionResult> UpdateStatus(int id, int status, int type, int weight = 0)
+        public async Task<IActionResult> UpdateStatus(int id, int status, int type, int weight = 0 , string Note = null)
         {
             try
             {
@@ -399,6 +399,7 @@ namespace WEB.CMS.Controllers
                                 model.VehicleTroughTimeComeOut = DateTime.Now;
                             model.VehicleTroughStatus = status;
                             model.VehicleTroughWeight = weight; // ✅ lấy từ input
+                            model.Note = Note; 
                             if ((model.VehicleTroughWeight == null || model.VehicleTroughWeight == 0)&& status == (int)VehicleTroughStatus.Hoan_thanh)
                             {
                                 return Ok(new
@@ -414,6 +415,15 @@ namespace WEB.CMS.Controllers
                                 var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLETROUGH_STATUS);
                                 var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.VehicleTroughStatus);
                                 detail.VehicleTroughStatusName = allcode_detail.Description;
+                                if (status == (int)VehicleTroughStatus.Bo_Luot)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("ListCarCall_Bo_LUOT", detail);
+                                    return Ok(new
+                                    {
+                                        status = (int)ResponseType.SUCCESS,
+                                        msg = "cập nhật thành công"
+                                    });
+                                }
                                 if (status == (int)VehicleTroughStatus.Hoan_thanh)
                                 {
                                     await _hubContext.Clients.All.SendAsync("ListCarCall_Da_SL", detail);

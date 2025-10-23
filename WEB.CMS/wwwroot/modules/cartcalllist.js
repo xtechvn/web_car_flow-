@@ -200,6 +200,7 @@
                         .catch(err => console.error(err.toString()));
                 } else {
                     var weight = $row.find('input.weight').val() || 0;
+                    var note = null;
 
                     // 👉 Nếu chọn Hoàn thành mà chưa nhập trọng lượng → hiển thị input phụ
                     if (val_TT == 0 && (weight == 0 || weight === "")) {
@@ -227,13 +228,31 @@
                             $row.find('input.weight').val(weight);
                         }
                     }
+                    if (val_TT == 4) {
+                        if ($menu.find(".extra-weight").length === 0) {
+                            var $extra = $('<div class="extra-weight" style="margin:10px 0;"><textarea class="weight-textarea" placeholder="Vui lòng nhập lý do" style="width:100%;padding:5px;"></textarea></div>');
 
+                            $extra.insertBefore($menu.find('.actions'));
+
+                            // 👉 Focus vào input ngay khi nó xuất hiện
+                            $extra.find("textarea").focus();
+                            return; // dừng, chờ user nhập
+                        } else {
+                            note = $menu.find(".weight-textarea").val();
+                            if (!note || note == "") {
+                                alert("Vui lòng nhập lý do!");
+                                return;
+                            }
+                           
+                        }
+                    
+                    }
                     // ✅ Gọi API update
                     var status_type = 0;
                     $.ajax({
                         url: "/Car/UpdateStatus",
                         type: "post",
-                        data: { id: id_row, status: val_TT, type: 6, weight: weight },
+                        data: { id: id_row, status: val_TT, type: 6, weight: weight, Note: note },
                         success: function (result) {
                             status_type = result.status;
                             if (result.status == 0) {
@@ -339,6 +358,7 @@
         // Add more objects as needed
     ];
     const AllCode2 = [
+        { Description: "Bỏ lượt", CodeValue: "4" },
         { Description: "Blank", CodeValue: "3" },
         { Description: "Đang xếp hàng", CodeValue: "2" },
         { Description: "Đã gọi", CodeValue: "1" },
@@ -367,6 +387,92 @@
             date.getFullYear();
         return `
     <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
+        <td>${item.recordNumber}</td>
+        <td>${item.customerName}</td>
+        <td>${item.driverName}</td>
+        <td><a class="btn-detail"
+                           data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
+        <td>${formatted || ""}</td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
+                        data-type="1"
+                        data-options='${jsonString}'
+                        ${isProcessed ? "disabled" : ""}>
+                    ${item.troughTypeName || ""}
+                </button>
+            </div>
+        </td>
+      <td>
+        <input type="text"
+               class="input-form weight"
+               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+               placeholder="Vui lòng nhập"
+               ${isProcessed ? "disabled" : ""} />
+    </td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle"
+                        data-options='${jsonString2}'>
+                    ${item.vehicleTroughStatusName || ""}
+                </button>
+            </div>
+        </td>
+    </tr>`;
+    }
+    function renderRow(item, isProcessed) {
+        var date = new Date(item.vehicleWeighingTimeComeOut);
+        let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear();
+        return `
+    <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}">
+        <td>${item.recordNumber}</td>
+        <td>${item.customerName}</td>
+        <td>${item.driverName}</td>
+        <td><a class="btn-detail"
+                           data-id="${item.id}" style="cursor:pointer">${item.vehicleNumber}</a></td>
+        <td>${formatted || ""}</td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle ${isProcessed ? "disabled" : ""}"
+                        data-type="1"
+                        data-options='${jsonString}'
+                        ${isProcessed ? "disabled" : ""}>
+                    ${item.troughTypeName || ""}
+                </button>
+            </div>
+        </td>
+      <td>
+        <input type="text"
+               class="input-form weight"
+               value="${item.vehicleTroughWeight > 0 ? item.vehicleTroughWeight : ""}"
+               placeholder="Vui lòng nhập"
+               ${isProcessed ? "disabled" : ""} />
+    </td>
+        <td>
+            <div class="status-dropdown">
+                <button class="dropdown-toggle"
+                        data-options='${jsonString2}'>
+                    ${item.vehicleTroughStatusName || ""}
+                </button>
+            </div>
+        </td>
+    </tr>`;
+    }
+    function renderRow_Bo_luot(item, isProcessed) {
+        var date = new Date(item.vehicleWeighingTimeComeOut);
+        let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear();
+        return `
+    <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" style="background: antiquewhite;">
         <td>${item.recordNumber}</td>
         <td>${item.customerName}</td>
         <td>${item.driverName}</td>
@@ -493,6 +599,12 @@
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item, true));
+        sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ListCarCall_Bo_LUOT", function (item) {
+        $('.CartoFactory_' + item.id).remove();
+        const tbody = document.getElementById("dataBody-1");
+        tbody.insertAdjacentHTML("beforeend", renderRow_Bo_luot(item, true));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
     // Nhận data từ server (SignalR)
@@ -642,7 +754,7 @@ var _cartcalllist = {
             VehicleStatus: 0,
             LoadType: null,
             VehicleWeighingType: 0,
-            VehicleTroughStatus: 0,
+            VehicleTroughStatus: "0,4",
             TroughType: null,
             VehicleWeighingStatus: null,
             LoadingStatus: 0,
