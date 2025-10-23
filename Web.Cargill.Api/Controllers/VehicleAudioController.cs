@@ -101,11 +101,33 @@ namespace Web.Cargill.Api.Controllers
         {
             try
             {
-               
+                // Lấy thời điểm hiện tại
+                var now = DateTime.Now;
+
+                // Mốc 17:55 hôm nay
+                var todayCutoff = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
+
+                DateTime fromDate, toDate;
+
+                // Nếu bây giờ sau 17:55 → lấy từ 17:55 hôm nay-1 đến 17:55 hôm nay
+                // Nếu bây giờ trước 17:55 → lấy từ 17:55 hôm kia đến 17:55 hôm nay-1
+                if (now >= todayCutoff)
+                {
+                    fromDate = todayCutoff.AddDays(-1); // 17:55 hôm qua
+                    toDate = todayCutoff;                // 17:55 hôm nay
+                }
+                else
+                {
+                    fromDate = todayCutoff.AddDays(-2);  // 17:55 hôm kia
+                    toDate = todayCutoff.AddDays(-1);    // 17:55 hôm qua
+                }
 
                 var list = await _db.VehicleInspection
-                    .Where(v => string.IsNullOrEmpty(v.AudioPath))
-                    .OrderByDescending(v => v.CreatedDate)
+                    .Where(v =>
+                        string.IsNullOrEmpty(v.AudioPath) &&
+                        v.RegisterDateOnline >= fromDate &&
+                        v.RegisterDateOnline < toDate)
+                    .OrderByDescending(v => v.RegisterDateOnline)
                     .Select(v => new
                     {
                         v.Id,
@@ -121,18 +143,17 @@ namespace Web.Cargill.Api.Controllers
                     })
                     .ToListAsync();
 
-              
-
                 return Ok(new
                 {
                     Status = 0,
+                    From = fromDate.ToString("yyyy-MM-dd HH:mm"),
+                    To = toDate.ToString("yyyy-MM-dd HH:mm"),
                     Count = list.Count,
                     Data = list
                 });
             }
             catch (Exception ex)
             {
-              
                 return StatusCode(500, new
                 {
                     Status = 1,
@@ -140,6 +161,7 @@ namespace Web.Cargill.Api.Controllers
                 });
             }
         }
+
 
 
 
