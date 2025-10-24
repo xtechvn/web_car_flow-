@@ -244,6 +244,7 @@ namespace WEB.CMS.Controllers
                 model.LoadingStatus = detail.LoadingStatus;
                 model.VehicleWeighedstatus = detail.VehicleWeighedstatus;
                 model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
+              
                 model.UpdatedBy = _UserId;
                 switch (type)
                 {
@@ -266,6 +267,7 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             model.VehicleStatus = status;
+                            model.VehicleArrivalDate = DateTime.Now;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
