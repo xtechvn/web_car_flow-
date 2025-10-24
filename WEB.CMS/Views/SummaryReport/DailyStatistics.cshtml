@@ -1,4 +1,7 @@
-﻿<div class="card-dashboard">
+﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
+@model List<CartoFactoryModel>
+<div class="card-dashboard">
     <div class="card-header">
         <h3>Thống kê ngày</h3>
         <div class="date-picker">
@@ -6,36 +9,50 @@
         </div>
     </div>
 
-    <table class="info-table">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Giờ đăng ký online</th>
+                <th>Tên KH (Trại, đại lý)</th>
+                <th>Tên lái xe</th>
+                <th>Số điện thoại</th>
+                <th>Biển số xe</th>
+                <th>Nhóm tài</th>
+                <th>Giờ xe có mặt</th>
+                <th>Giờ vào cân</th>
+                <th>Giờ cân xong đầu vào</th>
+                <th>Giờ vào máng</th>
+                <th>Giờ cân xong đầu ra</th>
+                <th>Thời gian xuất hàng(Phút)</th>
+                <th>Tình trạng</th>
+                <th>Tổng trọng lượng đã lấy(KG)</th>
+            </tr>
+        </thead>
         <tbody>
-            <tr>
-                <td>Thời điểm kết thúc xuất hàng</td>
-                <td>14:08:19</td>
-            </tr>
-            <tr>
-                <td>Số lượng chuyến đã xuất</td>
-                <td>21 chuyến</td>
-            </tr>
-            <tr>
-                <td>Khối lượng đã xuất</td>
-                <td>202 tấn</td>
-            </tr>
-            <tr>
-                <td>Số giờ làm việc</td>
-                <td>8.6 giờ</td>
-            </tr>
-            <tr>
-                <td>Năng suất trung bình</td>
-                <td>23.4 (tấn/h)</td>
-            </tr>
-            <tr>
-                <td>Thời gian loading trung bình/tấn</td>
-                <td>127 (ph/tấn)</td>
-            </tr>
-            <tr>
-                <td>Thời gian loading trung bình/chuyến</td>
-                <td>123 (ph/chuyến)</td>
-            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.RecordNumber</td>
+                    <td>@(((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy"))</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.DriverName</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.VehicleNumber</td>
+                    <td>@item.VehicleLoad</td>
+                    <td>@(item.VehicleArrivalDate == null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComeIn == null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComeOut == null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleTroughTimeComeIn == null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComplete == null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td></td>
+                    <td></td>
+                    <td>@item.VehicleTroughWeight</td>
+
+                </tr>
+            }
+
+
         </tbody>
     </table>
 </div>

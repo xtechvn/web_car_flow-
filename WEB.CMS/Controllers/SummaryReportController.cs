@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entities.ViewModels.Car;
+using Microsoft.AspNetCore.Mvc;
+using Nest;
 using Repositories.IRepositories;
+using Repositories.Repositories;
+using Utilities;
+using Utilities.Contants;
 
 namespace WEB.CMS.Controllers
 {
@@ -18,9 +23,19 @@ namespace WEB.CMS.Controllers
         {
             return View();
         }
-        public IActionResult DailyStatistics(string datetime)
+        public async Task<IActionResult> DailyStatistics(CartoFactorySearchModel SearchModel)
         {
-            return View();
+            try
+            {
+       
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(SearchModel);
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("DailyStatistics - SummaryReportController: " + ex);
+            }
+            return PartialView();
         }
     }
 }

@@ -91,5 +91,27 @@ namespace Repositories.Repositories
             }
             return null;
         }
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(CartoFactorySearchModel searchModel)
+        {
+            try
+            {
+                var now = DateTime.Now;
+                var expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
+                if (now >= expireAt)
+                {
+                    searchModel.RegistrationTime = expireAt;
+                }
+                else
+                {
+                    searchModel.RegistrationTime = expireAt.AddDays(-1);
+                }
+                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(searchModel);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListVehicleInspectionSynthetic - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }
     }
 }

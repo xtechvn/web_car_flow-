@@ -36,5 +36,6 @@ namespace Entities.Models
         public int? VehicleWeighedstatus { get; set; }
         public DateTime? TimeCallVehicleTroughTimeComeIn { get; set; }
         public string AudioPath { get; set; }
+        public DateTime? VehicleArrivalDate { get; set; }
     }
 }

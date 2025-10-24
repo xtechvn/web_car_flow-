@@ -14,5 +14,6 @@ namespace Repositories.IRepositories
         Task<int> UpdateCar(VehicleInspectionUpdateModel model);
         int SaveVehicleInspection(RegistrationRecord model);
         Task<string> GetAudioPathByVehicleNumber(string VehicleNumber);
+        Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(CartoFactorySearchModel searchModel);
     }
 }
