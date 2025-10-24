@@ -1,14 +1,7 @@
 ﻿@using Entities.ViewModels.Car;
 @using Entities.Models;
 @model List<CartoFactoryModel>
-<div class="card-dashboard">
-    <div class="card-header">
-        <h3>Thống kê ngày</h3>
-        <div class="date-picker">
-            <input type="date" value="2025-07-24">
-        </div>
-    </div>
-
+<div >
     <table class="data-table">
         <thead>
             <tr>
@@ -30,29 +23,31 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @if (Model != null && Model.Count > 0)
             {
-                <tr>
-                    <td>@item.RecordNumber</td>
-                    <td>@(((DateTime)item.RegisterDateOnline).ToString("HH:mm dd/MM/yyyy"))</td>
-                    <td>@item.CustomerName</td>
-                    <td>@item.DriverName</td>
-                    <td>@item.PhoneNumber</td>
-                    <td>@item.VehicleNumber</td>
-                    <td>@item.VehicleLoad</td>
-                    <td>@(item.VehicleArrivalDate == null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComeIn == null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComeOut == null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleTroughTimeComeIn == null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComplete == null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td></td>
-                    <td></td>
-                    <td>@item.VehicleTroughWeight</td>
+                foreach (var item in Model)
+                {
+                    var totalMinutes = item.VehicleWeighingTimeComplete.HasValue && item.VehicleWeighingTimeComeIn.HasValue  ? (item.VehicleWeighingTimeComplete.Value - item.VehicleWeighingTimeComeIn.Value).TotalMinutes: 0;
+                    <tr>
+                        <td>@item.RecordNumber</td>
+                        <td>@(item.RegisterDateOnline != null ? item.RegisterDateOnline.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@item.CustomerName</td>
+                        <td>@item.DriverName</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.VehicleNumber</td>
+                        <td>@item.VehicleLoad</td>
+                        <td>@(item.VehicleArrivalDate != null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@(item.VehicleTroughTimeComeIn != null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                        <td>@((int)Math.Round(totalMinutes))</td>
+                        <td></td>
+                        <td>@item.VehicleTroughWeight</td>
 
-                </tr>
-            }
-
-
+                    </tr>
+                }
+            }            
         </tbody>
     </table>
 </div>

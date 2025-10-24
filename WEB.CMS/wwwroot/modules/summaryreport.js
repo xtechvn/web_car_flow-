@@ -1,8 +1,10 @@
 ﻿$(document).ready(function () {
-
+    _summary_report.init();
 });
 var _summary_report = {
     init: function () {
+        var datetime = null;
+        _summary_report.GetDailyStatistics(datetime)
     },
     GetDailyStatistics: function (datetime) {
         $.ajax({
