@@ -23,12 +23,23 @@ namespace WEB.CMS.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> DailyStatistics(CartoFactorySearchModel SearchModel)
+        public async Task<IActionResult> DailyStatistics(string date)
         {
             try
             {
-       
-                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(SearchModel);
+                var date_time = date!=null && date !=""? DateUtil.Parse(date):null;
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(date_time);
+                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+                ViewBag.TotalData = Total;
+                if(data != null && data.Count > 0)
+                {
+                  var  SumTime= data.Sum(s=> s.VehicleWeighingTimeComplete.HasValue && s.VehicleWeighingTimeComeIn.HasValue ? (s.VehicleWeighingTimeComplete.Value - s.VehicleWeighingTimeComeIn.Value).TotalMinutes : 0);
+                 
+                    var tb= SumTime / Total.TotalCarCompleted;
+                    var SumTime_ngay= (data.Max(s=>s.VehicleWeighingTimeComplete).Value - data.Min(s =>s.VehicleWeighingTimeComeIn).Value).TotalMinutes;
+                    ViewBag.AverageWeighingTime = tb;
+                    ViewBag.SumTime_ngay = SumTime_ngay;
+                }
                 return PartialView(data);
             }
             catch (Exception ex)

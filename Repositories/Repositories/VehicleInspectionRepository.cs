@@ -91,21 +91,25 @@ namespace Repositories.Repositories
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(CartoFactorySearchModel searchModel)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime)
         {
             try
             {
-                var now = DateTime.Now;
-                var expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 55, 0);
-                if (now >= expireAt)
-                {
-                    searchModel.RegistrationTime = expireAt;
-                }
-                else
-                {
-                    searchModel.RegistrationTime = expireAt.AddDays(-1);
-                }
-                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(searchModel);
+  
+                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListVehicleInspectionSynthetic - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }    
+        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        {
+            try
+            {
+             
+                return await _VehicleInspectionDAL.CountTotalVehicleInspectionSynthetic(RegistrationTime);
             }
             catch (Exception ex)
             {

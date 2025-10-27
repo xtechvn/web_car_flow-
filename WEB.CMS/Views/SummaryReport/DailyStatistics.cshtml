@@ -1,5 +1,10 @@
 ﻿@using Entities.ViewModels.Car;
 @using Entities.Models;
+@{
+
+    var title = "Báo cáo thống kê ngày";
+    var TotalData=(TotalVehicleInspection)ViewBag.TotalData;
+}
 @model List<CartoFactoryModel>
 <div >
     <table class="data-table">
@@ -23,6 +28,78 @@
             </tr>
         </thead>
         <tbody>
+            @if(TotalData != null)
+            {
+                <tr>
+                    <td>Tổng số xe</td>
+                    <td>Tổng số xe đã lấy hàng</td>
+                    <td>Tổng số xe chưa lấy hàng</td>
+                    <td>Tổng số xe đến lấy sau 16h</td>
+                    <td>Máng 3</td>
+                    <td>Máng 4</td>
+                    <td>Máng 5</td>
+                    <td>Máng 6</td>
+                    <td>Máng 7</td>
+                    <td>Máng 8</td>
+                    <td>Giờ vào máng</td>
+                    <td>Giờ cân xong đầu ra</td>
+                    <td>Tổng thời gian xuất hàng/ngày</td>
+                    <td>Trung bình thời gian xuất hàng/ xe</td>
+                    <td>Tổng trọng lượng đã lấy(KG)</td>
+                </tr>
+                <tr>
+                    <td>@TotalData.TotalCar</td>
+                    <td>@TotalData.TotalCarCompleted</td>
+                    <td>@TotalData.TotalCarUnfinished</td>
+                    <td>@TotalData.TotalCarArriving16h</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@ViewBag.SumTime_ngay</td>
+                    <td>@ViewBag.AverageWeighingTime</td>
+                    <td>@TotalData.TotalWeightTroughType</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>/td>
+                    <td></td>
+                    <td>Tổng số xe</td>
+                    <td>@TotalData.TotalTroughType3</td>
+                    <td>@TotalData.TotalTroughType4</td>
+                    <td>@TotalData.TotalTroughType5</td>
+                    <td>@TotalData.TotalTroughType6</td>
+                    <td>@TotalData.TotalTroughType7</td>
+                    <td>@TotalData.TotalTroughType8</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>  
+                <tr>
+                    <td></td>
+                    <td>/td>
+                    <td></td>
+                    <td>Tổng số kg</td>
+                    <td>@TotalData.TotalWeightTroughType3</td>
+                    <td>@TotalData.TotalWeightTroughType4</td>
+                    <td>@TotalData.TotalWeightTroughType5</td>
+                    <td>@TotalData.TotalWeightTroughType6</td>
+                    <td>@TotalData.TotalWeightTroughType7</td>
+                    <td>@TotalData.TotalWeightTroughType8</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+            }
             @if (Model != null && Model.Count > 0)
             {
                 foreach (var item in Model)

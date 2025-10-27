@@ -188,14 +188,14 @@ namespace DAL
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(CartoFactorySearchModel searchModel)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime)
         {
             try
             {
                 SqlParameter[] objParam = new SqlParameter[]
                 {
  
-                    new SqlParameter("@RegisterDateOnline", searchModel.RegistrationTime==null? DBNull.Value :searchModel.RegistrationTime),
+                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionSynthetic, objParam);
                 if (dt != null && dt.Rows.Count > 0)
@@ -206,6 +206,28 @@ namespace DAL
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("GetListCartoFactory - VehicleInspectionDAL: " + ex);
+            }
+            return null;
+        }
+        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+ 
+                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_CountTotalVehicleInspectionSynthetic, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                   var data = dt.ToList<TotalVehicleInspection>();
+                    return data.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CountTotalVehicleInspectionSynthetic - VehicleInspectionDAL: " + ex);
             }
             return null;
         }

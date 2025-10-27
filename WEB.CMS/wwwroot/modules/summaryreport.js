@@ -3,6 +3,7 @@
 });
 var _summary_report = {
     init: function () {
+        debugger
         var datetime = null;
         _summary_report.GetDailyStatistics(datetime)
     },
@@ -10,7 +11,7 @@ var _summary_report = {
         $.ajax({
             url: "/SummaryReport/DailyStatistics",
             type: "post",
-            data: { datetime: datetime },
+            data: { date: datetime },
             success: function (result) {
                 $('#Grid-DailyStatistics').html(result);
             },
