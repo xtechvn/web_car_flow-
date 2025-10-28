@@ -1,41 +1,131 @@
-﻿<div class="card-dashboard">
-    <div class="card-header">
-        <h3>Thống kê ngày</h3>
-        <div class="date-picker">
-            <input type="date" value="2025-07-24">
-        </div>
-    </div>
+﻿@using Entities.ViewModels.Car;
+@using Entities.Models;
+@{
 
-    <table class="info-table">
-        <tbody>
+    var title = "Báo cáo thống kê ngày";
+    var TotalData = (TotalVehicleInspection)ViewBag.TotalData;
+}
+@model List<CartoFactoryModel>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Giờ đăng ký online</th>
+            <th>Tên KH (Trại, đại lý)</th>
+            <th>Tên lái xe</th>
+            <th>Số điện thoại</th>
+            <th>Biển số xe</th>
+            <th>Nhóm tài</th>
+            <th>Giờ xe có mặt</th>
+            <th>Giờ vào cân</th>
+            <th>Giờ cân xong đầu vào</th>
+            <th>Giờ vào máng</th>
+            <th>Giờ cân xong đầu ra</th>
+            <th>Thời gian xuất hàng(Phút)</th>
+            <th>Tình trạng</th>
+            <th>Tổng trọng lượng đã lấy(KG)</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                var totalMinutes = item.VehicleWeighingTimeComplete.HasValue && item.VehicleWeighingTimeComeIn.HasValue ? (item.VehicleWeighingTimeComplete.Value - item.VehicleWeighingTimeComeIn.Value).TotalMinutes : 0;
+                <tr>
+                    <td>@item.RecordNumber</td>
+                    <td>@(item.RegisterDateOnline != null ? item.RegisterDateOnline.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.DriverName</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.VehicleNumber</td>
+                    <td>@item.LoadTypeName</td>
+                    <td>@(item.VehicleArrivalDate != null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleTroughTimeComeIn != null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@((int)Math.Round(totalMinutes))</td>
+                    <td></td>
+                    <td>@item.VehicleTroughWeight</td>
+
+                </tr>
+            }
+        }
+        @if (TotalData != null)
+        {
             <tr>
-                <td>Thời điểm kết thúc xuất hàng</td>
-                <td>14:08:19</td>
+                <th>Tổng số xe</th>
+                <th>Tổng số xe đã lấy hàng</th>
+                <th>Tổng số xe chưa lấy hàng</th>
+                <th>Tổng số xe đến lấy sau 16h</th>
+                <th>Máng 3</th>
+                <th>Máng 4</th>
+                <th>Máng 5</th>
+                <th>Máng 6</th>
+                <th>Máng 7</th>
+                <th>Máng 8</th>
+                <th>Giờ vào máng</th>
+                <th>Giờ cân xong đầu ra</th>
+                <th>Tổng thời gian xuất hàng/ngày</th>
+                <th>Trung bình thời gian xuất hàng/ xe</th>
+                <th>Tổng trọng lượng đã lấy(KG)</th>
             </tr>
             <tr>
-                <td>Số lượng chuyến đã xuất</td>
-                <td>21 chuyến</td>
+                <td>@TotalData.TotalCar</td>
+                <td>@TotalData.TotalCarCompleted</td>
+                <td>@TotalData.TotalCarUnfinished</td>
+                <td>@TotalData.TotalCarArriving16h</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>@TotalData.TotalTimeInHour</td>
+                <td>@TotalData.AvgTimePerCompletedCar_Hour</td>
+                <td>@TotalData.TotalWeightTroughType</td>
             </tr>
             <tr>
-                <td>Khối lượng đã xuất</td>
-                <td>202 tấn</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Tổng số xe</td>
+                <td>@TotalData.TotalTroughType3</td>
+                <td>@TotalData.TotalTroughType4</td>
+                <td>@TotalData.TotalTroughType5</td>
+                <td>@TotalData.TotalTroughType6</td>
+                <td>@TotalData.TotalTroughType7</td>
+                <td>@TotalData.TotalTroughType8</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
+
             <tr>
-                <td>Số giờ làm việc</td>
-                <td>8.6 giờ</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Tổng số kg</td>
+                <td>@TotalData.TotalWeightTroughType3</td>
+                <td>@TotalData.TotalWeightTroughType4</td>
+                <td>@TotalData.TotalWeightTroughType5</td>
+                <td>@TotalData.TotalWeightTroughType6</td>
+                <td>@TotalData.TotalWeightTroughType7</td>
+                <td>@TotalData.TotalWeightTroughType8</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
-            <tr>
-                <td>Năng suất trung bình</td>
-                <td>23.4 (tấn/h)</td>
-            </tr>
-            <tr>
-                <td>Thời gian loading trung bình/tấn</td>
-                <td>127 (ph/tấn)</td>
-            </tr>
-            <tr>
-                <td>Thời gian loading trung bình/chuyến</td>
-                <td>123 (ph/chuyến)</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+
+        }
+    </tbody>
+</table>

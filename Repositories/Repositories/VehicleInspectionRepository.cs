@@ -91,5 +91,44 @@ namespace Repositories.Repositories
             }
             return null;
         }
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        {
+            try
+            {
+  
+                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListVehicleInspectionSynthetic - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }    
+        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        {
+            try
+            {
+             
+                return await _VehicleInspectionDAL.CountTotalVehicleInspectionSynthetic(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetListVehicleInspectionSynthetic - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }
+        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByHour(DateTime? RegistrationTime)
+        {
+            try
+            {
+
+                return await _VehicleInspectionDAL.GetTotalWeightByHour(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalWeightByHour - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }
     }
 }
