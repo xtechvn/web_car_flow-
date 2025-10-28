@@ -27,24 +27,58 @@ namespace WEB.CMS.Controllers
         {
             try
             {
-                var date_time = date!=null && date !=""? DateUtil.Parse(date):null;
+                var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
                 var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(date_time);
                 var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
                 ViewBag.TotalData = Total;
-                if(data != null && data.Count > 0)
-                {
-                  var  SumTime= data.Sum(s=> s.VehicleWeighingTimeComplete.HasValue && s.VehicleWeighingTimeComeIn.HasValue ? (s.VehicleWeighingTimeComplete.Value - s.VehicleWeighingTimeComeIn.Value).TotalMinutes : 0);
-                 
-                    var tb= SumTime / Total.TotalCarCompleted;
-                    var SumTime_ngay= (data.Max(s=>s.VehicleWeighingTimeComplete).Value - data.Min(s =>s.VehicleWeighingTimeComeIn).Value).TotalMinutes;
-                    ViewBag.AverageWeighingTime = tb;
-                    ViewBag.SumTime_ngay = SumTime_ngay;
-                }
+                
                 return PartialView(data);
             }
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("DailyStatistics - SummaryReportController: " + ex);
+            }
+            return PartialView();
+        }
+        public async Task<IActionResult> GetTotalWeightByHour(string date)
+        {
+            try
+            {
+                var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
+            
+                var data = await _vehicleInspectionRepository.GetTotalWeightByHour(date_time);
+                var datamodel=new TotalWeightByHourViewModel();
+                datamodel.CompletionHour = data.Select(x => x.CompletionHour).ToArray();
+                datamodel.TotalWeightInHour = data.Select(x => x.TotalWeightInHour).ToArray();
+
+                return Ok(new
+                {
+                    isSuccess = true,
+                    data = datamodel
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalWeightByHour - SummaryReportController: " + ex);
+            }
+            return Ok(new
+            {
+                isSuccess = false,
+               
+            });
+        }
+       public async Task<IActionResult> GetProductivityStatistics(string date)
+        {
+            try
+            {
+                var date_time = date != null && date != "" ? DateUtil.StringToDate(date) : null;
+                var data = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+             
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetProductivityStatistics - SummaryReportController: " + ex);
             }
             return PartialView();
         }

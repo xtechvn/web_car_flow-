@@ -16,5 +16,6 @@ namespace Repositories.IRepositories
         Task<string> GetAudioPathByVehicleNumber(string VehicleNumber);
         Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime);
         Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime);
+        Task<List<TotalWeightByHourModel>> GetTotalWeightByHour(DateTime? RegistrationTime);
     }
 }

@@ -7,7 +7,9 @@ using Newtonsoft.Json;
 using Repositories.IRepositories;
 using System.Security.Claims;
 using Utilities;
+using Utilities.Contants;
 using WEB.CMS.Customize;
+using WEB.CMS.Services;
 
 namespace WEB.CMS.Controllers
 {
@@ -19,6 +21,7 @@ namespace WEB.CMS.Controllers
         private readonly IRoleRepository _RoleRepository;
         private readonly IDepartmentRepository _DepartmentRepository;
         private ManagementUser _ManagementUser;
+        private RedisConn _redisConn;
         public UserController(IUserRepository userRepository, ManagementUser managementUser, IConfiguration configuration, IWebHostEnvironment hostEnvironment, IRoleRepository roleRepository, IDepartmentRepository departmentRepository)
         {
             _UserRepository = userRepository;
@@ -27,6 +30,8 @@ namespace WEB.CMS.Controllers
             _RoleRepository = roleRepository;
             _ManagementUser = managementUser;
             _DepartmentRepository = departmentRepository;
+            _redisConn = new RedisConn(configuration);
+            _redisConn.Connect();
         }
 
         public IActionResult Index()
@@ -117,7 +122,7 @@ namespace WEB.CMS.Controllers
 
                 if (rs > 0)
                 {
-    
+                    _redisConn.clear(CacheName.USER_ROLE + model.Id + "_" + _configuration["CompanyType"], Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                     return new JsonResult(new
                     {
                         isSuccess = true,

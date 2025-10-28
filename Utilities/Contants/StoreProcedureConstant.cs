@@ -39,5 +39,6 @@ namespace Utilities.Contants
         public static string SP_GetDetailVehicleAudioByPlateNumber = "SP_GetDetailVehicleAudioByPlateNumber";
         public static string SP_GetListVehicleInspectionSynthetic = "SP_GetListVehicleInspectionSynthetic";
         public static string SP_CountTotalVehicleInspectionSynthetic = "SP_CountTotalVehicleInspectionSynthetic";
+        public static string SP_GetTotalWeightByHour = "SP_GetTotalWeightByHour";
     }
 }

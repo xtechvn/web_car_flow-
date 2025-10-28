@@ -230,6 +230,28 @@ namespace DAL
                 LogHelper.InsertLogTelegram("CountTotalVehicleInspectionSynthetic - VehicleInspectionDAL: " + ex);
             }
             return null;
+        }  
+        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByHour(DateTime? RegistrationTime)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+ 
+                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetTotalWeightByHour, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                   var data = dt.ToList<TotalWeightByHourModel>();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CountTotalVehicleInspectionSynthetic - VehicleInspectionDAL: " + ex);
+            }
+            return null;
         }
     }
 }

@@ -117,5 +117,18 @@ namespace Repositories.Repositories
             }
             return null;
         }
+        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByHour(DateTime? RegistrationTime)
+        {
+            try
+            {
+
+                return await _VehicleInspectionDAL.GetTotalWeightByHour(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalWeightByHour - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }
     }
 }
