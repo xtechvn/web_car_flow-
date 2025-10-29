@@ -223,6 +223,26 @@
 
         </tr>`;
     }
+    function renderRow2(item) {
+        
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.vehicleNumber}</td>
+            <td></td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle " data-options='${jsonString}'>
+                        ${item.vehicleWeighingStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
 
     // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
     function sortTable_Da_SL() {
@@ -272,7 +292,7 @@
     connection.on("ListCarCall_Da_SL", function (item) {
         $('.CartoFactory_' + item.id).remove();
         const tbody = document.getElementById("dataBody-0");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow2(item));
         sortTable();
     });
     connection.on("ListCarCall", function (item) {
