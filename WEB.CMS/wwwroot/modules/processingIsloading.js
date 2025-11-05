@@ -231,6 +231,7 @@
             <td>${item.phoneNumber}</td>
             <td>${item.vehicleNumber}</td>
             <td>${item.vehicleLoad}</td>
+            <td>${item.licenseNumber}</td>
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="status-dropdown">
@@ -262,6 +263,7 @@
             <td>${item.phoneNumber}</td>
             <td>${item.vehicleNumber}</td>
             <td>${item.vehicleLoad}</td>
+            <td>${item.licenseNumber}</td>
             <td>${item.vehicleStatusName}</td>
             <td>
                 <div class="">
