@@ -21,6 +21,7 @@
             <th>Giờ vào cân</th>
             <th>Giờ cân xong đầu vào</th>
             <th>Giờ vào máng</th>
+            <th>Giờ ra máng</th>
             <th>Giờ cân xong đầu ra</th>
             <th>Thời gian xuất hàng(Phút)</th>
             <th>Tình trạng</th>
@@ -42,13 +43,39 @@
                     <td>@item.PhoneNumber</td>
                     <td>@item.VehicleNumber</td>
                     <td>@item.LoadTypeName</td>
-                    <td>@(item.VehicleArrivalDate != null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleTroughTimeComeIn != null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
-                    <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+                    <td>@(item.VehicleArrivalDate != null ? item.VehicleArrivalDate.Value.ToString("HH:mm dd/MM/yyyy") : "")</td> @*bước 1*@
+                    <td>@(item.VehicleWeighingTimeComeIn != null ? item.VehicleWeighingTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 3*@
+                    <td>@(item.VehicleWeighingTimeComeOut != null ? item.VehicleWeighingTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 4*@
+                    <td>@(item.VehicleTroughTimeComeIn != null ? item.VehicleTroughTimeComeIn.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*bước 5 bốc hành*@
+                    <td>@(item.VehicleTroughTimeComeOut != null ? item.VehicleTroughTimeComeOut.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*bước 5 hoàn thành*@
+                    <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 6*@
                     <td>@((int)Math.Round(totalMinutes))</td>
-                    <td></td>
+                    <td>
+                        @if ((item.VehicleStatus != null && item.LoadingStatus == null) || item.VehicleStatus == (int)VehicleStatus.Blank)
+                        {
+                            <div>Bước 1</div>
+                        }
+                        @if ((item.LoadingStatus != null && item.VehicleStatus == (int)VehicleStatus.Da_Den_NM) || item.LoadingStatus == (int)LoadingStatus.Blank)
+                        {
+                            <div>Bước 2</div>
+                        } 
+                        @if ((item.VehicleWeighingType != null && item.LoadingStatus == (int)LoadingStatus.DA_Vao_Can) || item.VehicleWeighingType == (int)VehicleWeighingType.Blank)
+                        {
+                            <div>Bước 3</div>
+                        } 
+                        @if ((item.VehicleWeighedstatus != null && item.VehicleWeighingType == (int)VehicleWeighingType.DA_Vao_Can) || item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank)
+                        {
+                            <div>Bước 4</div>
+                        } 
+                        @if ((item.VehicleTroughStatus != null && item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao) || item.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
+                        {
+                            <div>Bước 5</div>
+                        } 
+                        @if ((item.VehicleWeighingStatus != null && item.VehicleTroughStatus == (int)VehicleTroughStatus.Hoan_thanh) ||(item.VehicleWeighingStatus == null && item.VehicleTroughStatus == (int)VehicleTroughStatus.Hoan_thanh))
+                        {
+                            <div>Bước 6</div>
+                        }
+                    </td>
                     <td>@item.VehicleTroughWeight</td>
 
                 </tr>
@@ -68,6 +95,7 @@
                 <th>Máng 7</th>
                 <th>Máng 8</th>
                 <th>Giờ vào máng</th>
+                <th>Giờ ra máng</th>
                 <th>Giờ cân xong đầu ra</th>
                 <th>Tổng thời gian xuất hàng/ngày</th>
                 <th>Trung bình thời gian xuất hàng/ xe</th>
@@ -86,11 +114,13 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
                 <td>@TotalData.TotalTimeInHour</td>
                 <td>@TotalData.AvgTimePerCompletedCar_Hour</td>
                 <td>@TotalData.TotalWeightTroughType</td>
             </tr>
             <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -109,6 +139,7 @@
             </tr>
 
             <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
