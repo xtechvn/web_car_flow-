@@ -37,11 +37,23 @@ namespace Entities.ViewModels.Car
         public int CompletionHour { get; set; }
         public int TotalWeightInHour { get; set; }
         public int TotalCompletedCarsInHour { get; set; }
+        public string WeightGroup { get; set; }
+        public double TotalWeightTons { get; set; }
+        public double TotalProcessMinutes { get; set; }
+        public double SanLuong { get; set; }
+        public double SoPhut_Tren_Tan { get; set; }
+        public double SoPhut_Tren_Xe { get; set; }
     } 
     public class TotalWeightByHourViewModel
     {
         public Array CompletionHour { get; set; }
         public Array TotalWeightInHour { get; set; }
         public Array TotalCompletedCarsInHour { get; set; }
+        public Array WeightGroup { get; set; }
+        public Array TotalWeightTons { get; set; }
+        public Array TotalProcessMinutes { get; set; }
+        public Array SanLuong { get; set; }
+        public Array SoPhut_Tren_Tan { get; set; }
+        public Array SoPhut_Tren_Xe { get; set; }
     }
 }

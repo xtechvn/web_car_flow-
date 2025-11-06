@@ -1,5 +1,6 @@
 ﻿@using Entities.ViewModels.Car;
 @using Entities.Models;
+@using Utilities.Contants;
 @{
 
     var title = "Báo cáo thống kê ngày";
@@ -51,30 +52,37 @@
                     <td>@(item.VehicleWeighingTimeComplete != null ? item.VehicleWeighingTimeComplete.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>@*Bước 6*@
                     <td>@((int)Math.Round(totalMinutes))</td>
                     <td>
-                        @if ((item.VehicleStatus != null && item.LoadingStatus == null) || item.VehicleStatus == (int)VehicleStatus.Blank)
-                        {
-                            <div>Bước 1</div>
-                        }
-                        @if ((item.LoadingStatus != null && item.VehicleStatus == (int)VehicleStatus.Da_Den_NM) || item.LoadingStatus == (int)LoadingStatus.Blank)
-                        {
-                            <div>Bước 2</div>
-                        } 
-                        @if ((item.VehicleWeighingType != null && item.LoadingStatus == (int)LoadingStatus.DA_Vao_Can) || item.VehicleWeighingType == (int)VehicleWeighingType.Blank)
-                        {
-                            <div>Bước 3</div>
-                        } 
-                        @if ((item.VehicleWeighedstatus != null && item.VehicleWeighingType == (int)VehicleWeighingType.DA_Vao_Can) || item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank)
-                        {
-                            <div>Bước 4</div>
-                        } 
-                        @if ((item.VehicleTroughStatus != null && item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao) || item.VehicleTroughStatus == (int)VehicleTroughStatus.Blank)
-                        {
-                            <div>Bước 5</div>
-                        } 
-                        @if ((item.VehicleWeighingStatus != null && item.VehicleTroughStatus == (int)VehicleTroughStatus.Hoan_thanh) ||(item.VehicleWeighingStatus == null && item.VehicleTroughStatus == (int)VehicleTroughStatus.Hoan_thanh))
+                        @* Ưu tiên kiểm tra từ Bước 6 xuống Bước 1 *@
+                        @if ((item.VehicleTroughStatus == (int)VehicleTroughStatus.Hoan_thanh) &&
+                                        (item.VehicleWeighingStatus != null ))
                         {
                             <div>Bước 6</div>
                         }
+                        else if ((item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Da_Can_Xong_Dau_Cao) && item.TroughType !=null &&
+                        (item.VehicleTroughStatus != null || item.VehicleTroughStatus == (int)VehicleTroughStatus.Blank))
+                        {
+                            <div>Bước 5</div>
+                        }
+                        else if ((item.VehicleWeighingType == (int)VehicleWeighingType.DA_Vao_Can) &&
+                        (item.VehicleWeighedstatus != null || item.VehicleWeighedstatus == (int)VehicleWeighedstatus.Blank))
+                        {
+                            <div>Bước 4</div>
+                        }
+                        else if ((item.LoadingStatus == (int)LoadingStatus.Da_HTTC) &&
+                        (item.VehicleWeighingType != null || item.VehicleWeighingType == (int)VehicleWeighingType.Blank))
+                        {
+                            <div>Bước 3</div>
+                        }
+                        else if ((item.VehicleStatus == (int)VehicleStatus.Da_Den_NM) &&
+                        (item.LoadingStatus != null || item.LoadingStatus == (int)LoadingStatus.Blank))
+                        {
+                            <div>Bước 2</div>
+                        }
+                        else if (item.VehicleStatus != null && (item.LoadingStatus == null || item.LoadingStatus == (int)VehicleWeighingType.Blank))
+                        {
+                            <div>Bước 1</div>
+                        }
+
                     </td>
                     <td>@item.VehicleTroughWeight</td>
 

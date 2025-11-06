@@ -23,6 +23,10 @@ namespace WEB.CMS.Controllers
         {
             return View();
         }
+        public IActionResult DetailSummaryReport()
+        {
+            return View();
+        }
         public async Task<IActionResult> DailyStatistics(string date)
         {
             try
@@ -50,6 +54,12 @@ namespace WEB.CMS.Controllers
                 var datamodel=new TotalWeightByHourViewModel();
                 datamodel.CompletionHour = data.Select(x => x.CompletionHour).ToArray();
                 datamodel.TotalWeightInHour = data.Select(x => x.TotalWeightInHour).ToArray();
+                datamodel.WeightGroup = data.Select(x => x.WeightGroup).ToArray();
+                datamodel.TotalWeightTons = data.Select(x => x.TotalWeightTons).ToArray();
+                datamodel.TotalProcessMinutes = data.Select(x => x.TotalProcessMinutes).ToArray();
+                datamodel.SanLuong = data.Select(x => x.SanLuong).ToArray();
+                datamodel.SoPhut_Tren_Tan = data.Select(x => x.SoPhut_Tren_Tan).ToArray();
+                datamodel.SoPhut_Tren_Xe = data.Select(x => x.SoPhut_Tren_Xe).ToArray();
 
                 return Ok(new
                 {
