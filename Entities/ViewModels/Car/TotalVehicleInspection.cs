@@ -30,6 +30,7 @@ namespace Entities.ViewModels.Car
         public DateTime MaxVehicleTimeOutToday { get; set; }
         public double TotalTimeWorkInHour { get; set; }
         public double AverageProductivity { get; set; }
+        public DateTime VehicleWeighingTimeComplete { get; set; }
 
     }
     public class TotalWeightByHourModel

@@ -20,8 +20,16 @@ namespace WEB.CMS.Controllers
             _configuration = configuration;
             _allCodeRepository = allCodeRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
+        { 
+            return View();
+        }  
+        public async Task<IActionResult> TotalVehicleInspection( string date)
         {
+            var date_time = date != null && date != "" ? DateUtil.StringToDate(date) : null;
+
+            var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+            ViewBag.TotalData = Total;
             return View();
         }
         public async Task<IActionResult> DetailSummaryReport()

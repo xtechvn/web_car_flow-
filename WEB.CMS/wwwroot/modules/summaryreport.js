@@ -11,6 +11,7 @@ var _summary_report = {
         _summary_report.GetTotalWeightByHour(datetime);
         _summary_report.GetProductivityStatistics(datetime);
         _summary_report.GetTotalWeightByTroughType(datetime);
+        _summary_report.TotalVehicleInspection(datetime);
     },
     Seach: function () {
         var text = $('#date_time_Car').val();
@@ -19,7 +20,8 @@ var _summary_report = {
        /* _summary_report.GetDailyStatistics(datetime)*/
         _summary_report.GetTotalWeightByHour(datetime);
         _summary_report.GetProductivityStatistics(datetime);
-       
+        _summary_report.TotalVehicleInspection(datetime);
+
     },
     Seach_mang: function () {
         var text = $('#date_time_mang').val();
@@ -48,6 +50,19 @@ var _summary_report = {
             data: { date: datetime },
             success: function (result) {
                 $('#Grid-ProductivityStatistics').html(result);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("Status: " + textStatus);
+            }
+        });
+    },
+    TotalVehicleInspection: function (datetime) {
+        $.ajax({
+            url: "/SummaryReport/TotalVehicleInspection",
+            type: "post",
+            data: { date: datetime },
+            success: function (result) {
+                $('#data_Total').html(result);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 console.log("Status: " + textStatus);
