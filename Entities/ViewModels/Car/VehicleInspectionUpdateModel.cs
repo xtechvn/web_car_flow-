@@ -37,6 +37,7 @@ namespace Entities.ViewModels.Car
         public DateTime? TimeCallVehicleTroughTimeComeIn { get; set; }
         public DateTime? VehicleArrivalDate { get; set; }
         public string? Note { get; set; }
+        public int? LoadingType { get; set; }
     }
 
 }

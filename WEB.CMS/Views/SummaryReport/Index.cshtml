@@ -23,13 +23,13 @@
             <div class="card-header">
                 <h3>Thống kê ngày</h3>
                 <div class="date-picker">
-                    <input type="date" id="date_time_Car" max="@date.ToString("yyyy-MM-dd")" onchange="_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")" >
+                    <input type="date" id="date_time_Car" max="@date.ToString("yyyy-MM-dd")" onchange="_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")">
                 </div>
             </div>
 
             <table class="info-table" id="Grid-ProductivityStatistics">
-                
             </table>
+            <a href="/SummaryReport/DetailSummaryReport">Xem chi tiết</a>
         </div>
 
         <!-- Cột 2 -->
@@ -40,15 +40,20 @@
 
   
 
-    <div class="table-wrapper simple-scrollbar ss-container" style="height: 310px;">
-        <div class="ss-wrapper">
-            <div class="ss-content" id="Grid-DailyStatistics">
-
+    <div class="dashboard-grid">
+        <!-- Cột 2 -->
+        <div class=" card-dashboard">
+            <div class="card-header">
+                <h3>Biểu đồ tấn xuất hàng/máng</h3>
+                <div class="date-picker">
+                    <input type="date" id="date_time_mang" max="@date.ToString("yyyy-MM-dd")" onchange="_summary_report.Seach_mang()" value="@date.ToString("yyyy-MM-dd")">
+                </div>
             </div>
-        </div><div class="ss-scroll ss-hidden"></div>
-    </div>
+            <canvas id="revenuChart_mang" class="chartjs-render-monitor"></canvas>
+        </div>
 
-    <div id="dropdown-container"></div>
+
+    </div>
    
 </main>
 @section scripts {

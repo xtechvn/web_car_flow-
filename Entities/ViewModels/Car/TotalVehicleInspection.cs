@@ -43,6 +43,10 @@ namespace Entities.ViewModels.Car
         public double SanLuong { get; set; }
         public double SoPhut_Tren_Tan { get; set; }
         public double SoPhut_Tren_Xe { get; set; }
+        public string TroughType { get; set; }
+        public double SoXe { get; set; }
+        public double TongGio { get; set; }
+        public double Tan_Moi_Gio { get; set; }
     } 
     public class TotalWeightByHourViewModel
     {
@@ -55,5 +59,10 @@ namespace Entities.ViewModels.Car
         public Array SanLuong { get; set; }
         public Array SoPhut_Tren_Tan { get; set; }
         public Array SoPhut_Tren_Xe { get; set; }
+        public Array SoXe { get; set; }
+        public Array TongGio { get; set; }
+        public Array Tan_Moi_Gio { get; set; }
+        public Array TroughType { get; set; }
+
     }
 }

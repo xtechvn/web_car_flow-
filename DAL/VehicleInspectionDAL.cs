@@ -88,6 +88,7 @@ namespace DAL
                     new SqlParameter("@TimeCallVehicleTroughTimeComeIn", (object?)model.TimeCallVehicleTroughTimeComeIn ?? DBNull.Value),
                     new SqlParameter("@Note", (object?)model.Note ?? DBNull.Value),
                     new SqlParameter("@VehicleArrivalDate", (object?)model.VehicleArrivalDate ?? DBNull.Value),
+                    new SqlParameter("@LoadingType", (object?)model.LoadingType ?? DBNull.Value),
            
                 };
 
@@ -241,6 +242,28 @@ namespace DAL
                     new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetTotalWeightByHour, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                   var data = dt.ToList<TotalWeightByHourModel>();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CountTotalVehicleInspectionSynthetic - VehicleInspectionDAL: " + ex);
+            }
+            return null;
+        }    
+        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[]
+                {
+ 
+                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
+                };
+                var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetTotalWeightByTroughType, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                    var data = dt.ToList<TotalWeightByHourModel>();

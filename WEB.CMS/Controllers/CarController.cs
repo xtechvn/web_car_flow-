@@ -244,6 +244,7 @@ namespace WEB.CMS.Controllers
                 model.LoadingStatus = detail.LoadingStatus;
                 model.VehicleWeighedstatus = detail.VehicleWeighedstatus;
                 model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
+                model.LoadingType = detail.LoadingType;
               
                 model.UpdatedBy = _UserId;
                 switch (type)
@@ -557,6 +558,23 @@ namespace WEB.CMS.Controllers
                             }
 
 
+                        }
+                        break;
+                      
+                    case 10:
+                        {
+                      
+                            model.LoadingType = status;
+                            UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
+
+                            if (UpdateCar > 0)
+                            {
+                                detail.LoadingTypeName = "Khóa";
+                                    // ✅ bắn cả máng cũ + máng mới
+
+                                    await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);
+
+                            }
                         }
                         break;
                 }

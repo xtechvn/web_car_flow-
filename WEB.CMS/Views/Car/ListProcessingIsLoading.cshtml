@@ -20,6 +20,14 @@
                 <th>Tải trọng xe (kg)</th>
                 <th>Hoàn hảo/Trại</th>
                 <th>TT xe có mặt</th>
+                @if (ViewBag.type == 1)
+                {
+
+                }
+                else
+                {
+                    <th>TT sử lý</th>
+                }
                 <th>Nhóm tài</th>
                 <th>Tình trạng</th>
             </tr>
@@ -41,6 +49,21 @@
                     <td>@item.VehicleStatusName</td>
                     <td>
 
+                        @if (ViewBag.type == 1)
+                        {
+
+                        }
+                        else
+                        {
+                            <div class="status-dropdown">
+                                <button class="dropdown-toggle  Vehicle-Status" data-type="2" data-options='[{"text":"Khóa","value":"1"}]'>
+                                    @(item.LoadingType!=null?"Khóa":"")
+                                </button>
+                            </div>
+                        }
+
+                    </td>
+                    <td>
                         @if (ViewBag.type == 1)
                         {
                             <div class="">
@@ -69,10 +92,10 @@
 
                                     }
                                                                     ]'>
-                                        @item.LoadTypeName
-                                    </button>
-                                </div>
-                            }
+                                    @item.LoadTypeName
+                                </button>
+                            </div>
+                        }
                     </td>
                     <td>
                         <div class="status-dropdown">
@@ -106,7 +129,16 @@ else
                 <th>Số điện thoại</th>
                 <th>Biển số xe</th>
                 <th>Tải trọng xe (kg)</th>
+                <th>Hoàn hảo/Trại</th>
                 <th>TT xe có mặt</th>
+                @if (ViewBag.type == 1)
+                {
+
+                }
+                else
+                {
+                    <th>TT sử lý</th>
+                }
                 <th>Nhóm tài</th>
                 <th>Tình trạng</th>
             </tr>

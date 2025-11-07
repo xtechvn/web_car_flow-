@@ -11,11 +11,12 @@ var _detail_summary_report = {
     },
     Seach: function () {
         var text = $('#date_time_Car').val();
+        var loadType = $('#loadType').val();
         parse_value = text.split(' ')[0].split('-')
         var datetime = parse_value[2] + '/' + parse_value[1] + '/' + parse_value[0];
-        _summary_report.GetDailyStatistics(datetime)
-        _summary_report.GetTotalWeightByHour(datetime);
-        _summary_report.GetProductivityStatistics(datetime);
+        _detail_summary_report.GetDailyStatistics(datetime)
+    /*    _summary_report.GetTotalWeightByHour(datetime);
+        _summary_report.GetProductivityStatistics(datetime);*/
     },
 
     GetDailyStatistics: function (datetime) {
