@@ -49,6 +49,20 @@
         <!-- Cột 2 -->
         <div class=" card-dashboard">
             <div class="card-header">
+              
+                <div class="date-picker">
+                    @* <input type="date" id="date_time_mang" max="@date.ToString("yyyy-MM-dd")" onchange="_summary_report.Seach_mang()" value="@date.ToString("yyyy-MM-dd")"> *@
+                </div>
+            </div>
+            <canvas id="revenuChart_KhungGio" class="chartjs-render-monitor"></canvas>
+        </div>
+
+
+    </div>
+    <div class="dashboard-grid">
+        <!-- Cột 2 -->
+        <div class=" card-dashboard">
+            <div class="card-header">
                 <h3>Biểu đồ tấn xuất hàng/máng</h3>
                 <div class="date-picker">
                     <input type="date" id="date_time_mang" max="@date.ToString("yyyy-MM-dd")" onchange="_summary_report.Seach_mang()" value="@date.ToString("yyyy-MM-dd")">

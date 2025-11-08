@@ -130,6 +130,19 @@ namespace Repositories.Repositories
             }
             return null;
         }    
+        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByWeightGroup(DateTime? RegistrationTime)
+        {
+            try
+            {
+
+                return await _VehicleInspectionDAL.GetTotalWeightByWeightGroup(RegistrationTime);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalWeightByHour - VehicleInspectionRepository: " + ex);
+            }
+            return null;
+        }    
         public async Task<List<TotalWeightByHourModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
         {
             try
