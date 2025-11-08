@@ -30,6 +30,7 @@ namespace Entities.ViewModels.Car
         public DateTime MaxVehicleTimeOutToday { get; set; }
         public double TotalTimeWorkInHour { get; set; }
         public double AverageProductivity { get; set; }
+        public DateTime VehicleWeighingTimeComplete { get; set; }
 
     }
     public class TotalWeightByHourModel
@@ -37,11 +38,32 @@ namespace Entities.ViewModels.Car
         public int CompletionHour { get; set; }
         public int TotalWeightInHour { get; set; }
         public int TotalCompletedCarsInHour { get; set; }
+        public string WeightGroup { get; set; }
+        public double TotalWeightTons { get; set; }
+        public double TotalProcessMinutes { get; set; }
+        public double SanLuong { get; set; }
+        public double SoPhut_Tren_Tan { get; set; }
+        public double SoPhut_Tren_Xe { get; set; }
+        public string TroughType { get; set; }
+        public double SoXe { get; set; }
+        public double TongGio { get; set; }
+        public double Tan_Moi_Gio { get; set; }
     } 
     public class TotalWeightByHourViewModel
     {
         public Array CompletionHour { get; set; }
         public Array TotalWeightInHour { get; set; }
         public Array TotalCompletedCarsInHour { get; set; }
+        public Array WeightGroup { get; set; }
+        public Array TotalWeightTons { get; set; }
+        public Array TotalProcessMinutes { get; set; }
+        public Array SanLuong { get; set; }
+        public Array SoPhut_Tren_Tan { get; set; }
+        public Array SoPhut_Tren_Xe { get; set; }
+        public Array SoXe { get; set; }
+        public Array TongGio { get; set; }
+        public Array Tan_Moi_Gio { get; set; }
+        public Array TroughType { get; set; }
+
     }
 }

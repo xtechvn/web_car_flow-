@@ -17,5 +17,6 @@ namespace Repositories.IRepositories
         Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime);
         Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime);
         Task<List<TotalWeightByHourModel>> GetTotalWeightByHour(DateTime? RegistrationTime);
+        Task<List<TotalWeightByHourModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime);
     }
 }
