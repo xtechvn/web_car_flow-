@@ -331,13 +331,13 @@
                 const minutes = now.getMinutes();
 
                 // Kiểm tra khoảng 17:55 đến 18:00
-                if ((hours === 18 && minutes >= 25 && minutes <=30)) {
+                if ((hours === 17 && minutes >= 55 )) {
                     e.preventDefault(); // Ngăn hành động mặc định
                     e.stopPropagation(); // Ngăn sự kiện lan truyền
                     setTimeout(() => {
                         startCountdown17_18();
                     }, 1000);
-                    errorMessage = 'Vui lòng đợi 18 giờ 30 phút rồi thử lại!';
+                    errorMessage = 'Vui lòng đợi 18 giờ rồi thử lại!';
                     return;
                 }
                 // Call API to register car
@@ -462,7 +462,7 @@
             submitBtn.textContent = 'VUI LÒNG ĐỢI...';
             const now = new Date();
             let target = new Date();
-            target.setHours(18, 30, 0, 0);
+            target.setHours(18, 0, 0, 0);
             let remaining = Math.floor((target - now) / 1000);
 
             const updateCountdown = () => {
@@ -494,7 +494,7 @@
             const minutes = now.getMinutes();
             console.log('Current time:', hours, minutes);
             // Kiểm tra khoảng 17:55 đến 18:00
-            if (hours === 18 && minutes >= 25 && minutes<=30) {
+            if (hours === 17 && minutes >= 55 ) {
 
                 setTimeout(() => {
                     startCountdown17_18();
