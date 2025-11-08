@@ -41,5 +41,6 @@ namespace Utilities.Contants
         public static string SP_CountTotalVehicleInspectionSynthetic = "SP_CountTotalVehicleInspectionSynthetic";
         public static string SP_GetTotalWeightByHour = "SP_GetTotalWeightByHour";
         public static string SP_GetTotalWeightByTroughType = "SP_GetTotalWeightByTroughType";
+        public static string SP_GetTotalWeightByWeightGroup = "SP_GetTotalWeightByWeightGroup";
     }
 }

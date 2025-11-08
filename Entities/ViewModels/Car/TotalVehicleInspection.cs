@@ -48,6 +48,7 @@ namespace Entities.ViewModels.Car
         public double SoXe { get; set; }
         public double TongGio { get; set; }
         public double Tan_Moi_Gio { get; set; }
+        public double KhungGio { get; set; }
     } 
     public class TotalWeightByHourViewModel
     {
@@ -64,6 +65,7 @@ namespace Entities.ViewModels.Car
         public Array TongGio { get; set; }
         public Array Tan_Moi_Gio { get; set; }
         public Array TroughType { get; set; }
+        public Array KhungGio { get; set; }
 
     }
 }

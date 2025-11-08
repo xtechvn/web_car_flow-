@@ -77,7 +77,7 @@ namespace WEB.CMS.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("GetTotalWeightByHour - SummaryReportController: " + ex);
+                LogHelper.InsertLogTelegram("GetTotalWeightByWeightGroup - SummaryReportController: " + ex);
             }
             return Ok(new
             {
@@ -85,13 +85,13 @@ namespace WEB.CMS.Controllers
 
             });
         }
-        public async Task<IActionResult> GetTotalWeightByHour(string date)
+        public async Task<IActionResult> GetTotalWeightByWeightGroup(string date)
         {
             try
             {
                 var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
             
-                var data = await _vehicleInspectionRepository.GetTotalWeightByHour(date_time);
+                var data = await _vehicleInspectionRepository.GetTotalWeightByWeightGroup(date_time);
                 var datamodel=new TotalWeightByHourViewModel();
                 datamodel.CompletionHour = data.Select(x => x.CompletionHour).ToArray();
                 datamodel.TotalWeightInHour = data.Select(x => x.TotalWeightInHour).ToArray();
@@ -110,7 +110,7 @@ namespace WEB.CMS.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("GetTotalWeightByHour - SummaryReportController: " + ex);
+                LogHelper.InsertLogTelegram("GetTotalWeightByWeightGroup - SummaryReportController: " + ex);
             }
             return Ok(new
             {
@@ -118,7 +118,36 @@ namespace WEB.CMS.Controllers
                
             });
         }
-       public async Task<IActionResult> GetProductivityStatistics(string date)
+        public async Task<IActionResult> GetTotalWeightByHour(string date)
+        {
+            try
+            {
+                var date_time = date != null && date != "" ? DateUtil.StringToDate(date) : null;
+
+                var data = await _vehicleInspectionRepository.GetTotalWeightByHour(date_time);
+                var datamodel = new TotalWeightByHourViewModel();
+                datamodel.KhungGio = data.Select(x => x.KhungGio).ToArray();
+                datamodel.SanLuong = data.Select(x => x.SanLuong).ToArray();
+                datamodel.Tan_Moi_Gio = data.Select(x => x.Tan_Moi_Gio).ToArray();
+            
+
+                return Ok(new
+                {
+                    isSuccess = true,
+                    data = datamodel
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalWeightByWeightGroup - SummaryReportController: " + ex);
+            }
+            return Ok(new
+            {
+                isSuccess = false,
+
+            });
+        }
+        public async Task<IActionResult> GetProductivityStatistics(string date)
         {
             try
             {
