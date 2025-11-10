@@ -246,7 +246,7 @@ namespace WEB.CMS.Controllers
                 model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
                 model.LoadingType = detail.LoadingType;
               
-                model.UpdatedBy = _UserId;
+                model.CreatedBy = _UserId;
                 switch (type)
                 {
                     case 1:
@@ -489,6 +489,7 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             model.LoadingStatus = status;
+                            model.UpdatedBy = _UserId;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
