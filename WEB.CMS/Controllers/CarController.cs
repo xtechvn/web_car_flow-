@@ -56,7 +56,9 @@ namespace WEB.CMS.Controllers
             {
                 ViewBag.type = SearchModel.type;//1 đã SL
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                var LoadingType = await _allCodeRepository.GetListSortByName(AllCodeType.Loading_Type);
                 ViewBag.AllCode = AllCode;
+                ViewBag.LoadingType = LoadingType;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
@@ -246,7 +248,7 @@ namespace WEB.CMS.Controllers
                 model.TimeCallVehicleTroughTimeComeIn = detail.TimeCallVehicleTroughTimeComeIn;
                 model.LoadingType = detail.LoadingType;
               
-                model.UpdatedBy = _UserId;
+                model.CreatedBy = _UserId;
                 switch (type)
                 {
                     case 1:
@@ -489,6 +491,7 @@ namespace WEB.CMS.Controllers
                                 });
                             }
                             model.LoadingStatus = status;
+                            model.UpdatedBy = _UserId;
                             UpdateCar = await _vehicleInspectionRepository.UpdateCar(model);
                             if (UpdateCar > 0)
                             {
