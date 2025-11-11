@@ -148,7 +148,7 @@
                     .filter(c => c !== 'active')[0] || '';
 
 
-   
+
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
                     _processing_is_loading.UpdateStatus(id_row, val_TT, 2);
@@ -159,38 +159,29 @@
                         }) // xoá các class status- cũ
                         .addClass(cls); // gắn class mới (status-arrived, status-blank…)
                 } else {
-                    if (type == '2')
-                    {
-                        _processing_is_loading.UpdateStatus(id_row, val_TT, 10);
+
+                    var Status_type = _processing_is_loading.UpdateStatus(id_row, val_TT, 8);
+                    if (Status_type == 0) {
                         $currentBtn
                             .text(text)
                             .removeClass(function (_, old) {
                                 return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
                             }) // xoá các class status- cũ
                             .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                    } else {
-                        var Status_type = _processing_is_loading.UpdateStatus(id_row, val_TT, 8);
-                        if (Status_type == 0) {
-                            $currentBtn
-                                .text(text)
-                                .removeClass(function (_, old) {
-                                    return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
-                                }) // xoá các class status- cũ
-                                .addClass(cls); // gắn class mới (status-arrived, status-blank…)
-                            if (val_TT == 1) {
+                        if (val_TT == 1) {
 
-                                $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
-                            } else {
-                                $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                            $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        } else {
+                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
 
-                            }
                         }
                     }
-                    
-                   
+
+
+
                 }
-                
-                
+
+
             }
         }
         closeMenu();
@@ -214,14 +205,11 @@
         .build();
     const AllCode = [
         { Description: "Thường", CodeValue: "1" },
-        { Description: "Xanh", CodeValue: "0" }, 
+        { Description: "Xanh", CodeValue: "0" },
     ];
     const AllCode2 = [
         { Description: "Blank", CodeValue: "1" },
-        { Description: "Hoàn thành", CodeValue: "0" }, 
-    ];
-    const AllCode3 = [
-        { Description: "Khóa", CodeValue: "1" }
+        { Description: "Hoàn thành", CodeValue: "0" },
     ];
     // Create a new array of objects in the desired format
     const options = AllCode.map(allcode => ({
@@ -232,13 +220,9 @@
         text: allcode2.Description,
         value: allcode2.CodeValue
     }));
-    const options3 = AllCode3.map(allcode3 => ({
-        text: allcode3.Description,
-        value: allcode3.CodeValue
-    }));
+ 
     const jsonString = JSON.stringify(options);
     const jsonString2 = JSON.stringify(options2);
-    const jsonString3 = JSON.stringify(options3);
     // Hàm render row
     function renderRow(item) {
 
@@ -253,12 +237,6 @@
             <td>${item.vehicleLoad}</td>
             <td>${item.licenseNumber}</td>
             <td>${item.vehicleStatusName}</td>
-            <td>
-                <div class="status-dropdown">
-                    <button class="dropdown-toggle "  data-type="2" data-options='${jsonString3}'>
-                        ${item.loadingTypeName}
-                    </button>
-                </div></td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle "  data-type="1" data-options='${jsonString}'>
@@ -375,12 +353,7 @@
         tbody.insertAdjacentHTML("beforeend", renderRow_DA_SL(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
-    connection.on("ProcessingIsLoading_khoa", function (item) {
-        const tbody = document.getElementById("dataBody-0");
-        $('.CartoFactory_' + item.id).remove();
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
-        sortTable(); // sắp xếp lại ngay khi thêm
-    });
+
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);
     });

@@ -20,5 +20,7 @@ namespace Entities.ViewModels.Car
         public string AudioPath { get; set; }
         public string Note { get; set; }
         public string LoadingTypeName { get; set; }
+        public string FullName { get; set; }
+
     }
 }

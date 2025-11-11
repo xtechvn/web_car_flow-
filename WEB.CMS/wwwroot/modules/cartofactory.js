@@ -147,23 +147,35 @@
                 const cls = $active.attr('class').split(/\s+/)
                     .filter(c => c !== 'active')[0] || '';
 
-                var Status_type = _cartofactory.UpdateStatus(id_row, val_TT, 1);
-                if (Status_type == 0) {
+                var type = $currentBtn.attr('data-type');
+                if (type == '1') {
+                    _processing_is_loading.UpdateStatus(id_row, val_TT, 10);
                     $currentBtn
                         .text(text)
                         .removeClass(function (_, old) {
                             return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
                         }) // xoá các class status- cũ
                         .addClass(cls); // gắn class mới (status-arrived, status-blank…)
+                } else {
+                    var Status_type = _cartofactory.UpdateStatus(id_row, val_TT, 1);
+                    if (Status_type == 0) {
+                        $currentBtn
+                            .text(text)
+                            .removeClass(function (_, old) {
+                                return (old.match(/(^|\s)status-\S+/g) || []).join(' ');
+                            }) // xoá các class status- cũ
+                            .addClass(cls); // gắn class mới (status-arrived, status-blank…)
 
 
-                    if (val_TT == 1) {
-                        $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
+                        if (val_TT == 1) {
+                            $('#dataBody-1').find('.CartoFactory_' + id_row).remove();
 
-                    } else {
-                        $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                        } else {
+                            $('#dataBody-0').find('.CartoFactory_' + id_row).remove();
+                        }
                     }
                 }
+                
                 
             }
         }
@@ -192,12 +204,22 @@
         { Description: "Đã đến nhà máy", CodeValue: "0" },
         // Add more objects as needed
     ];
+    const AllCode2 = [
+        { Description: "Blank", CodeValue: "1" },
+        { Description: "Đã xử lý", CodeValue: "0" },
+        // Add more objects as needed
+    ];
     // Create a new array of objects in the desired format
     const options = AllCode.map(allcode => ({
         text: allcode.Description,
         value: allcode.CodeValue
     }));
+    const options2 = AllCode2.map(allcode2 => ({
+        text: allcode2.Description,
+        value: allcode2.CodeValue
+    }));
     const jsonString = JSON.stringify(options);
+    const jsonString2 = JSON.stringify(options2);
     // Hàm render row
     function renderRow(item) {
         var date = new Date(item.registerDateOnline);
@@ -217,6 +239,14 @@
             <td>${item.vehicleNumber}</td>
             <td>${item.vehicleLoad}</td>
             <td>${item.licenseNumber}</td>
+              <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle "data-type="1" data-options='${jsonString2}'>
+                        ${item.loadingTypeName}
+                    </button>
+                </div>
+
+            </td>
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle " data-options='${jsonString}'>
@@ -308,6 +338,12 @@
         const tbody = document.getElementById("dataBody-1");
         tbody.insertAdjacentHTML("beforeend", renderRow(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
+    });
+    connection.on("ProcessingIsLoading_khoa", function (item) {
+        const tbody = document.getElementById("dataBody-0");
+        $('.CartoFactory_' + item.id).remove();
+        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        sortTable(); // sắp xếp lại ngay khi thêm
     });
     connection.onreconnecting(error => {
         console.warn("🔄 Đang reconnect...", error);

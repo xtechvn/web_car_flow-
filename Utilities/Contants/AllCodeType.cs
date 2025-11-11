@@ -12,6 +12,7 @@
         public static string LOADINGSTATUS = "LOADINGSTATUS";//8
         public static string VEHICLEWEIGHEDSTATUS = "VEHICLEWEIGHEDSTATUS";//8
         public static string BRANCH_CODE = "BRANCH_CODE";
+        public static string Loading_Type = "Loading_Type";
 
 
     }

@@ -38,6 +38,7 @@ namespace Entities.ViewModels.Car
         public DateTime? VehicleArrivalDate { get; set; }
         public string? Note { get; set; }
         public int? LoadingType { get; set; }
+        public int? CreatedBy { get; set; }
     }
 
 }

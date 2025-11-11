@@ -56,7 +56,9 @@ namespace WEB.CMS.Controllers
             {
                 ViewBag.type = SearchModel.type;//1 đã SL
                 var AllCode = await _allCodeRepository.GetListSortByName(AllCodeType.VEHICLE_STATUS);
+                var LoadingType = await _allCodeRepository.GetListSortByName(AllCodeType.Loading_Type);
                 ViewBag.AllCode = AllCode;
+                ViewBag.LoadingType = LoadingType;
                 var data = await _vehicleInspectionRepository.GetListCartoFactory(SearchModel);
                 return PartialView(data);
             }
