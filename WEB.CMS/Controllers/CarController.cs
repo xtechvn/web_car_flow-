@@ -572,7 +572,9 @@ namespace WEB.CMS.Controllers
 
                             if (UpdateCar > 0)
                             {
-                                detail.LoadingTypeName = "Khóa";
+                                var allcode = await _allCodeRepository.GetListSortByName(AllCodeType.Loading_Type);
+                                var allcode_detail = allcode.FirstOrDefault(s => s.CodeValue == model.LoadingType);
+                                detail.LoadingTypeName = allcode_detail == null ? "" : allcode_detail.Description;
                                     // ✅ bắn cả máng cũ + máng mới
 
                                     await _hubContext.Clients.All.SendAsync("ProcessingIsLoading_khoa", detail);

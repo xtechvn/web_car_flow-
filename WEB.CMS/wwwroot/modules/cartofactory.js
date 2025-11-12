@@ -149,7 +149,7 @@
 
                 var type = $currentBtn.attr('data-type');
                 if (type == '1') {
-                    _processing_is_loading.UpdateStatus(id_row, val_TT, 10);
+                    _cartofactory.UpdateStatus(id_row, val_TT, 10);
                     $currentBtn
                         .text(text)
                         .removeClass(function (_, old) {

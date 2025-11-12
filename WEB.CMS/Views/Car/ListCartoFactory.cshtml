@@ -56,7 +56,7 @@
                                 @foreach (var allcode in LoadingType)
                                 {
 
-                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
+                                    @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != LoadingType.Last() ? "," : "")
 
                                 }
                                                             ]'>
