@@ -44,27 +44,29 @@
                     </td>
                     <td>@item.VehicleLoad</td>
                     <td>@item.LicenseNumber</td>
-                    <td>
-                        @if (ViewBag.type == 1)
-                        {
-                  
-                        }
-                        else
-                        {
+
+                    @if (ViewBag.type == 1)
+                    {
+
+                    }
+                    else
+                    {
+                        <td>
                             <div class="status-dropdown">
-                            <button class="dropdown-toggle" data-type="1" data-options='[
+                                <button class="dropdown-toggle" data-type="1" data-options='[
                                 @foreach (var allcode in LoadingType)
                                 {
 
                                     @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != LoadingType.Last() ? "," : "")
 
                                 }
-                                                            ]'>
+                                                                        ]'>
                                     @item.LoadingTypeName
                                 </button>
                             </div>
-                        }
-                    </td>
+                        </td>
+                    }
+
                     <td>
                         <div class="status-dropdown">
                             <button class="dropdown-toggle" data-options='[
@@ -74,7 +76,7 @@
                                 @:{"text":"@allcode.Description","value":"@allcode.CodeValue"}@(allcode != AllCode.Last() ? "," : "")
 
                             }
-                                                ]'>
+                                                        ]'>
                                 @item.VehicleStatusName
                             </button>
                         </div>
