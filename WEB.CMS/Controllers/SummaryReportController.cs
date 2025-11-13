@@ -38,13 +38,13 @@ namespace WEB.CMS.Controllers
             ViewBag.LOAD_TYPE = LOAD_TYPE;
             return View();
         }
-        public async Task<IActionResult> DailyStatistics(string date)
+        public async Task<IActionResult> DailyStatistics(CartoFactorySearchModel SearchModel)
         {
             try
             {
-                var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
-                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(date_time);
-                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(SearchModel.RegistrationTime, Convert.ToInt32(SearchModel.LoadType));
+                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(SearchModel.RegistrationTime);
                 ViewBag.TotalData = Total;
                 
                 return PartialView(data);

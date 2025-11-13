@@ -189,7 +189,7 @@ namespace DAL
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime,int LoadType)
         {
             try
             {
@@ -197,6 +197,7 @@ namespace DAL
                 {
  
                     new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
+                    new SqlParameter("@LoadType", LoadType),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionSynthetic, objParam);
                 if (dt != null && dt.Rows.Count > 0)

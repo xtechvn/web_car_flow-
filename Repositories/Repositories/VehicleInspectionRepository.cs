@@ -91,12 +91,12 @@ namespace Repositories.Repositories
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime, int LoadType)
         {
             try
             {
   
-                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(RegistrationTime);
+                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(RegistrationTime,LoadType);
             }
             catch (Exception ex)
             {
