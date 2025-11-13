@@ -189,16 +189,15 @@ namespace DAL
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime,int LoadType)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? FromDate, DateTime? ToDate, int LoadType)
         {
             try
             {
-                SqlParameter[] objParam = new SqlParameter[]
-                {
- 
-                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
-                    new SqlParameter("@LoadType", LoadType),
-                };
+                SqlParameter[] objParam = new SqlParameter[3];
+                objParam[0] = new SqlParameter("@FromDate", FromDate == null ? DateTime.Now : FromDate);
+                objParam[1] = new SqlParameter("@ToDate", ToDate == null ? DateTime.Now : ToDate);
+                objParam[2] = new SqlParameter("@LoadType", LoadType);
+                
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspectionSynthetic, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -211,14 +210,15 @@ namespace DAL
             }
             return null;
         }
-        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? FromDate, DateTime? ToDate)
         {
             try
             {
                 SqlParameter[] objParam = new SqlParameter[]
                 {
  
-                    new SqlParameter("@RegisterDateOnline", RegistrationTime==null? DateTime.Now :RegistrationTime),
+                    new SqlParameter("@FromDate", FromDate==null? DateTime.Now :FromDate),
+                    new SqlParameter("@ToDate", ToDate==null? DateTime.Now :ToDate),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_CountTotalVehicleInspectionSynthetic, objParam);
                 if (dt != null && dt.Rows.Count > 0)

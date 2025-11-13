@@ -91,12 +91,12 @@ namespace Repositories.Repositories
             }
             return null;
         }
-        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? RegistrationTime, int LoadType)
+        public async Task<List<CartoFactoryModel>> GetListVehicleInspectionSynthetic(DateTime? FromDate, DateTime? ToDate, int LoadType)
         {
             try
             {
   
-                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(RegistrationTime,LoadType);
+                return await _VehicleInspectionDAL.GetListVehicleInspectionSynthetic(FromDate,ToDate, LoadType);
             }
             catch (Exception ex)
             {
@@ -104,12 +104,12 @@ namespace Repositories.Repositories
             }
             return null;
         }    
-        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? RegistrationTime)
+        public async Task<TotalVehicleInspection> CountTotalVehicleInspectionSynthetic(DateTime? FromDate, DateTime? ToDate)
         {
             try
             {
              
-                return await _VehicleInspectionDAL.CountTotalVehicleInspectionSynthetic(RegistrationTime);
+                return await _VehicleInspectionDAL.CountTotalVehicleInspectionSynthetic(FromDate,ToDate);
             }
             catch (Exception ex)
             {
