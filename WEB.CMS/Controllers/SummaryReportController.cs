@@ -28,7 +28,7 @@ namespace WEB.CMS.Controllers
         {
             var date_time = date != null && date != "" ? DateUtil.StringToDate(date) : null;
 
-            var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+            var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time, date_time);
             ViewBag.TotalData = Total;
             return View();
         }
@@ -38,13 +38,12 @@ namespace WEB.CMS.Controllers
             ViewBag.LOAD_TYPE = LOAD_TYPE;
             return View();
         }
-        public async Task<IActionResult> DailyStatistics(string date)
+        public async Task<IActionResult> DailyStatistics(SummaryReportSearchModel SearchModel)
         {
             try
             {
-                var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
-                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(date_time);
-                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+                var data = await _vehicleInspectionRepository.GetListVehicleInspectionSynthetic(SearchModel.FromDate, SearchModel.ToDate, SearchModel.LoadType);
+                var Total = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(SearchModel.FromDate, SearchModel.ToDate);
                 ViewBag.TotalData = Total;
                 
                 return PartialView(data);
@@ -152,7 +151,7 @@ namespace WEB.CMS.Controllers
             try
             {
                 var date_time = date != null && date != "" ? DateUtil.StringToDate(date) : null;
-                var data = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time);
+                var data = await _vehicleInspectionRepository.CountTotalVehicleInspectionSynthetic(date_time, date_time);
              
                 return PartialView(data);
             }

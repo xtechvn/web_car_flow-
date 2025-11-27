@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace Entities.ViewModels.Car
 {
@@ -40,5 +41,11 @@ namespace Entities.ViewModels.Car
         public string text_voice { get; set; }
         public string AudioPath { get; set; }
     }
-
+    public class SummaryReportSearchModel
+    {
+        public int LoadType { get; set; }             // Loại xanh/thuong
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    
+    }
 }
