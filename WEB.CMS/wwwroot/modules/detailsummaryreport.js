@@ -27,6 +27,7 @@ var _detail_summary_report = {
             _summary_report.GetProductivityStatistics(datetime);*/
     },
 
+
     GetDailyStatistics: function (model) {
         $.ajax({
             url: "/SummaryReport/DailyStatistics",
