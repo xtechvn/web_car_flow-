@@ -282,6 +282,35 @@
 
         </tr>`;
     }
+    function renderRow3(item) {
+        var date = new Date(item.registerDateOnline);
+        let formatted =
+            String(date.getHours()).padStart(2, '0') + ":" +
+            String(date.getMinutes()).padStart(2, '0') + " " +
+            String(date.getDate()).padStart(2, '0') + "/" +
+            String(date.getMonth() + 1).padStart(2, '0') + "/" +
+            date.getFullYear();
+        return `
+        <tr class="CartoFactory_${item.id}" data-queue="${item.recordNumber}" >
+            <td>${item.recordNumber}</td>
+            <td>${formatted}</td>
+            <td>${item.customerName}</td>
+            <td>${item.driverName}</td>
+            <td>${item.phoneNumber}</td>
+            <td>${item.vehicleNumber}</td>
+            <td>${item.vehicleLoad}</td>
+            <td>${item.licenseNumber}</td>
+            <td>
+                <div class="status-dropdown">
+                    <button class="dropdown-toggle " data-options='${jsonString}'>
+                        ${item.vehicleStatusName}
+                    </button>
+                </div>
+
+            </td>
+
+        </tr>`;
+    }
     // Hàm sắp xếp lại tbody theo QueueNumber tăng dần
     function sortTable_Da_SL() {
         const tbody = document.getElementById("dataBody-1");
@@ -316,7 +345,7 @@
     connection.on("ListCartoFactory_Da_SL", function (item) {
         const tbody = document.getElementById("dataBody-1");
         $('.CartoFactory_' + item.id).remove();
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow3(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
 
@@ -336,7 +365,7 @@
     });
     connection.on("ListProcessingIsLoading", function (item) {
         const tbody = document.getElementById("dataBody-1");
-        tbody.insertAdjacentHTML("beforeend", renderRow(item));
+        tbody.insertAdjacentHTML("beforeend", renderRow3(item));
         sortTable_Da_SL(); // sắp xếp lại ngay khi thêm
     });
     connection.on("ProcessingIsLoading_khoa", function (item) {
