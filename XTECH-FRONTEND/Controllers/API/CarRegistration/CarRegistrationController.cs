@@ -235,7 +235,12 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 var now = DateTime.Now;
                 var hours = now.Hour;
                 var minutes = now.Minute;
-
+                var adjustedTime = DateTime.Now;
+                if (hours==17 && minutes == 59)
+                {
+                     adjustedTime = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
+                }
+                
                 // Kiểm tra khoảng 17:55 đến 18:00
 
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
@@ -266,7 +271,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Referee = request.Referee.ToUpper(),
                     GPLX = request.GPLX.ToUpper(),
                     QueueNumber = queueNumber,
-                    RegistrationTime = DateTime.Now,
+                    RegistrationTime = adjustedTime,
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp,
                 };
