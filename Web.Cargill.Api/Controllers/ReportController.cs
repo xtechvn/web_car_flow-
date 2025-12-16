@@ -8,7 +8,9 @@ using Web.Cargill.Api.Services;
 
 namespace Web.Cargill.Api.Controllers
 {
-    public class ReportController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReportController : ControllerBase
     {
         private readonly AppDbContext _db;
         private readonly IWebHostEnvironment _env;
@@ -25,7 +27,7 @@ namespace Web.Cargill.Api.Controllers
             _mailService = new MailService(_config);
         }
 
-        [HttpPost("report/send-daily-mail")]
+        [HttpPost("send-daily-mail")]
         public async Task<IActionResult> SendDailyMail()
         {
             try
