@@ -26,13 +26,14 @@ namespace Web.Cargill.Api.Controllers
         }
 
         [HttpPost("report/send-daily-mail")]
-        public async Task<IActionResult> SendDailyMail([FromQuery] DateTime? date)
+        public async Task<IActionResult> SendDailyMail()
         {
             try
             {
-                var reportDate = DateTime.Today;
+                var vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                var vnNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+                var reportDate = vnNow.Date;
 
-                // đúng logic ca: truyền ngày bất kỳ, SP tự xử lý 17:55
                 var summary = await _vehicleInspectionRepository
                     .CountTotalVehicleInspectionSynthetic(reportDate, reportDate);
 
@@ -64,6 +65,7 @@ namespace Web.Cargill.Api.Controllers
                 return Ok(new { status = 0, message = "Lỗi hệ thống" });
             }
         }
+
 
 
 
