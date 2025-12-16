@@ -1,49 +1,3 @@
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\FlyBookingServiceCodeTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\HotelBookingTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\TourServiceCodeTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\VinWonder\VinWonderMailTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\x86\liblept1753.dll
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\x86\libtesseract3052.dll
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\x64\liblept1753.dll
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\x64\libtesseract3052.dll
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\CodeHotelTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\OrderFlyTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\OrderTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\OrderTemplateDH.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\OtherSupplierTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\PaymentRequestTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\SupplierTemplate.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\EmailTemplate\TemplatePaymentRequest.html
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\Utilities.deps.json
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\Utilities.dll
-I:\DA ADAVIGO\CMS\Utilities\bin\Debug\net6.0\Utilities.pdb
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.csproj.AssemblyReference.cache
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.csproj.ResolveComReference.cache
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfoInputs.cache
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfo.cs
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.csproj.CoreCompileInputs.cache
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.sourcelink.json
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.dll
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\refint\Utilities.dll
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\Utilities.pdb
-I:\DA ADAVIGO\CMS\Utilities\obj\Debug\net6.0\ref\Utilities.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\x86\liblept1753.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\x86\libtesseract3052.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\x64\liblept1753.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\x64\libtesseract3052.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\Utilities.deps.json
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\Utilities.dll
-I:\Cargill_CMS\Utilities\bin\Debug\net6.0\Utilities.pdb
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.csproj.AssemblyReference.cache
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfoInputs.cache
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfo.cs
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.csproj.CoreCompileInputs.cache
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.dll
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\refint\Utilities.dll
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\Utilities.pdb
-I:\Cargill_CMS\Utilities\obj\Debug\net6.0\ref\Utilities.dll
 I:\web_car_flow\Utilities\bin\Debug\net6.0\x86\liblept1753.dll
 I:\web_car_flow\Utilities\bin\Debug\net6.0\x86\libtesseract3052.dll
 I:\web_car_flow\Utilities\bin\Debug\net6.0\x64\liblept1753.dll
@@ -61,20 +15,3 @@ I:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.dll
 I:\web_car_flow\Utilities\obj\Debug\net6.0\refint\Utilities.dll
 I:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.pdb
 I:\web_car_flow\Utilities\obj\Debug\net6.0\ref\Utilities.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\x86\liblept1753.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\x86\libtesseract3052.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\x64\liblept1753.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\x64\libtesseract3052.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\Utilities.deps.json
-D:\web_car_flow\Utilities\bin\Debug\net6.0\Utilities.dll
-D:\web_car_flow\Utilities\bin\Debug\net6.0\Utilities.pdb
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.csproj.AssemblyReference.cache
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfoInputs.cache
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.AssemblyInfo.cs
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.csproj.CoreCompileInputs.cache
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.sourcelink.json
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.dll
-D:\web_car_flow\Utilities\obj\Debug\net6.0\refint\Utilities.dll
-D:\web_car_flow\Utilities\obj\Debug\net6.0\Utilities.pdb
-D:\web_car_flow\Utilities\obj\Debug\net6.0\ref\Utilities.dll

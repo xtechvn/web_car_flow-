@@ -58,6 +58,7 @@ wwwroot\js\simple-scrollbar.min.js
 wwwroot\js\stickyfill.min.js
 wwwroot\js\svgxuse.js
 wwwroot\js\swiper.min.js
+wwwroot\js\zebra_datepicker.min.js
 wwwroot\lib\apexchart\apexcharts.amd.js
 wwwroot\lib\apexchart\apexcharts.common.js
 wwwroot\lib\apexchart\apexcharts.css
@@ -301,9 +302,11 @@ wwwroot\modules\cartcalllist.js
 wwwroot\modules\cartofactory.js
 wwwroot\modules\common.js
 wwwroot\modules\department.js
+wwwroot\modules\detailsummaryreport.js
 wwwroot\modules\listVehicles.js
 wwwroot\modules\menu.js
 wwwroot\modules\processingIsloading.js
 wwwroot\modules\role.js
+wwwroot\modules\summaryreport.js
 wwwroot\modules\user.js
 wwwroot\modules\weighedinput.js

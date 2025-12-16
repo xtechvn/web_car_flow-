@@ -72,8 +72,8 @@ namespace App_Push_Consummer
                                    .AddSingleton<IMongoService, MongoService>()
                                    .BuildServiceProvider())
                                 {
-                                    var _factory = serviceProvider.GetService<IFactory>();
-                                    _factory.DoSomeRealWork(message);
+                                    //var _factory = serviceProvider.GetService<IFactory>();
+                                    //_factory.DoSomeRealWork(message);
                                 }
 
                                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
@@ -94,7 +94,7 @@ namespace App_Push_Consummer
                             {
                                 var now = DateTime.Now;
 
-                                if (now.Hour == 18 && now.Minute == 30)
+                                if (now.Hour == 11 && now.Minute == 18)
                                 {
                                     try
                                     {

@@ -1,6 +1,37 @@
 [
   {
     "ContainingType": "Web.Cargill.Api.Controllers.VehicleAudioController",
+    "Method": "DownloadZaloAudio",
+    "RelativePath": "api/VehicleAudio/download-zalo-audio",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "booking_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "link_audio_zalo_ai",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web.Cargill.Api.Controllers.VehicleAudioController",
+    "Method": "GetListNoAudio",
+    "RelativePath": "api/VehicleAudio/GetListNoAudio",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web.Cargill.Api.Controllers.VehicleAudioController",
     "Method": "UploadAudio",
     "RelativePath": "api/VehicleAudio/upload-audio",
     "HttpMethod": "POST",
@@ -54,9 +85,25 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "record",
+        "Name": "request",
         "Type": "Entities.ViewModels.Car.RegistrationRecord",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web.Cargill.Api.Controllers.ReportController",
+    "Method": "SendDailyMail",
+    "RelativePath": "report/send-daily-mail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "date",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
