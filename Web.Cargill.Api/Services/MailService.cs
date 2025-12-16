@@ -27,20 +27,9 @@ namespace Web.Cargill.Api.Services
                 var avgTonPerTrip = s.TotalCarCompleted > 0
                     ? Math.Round(s.TotalWeightTroughType / s.TotalCarCompleted, 2)
                     : 0;
+
                 if (config == null)
                     throw new Exception("MAIL_CONFIG not found");
-
-                if (string.IsNullOrEmpty(config["HOST"]))
-                    throw new Exception("MAIL_CONFIG.HOST is missing");
-
-                if (string.IsNullOrEmpty(config["PORT"]))
-                    throw new Exception("MAIL_CONFIG.PORT is missing");
-
-                if (string.IsNullOrEmpty(config["FROM_MAIL"]))
-                    throw new Exception("MAIL_CONFIG.FROM_MAIL is missing");
-
-                if (string.IsNullOrEmpty(config["TO_MAIL"]))
-                    throw new Exception("MAIL_CONFIG.TO_MAIL is missing");
 
                 var message = new MailMessage
                 {
@@ -51,49 +40,145 @@ namespace Web.Cargill.Api.Services
 
                 message.Body = $@"
 <html>
-<body style='font-family:Arial;font-size:14px'>
-<b>Báo cáo xuất hàng ngày {reportDate:dd/MM/yyyy} – Nhà máy Hà Nam</b><br/>
-Kính gửi: Ban Lãnh đạo Công ty<br/>
-Đơn vị báo cáo: Hệ thống vận hành xuất hàng<br/>
-Thời điểm chốt số liệu: {DateTime.Now:HH:mm:ss} – ngày {reportDate:dd/MM/yyyy}
+<body style='margin:0;padding:0;
+font-family:Arial,Helvetica,sans-serif;
+font-size:14px;color:#00264D;background-color:#f6f6f6;'>
 
-<h3>I. CHỈ TIÊU CHÍNH</h3>
-<table border='1' cellpadding='6' cellspacing='0' width='100%'>
-<tr><td>Tổng xe đăng ký</td><td>{s.TotalCar} xe</td></tr>
-<tr><td>Số chuyến đã xuất</td><td>{s.TotalCarCompleted} chuyến</td></tr>
-<tr><td>Tổng khối lượng đã xuất</td><td>{s.TotalWeightTroughType} tấn</td></tr>
-<tr><td>Tổng thời gian làm việc</td><td>{s.TotalTimeWorkInHour} giờ</td></tr>
-<tr><td><b>Năng suất trung bình</b></td><td><b>{s.AverageProductivity} tấn/giờ</b></td></tr>
-<tr><td>Trung bình khối lượng / chuyến</td><td>{avgTonPerTrip} tấn</td></tr>
-<tr><td>Thời gian trung bình / chuyến</td><td>{Math.Round(s.AvgTimePerCompletedCar_Hour * 60, 2)} phút</td></tr>
-<tr><td>Phút / tấn (bình quân)</td><td>{minutePerTon} phút</td></tr>
-<tr><td>Xe đến lấy sau 16h</td><td>{s.TotalCarArriving16h} xe</td></tr>
-</table>
-
-<h3>III. HIỆU SUẤT THEO NHÓM XE</h3>
-<table border='1' cellpadding='6' cellspacing='0' width='100%'>
+<table width='100%' cellpadding='0' cellspacing='0'>
 <tr>
-<th>Nhóm xe</th><th>Sản lượng (tấn)</th><th>Phút / tấn</th><th>Phút / xe</th>
+<td align='center'>
+
+<table width='100%' cellpadding='0' cellspacing='0'
+style='max-width:800px;margin:0 auto;background:#fff;border:1px solid #E3EBF3;'>
+
+<!-- TITLE -->
+<tr>
+<td style='padding:16px;text-align:center;font-size:18px;font-weight:bold;color:#070BA0;'>
+BÁO CÁO XUẤT HÀNG NGÀY {reportDate:dd/MM/yyyy} – NHÀ MÁY HÀ NAM
+</td>
 </tr>
+
+<!-- META -->
+<tr>
+<td style='padding:8px 16px;font-size:13px;line-height:1.6;'>
+<b>Kính gửi:</b> Ban Lãnh đạo Công ty<br/>
+<b>Đơn vị báo cáo:</b> Hệ thống vận hành xuất hàng<br/>
+<b>Thời điểm chốt số liệu:</b> {DateTime.Now:HH:mm:ss} – ngày {reportDate:dd/MM/yyyy}
+</td>
+</tr>
+
+<!-- I. CHỈ TIÊU CHÍNH -->
+<tr>
+<td style='padding:12px 16px;font-weight:bold;font-size:15px;'>
+I. CHỈ TIÊU CHÍNH
+</td>
+</tr>
+
+<tr>
+<td style='padding:0 16px 24px 16px;'>
+<table width='100%' cellpadding='0' cellspacing='0'
+style='border-collapse:collapse;border:1px solid #E3EBF3;'>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Tổng xe đăng ký</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{s.TotalCar} xe</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Số chuyến đã xuất</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{s.TotalCarCompleted} chuyến</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Tổng khối lượng đã xuất</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{s.TotalWeightTroughType:N0} tấn</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Tổng thời gian làm việc</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{s.TotalTimeWorkInHour} giờ</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Năng suất trung bình</td><td style='padding:8px 12px;border:1px solid #E3EBF3;font-weight:bold;color:#D4380D;'>{s.AverageProductivity} tấn/giờ</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>TB khối lượng / chuyến</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{avgTonPerTrip} tấn</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>TB thời gian / chuyến</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{Math.Round(s.AvgTimePerCompletedCar_Hour * 60, 2)} phút</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Phút / tấn</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{minutePerTon}</td></tr>
+<tr><td style='padding:8px 12px;font-weight:bold;border:1px solid #E3EBF3;'>Xe đến sau 16h</td><td style='padding:8px 12px;border:1px solid #E3EBF3;'>{s.TotalCarArriving16h}</td></tr>
+</table>
+</td>
+</tr>
+
+<!-- III -->
+<tr>
+<td style='padding:16px;font-weight:bold;font-size:15px;'>
+III. HIỆU SUẤT THEO NHÓM XE
+</td>
+</tr>
+
+<tr>
+<td style='padding:0 16px 32px 16px;'>
+<table width='100%' cellpadding='0' cellspacing='0'
+style='border-collapse:collapse;
+       border:1px solid #D9D9D9;
+       table-layout:fixed;'>
+
+<tr style='background:#F5F7FA;font-weight:bold;'>
+  <td style='width:40%;padding:10px;border:1px solid #D9D9D9;'>
+    Nhóm xe
+  </td>
+  <td style='width:20%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Sản lượng (tấn)
+  </td>
+  <td style='width:20%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Phút / tấn
+  </td>
+  <td style='width:20%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Phút / xe
+  </td>
+</tr>
+
 {BuildWeightGroupRows(byWeightGroup)}
-</table>
 
-<h3>IV. HIỆU SUẤT THEO MÁNG XUẤT</h3>
-<table border='1' cellpadding='6' cellspacing='0' width='100%'>
-<tr>
-<th>Máng</th><th>Sản lượng (tấn)</th><th>Thời gian (giờ)</th><th>Năng suất (tấn/giờ)</th>
+</table>
+</td>
 </tr>
+
+
+<!-- IV -->
+<tr>
+<td style='padding:16px;font-weight:bold;font-size:15px;'>
+IV. HIỆU SUẤT THEO MÁNG XUẤT
+</td>
+</tr>
+
+<tr>
+<td style='padding:0 16px 32px 16px;'>
+<table width='100%' cellpadding='0' cellspacing='0'
+style='border-collapse:collapse;
+       border:1px solid #D9D9D9;
+       table-layout:fixed;'>
+
+<tr style='background:#F5F7FA;font-weight:bold;'>
+  <td style='width:25%;padding:10px;border:1px solid #D9D9D9;'>
+    Máng
+  </td>
+  <td style='width:25%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Sản lượng (tấn)
+  </td>
+  <td style='width:25%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Thời gian (giờ)
+  </td>
+  <td style='width:25%;padding:10px;border:1px solid #D9D9D9;text-align:right;'>
+    Năng suất (tấn/giờ)
+  </td>
+</tr>
+
 {BuildTroughRows(byTrough)}
+
 </table>
+</td>
+</tr>
 
-<p><b>Nhận định & Đề xuất:</b></p>
-<ul>
+
+<tr>
+<td style='padding:16px;font-size:13px;'>
+<b>Nhận định & Đề xuất:</b>
+<ul style='margin:6px 0 0 18px;padding:0;'>
 <li>Máng có năng suất cao nhất cần ưu tiên khai thác.</li>
-<li>Theo dõi máng hiệu suất thấp để điều chỉnh nhân lực/luồng xe.</li>
+<li>Theo dõi máng hiệu suất thấp để điều chỉnh nhân lực / luồng xe.</li>
 </ul>
-
-Trân trọng,<br/>
+<br/>
 <b>Hệ thống Báo cáo Vận hành</b>
+</td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>
 </body>
 </html>";
 
@@ -112,27 +197,34 @@ Trân trọng,<br/>
             catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram(
-           $"SendDailyVehicleReportMail ERROR\n" +
-           $"Message: {ex.Message}\n" +
-           $"StackTrace: {ex.StackTrace}"
-       );
-
-                // QUAN TRỌNG: throw lại để Controller bắt
-                throw;
+                    "SendDailyVehicleReportMail ERROR: " + ex
+                );
+                return false; // ✅ QUAN TRỌNG
             }
+
         }
+
         private string BuildWeightGroupRows(List<TotalWeightByHourModel> list)
         {
             if (list == null || !list.Any()) return "";
 
             return string.Join("", list.Select(x => $@"
 <tr>
-<td>{x.WeightGroup}</td>
-<td>{x.SanLuong}</td>
-<td>{x.SoPhut_Tren_Tan}</td>
-<td>{x.SoPhut_Tren_Xe}</td>
+  <td style='width:40%;padding:8px 10px;border:1px solid #D9D9D9;'>
+    {x.WeightGroup}
+  </td>
+  <td style='width:20%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.SanLuong:N2}
+  </td>
+  <td style='width:20%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.SoPhut_Tren_Tan}
+  </td>
+  <td style='width:20%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.SoPhut_Tren_Xe}
+  </td>
 </tr>"));
         }
+
 
         // ================= HELPER =================
 
@@ -163,12 +255,21 @@ Trân trọng,<br/>
 
             return string.Join("", list.Select(x => $@"
 <tr>
-<td>{x.TroughType}</td>
-<td>{x.SanLuong}</td>
-<td>{x.TongGio}</td>
-<td>{x.Tan_Moi_Gio}</td>
+  <td style='width:25%;padding:8px 10px;border:1px solid #D9D9D9;'>
+    {x.TroughType}
+  </td>
+  <td style='width:25%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.SanLuong:N2}
+  </td>
+  <td style='width:25%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.TongGio}
+  </td>
+  <td style='width:25%;padding:8px 10px;border:1px solid #D9D9D9;text-align:right;'>
+    {x.Tan_Moi_Gio}
+  </td>
 </tr>"));
         }
+
 
 
         private double CalcMinutePerTon(TotalVehicleInspection r)
