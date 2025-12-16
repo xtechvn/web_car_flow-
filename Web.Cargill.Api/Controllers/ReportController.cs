@@ -30,11 +30,11 @@ namespace Web.Cargill.Api.Controllers
         {
             try
             {
-                var reportDate = date?.Date ?? DateTime.Today.AddDays(-1);
+                var reportDate = DateTime.Today;
 
                 // đúng logic ca: truyền ngày bất kỳ, SP tự xử lý 17:55
                 var summary = await _vehicleInspectionRepository
-                    .CountTotalVehicleInspectionSynthetic(reportDate, reportDate.AddDays(1));
+                    .CountTotalVehicleInspectionSynthetic(reportDate, reportDate);
 
                 var byWeightGroup = await _vehicleInspectionRepository
                     .GetTotalWeightByWeightGroup(reportDate);
