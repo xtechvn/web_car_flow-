@@ -8,7 +8,9 @@ using Web.Cargill.Api.Services;
 
 namespace Web.Cargill.Api.Controllers
 {
-    public class ReportController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReportController : ControllerBase
     {
         private readonly AppDbContext _db;
         private readonly IWebHostEnvironment _env;
@@ -25,45 +27,41 @@ namespace Web.Cargill.Api.Controllers
             _mailService = new MailService(_config);
         }
 
-        [HttpPost("report/send-daily-mail")]
-        public async Task<IActionResult> SendDailyMail([FromQuery] DateTime? date)
+        [HttpPost("send-daily-mail")]
+        public async Task<IActionResult> SendDailyMail()
         {
-            try
+            // Ngày báo cáo
+            var reportDate = DateUtil.Now.Date;
+
+            var summary = await _vehicleInspectionRepository
+                .CountTotalVehicleInspectionSynthetic(reportDate, reportDate);
+
+            if (summary == null)
             {
-                var reportDate = date?.Date ?? DateTime.Today.AddDays(-1);
-
-                // đúng logic ca: truyền ngày bất kỳ, SP tự xử lý 17:55
-                var summary = await _vehicleInspectionRepository
-                    .CountTotalVehicleInspectionSynthetic(reportDate, reportDate.AddDays(1));
-
-                var byWeightGroup = await _vehicleInspectionRepository
-                    .GetTotalWeightByWeightGroup(reportDate);
-
-                var byTrough = await _vehicleInspectionRepository
-                    .GetTotalWeightByTroughType(reportDate);
-
-                if (summary == null)
-                    return Ok(new { status = 0, message = "Không có dữ liệu" });
-
-                var sent = await _mailService.SendDailyVehicleReportMail(
-                    summary,
-                    byWeightGroup,
-                    byTrough,
-                    reportDate
-                );
-
-                return Ok(new
-                {
-                    status = sent ? 1 : 0,
-                    message = sent ? "Gửi mail thành công" : "Gửi mail thất bại"
-                });
+                return Ok(new { status = 0, message = "Không có dữ liệu" });
             }
-            catch (Exception ex)
+
+            var byWeightGroup = await _vehicleInspectionRepository
+                .GetTotalWeightByWeightGroup(reportDate);
+
+            var byTrough = await _vehicleInspectionRepository
+                .GetTotalWeightByTroughType(reportDate);
+
+            var sent = await _mailService.SendDailyVehicleReportMail(
+                summary,
+                byWeightGroup,
+                byTrough,
+                reportDate
+            );
+
+            return Ok(new
             {
-                LogHelper.InsertLogTelegram("SendDailyMail API: " + ex);
-                return Ok(new { status = 0, message = "Lỗi hệ thống" });
-            }
+                status = sent ? 1 : 0,
+                message = sent ? "Gửi mail thành công" : "Gửi mail thất bại"
+            });
         }
+
+
 
 
 
