@@ -68,9 +68,21 @@ namespace Web.Cargill.Api.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("SendDailyMail API: " + ex);
-                return Ok(new { status = 0, message = "Lỗi hệ thống" });
+                LogHelper.InsertLogTelegram(
+                    $"SendDailyMail API ERROR\n" +
+                    $"Message: {ex.Message}\n" +
+                    $"StackTrace: {ex.StackTrace}"
+                );
+
+                return StatusCode(500, new
+                {
+                    status = 0,
+                    message = "SendDailyMail failed",
+                    error = ex.Message,
+                    detail = ex.InnerException?.Message
+                });
             }
+
         }
 
 

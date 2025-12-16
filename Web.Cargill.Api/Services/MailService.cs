@@ -27,6 +27,20 @@ namespace Web.Cargill.Api.Services
                 var avgTonPerTrip = s.TotalCarCompleted > 0
                     ? Math.Round(s.TotalWeightTroughType / s.TotalCarCompleted, 2)
                     : 0;
+                if (config == null)
+                    throw new Exception("MAIL_CONFIG not found");
+
+                if (string.IsNullOrEmpty(config["HOST"]))
+                    throw new Exception("MAIL_CONFIG.HOST is missing");
+
+                if (string.IsNullOrEmpty(config["PORT"]))
+                    throw new Exception("MAIL_CONFIG.PORT is missing");
+
+                if (string.IsNullOrEmpty(config["FROM_MAIL"]))
+                    throw new Exception("MAIL_CONFIG.FROM_MAIL is missing");
+
+                if (string.IsNullOrEmpty(config["TO_MAIL"]))
+                    throw new Exception("MAIL_CONFIG.TO_MAIL is missing");
 
                 var message = new MailMessage
                 {
@@ -97,8 +111,14 @@ Trân trọng,<br/>
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("SendDailyVehicleReportMail: " + ex);
-                return false;
+                LogHelper.InsertLogTelegram(
+           $"SendDailyVehicleReportMail ERROR\n" +
+           $"Message: {ex.Message}\n" +
+           $"StackTrace: {ex.StackTrace}"
+       );
+
+                // QUAN TRỌNG: throw lại để Controller bắt
+                throw;
             }
         }
         private string BuildWeightGroupRows(List<TotalWeightByHourModel> list)
