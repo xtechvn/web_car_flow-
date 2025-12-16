@@ -30,22 +30,27 @@ namespace Web.Cargill.Api.Controllers
         {
             try
             {
-                var vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-                var vnNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
-                var reportDate = vnNow.Date;
+                // Ngày báo cáo (chỉ cần ngày)
+                var reportDate = DateUtil.Now.Date;
 
+                // 1️⃣ Tổng hợp chỉ tiêu chính
                 var summary = await _vehicleInspectionRepository
                     .CountTotalVehicleInspectionSynthetic(reportDate, reportDate);
 
+                if (summary == null)
+                {
+                    return Ok(new { status = 0, message = "Không có dữ liệu" });
+                }
+
+                // 2️⃣ Theo nhóm xe
                 var byWeightGroup = await _vehicleInspectionRepository
                     .GetTotalWeightByWeightGroup(reportDate);
 
+                // 3️⃣ Theo máng
                 var byTrough = await _vehicleInspectionRepository
                     .GetTotalWeightByTroughType(reportDate);
 
-                if (summary == null)
-                    return Ok(new { status = 0, message = "Không có dữ liệu" });
-
+                // 4️⃣ Gửi mail
                 var sent = await _mailService.SendDailyVehicleReportMail(
                     summary,
                     byWeightGroup,
