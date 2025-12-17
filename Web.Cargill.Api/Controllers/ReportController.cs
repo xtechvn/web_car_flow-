@@ -28,17 +28,28 @@ namespace Web.Cargill.Api.Controllers
         }
 
         [HttpPost("send-daily-mail")]
-        public async Task<IActionResult> SendDailyMail()
+        public async Task<IActionResult> SendDailyMail(
+         [FromHeader(Name = "X-API-KEY")] string apiKey)
         {
-            // Ngày báo cáo
+            // 1️⃣ Check API Key
+            if (apiKey != _config["DailyMail:ApiKey"])
+                return Unauthorized("Unauthorized");
+
             var reportDate = DateUtil.Now.Date;
 
+            
+
+            // 3️⃣ Lấy dữ liệu
             var summary = await _vehicleInspectionRepository
                 .CountTotalVehicleInspectionSynthetic(reportDate, reportDate);
 
             if (summary == null)
             {
-                return Ok(new { status = 0, message = "Không có dữ liệu" });
+                return Ok(new
+                {
+                    status = 0,
+                    message = "Không có dữ liệu"
+                });
             }
 
             var byWeightGroup = await _vehicleInspectionRepository
@@ -47,12 +58,15 @@ namespace Web.Cargill.Api.Controllers
             var byTrough = await _vehicleInspectionRepository
                 .GetTotalWeightByTroughType(reportDate);
 
+            // 4️⃣ Gửi mail
             var sent = await _mailService.SendDailyVehicleReportMail(
                 summary,
                 byWeightGroup,
                 byTrough,
                 reportDate
             );
+
+            
 
             return Ok(new
             {
