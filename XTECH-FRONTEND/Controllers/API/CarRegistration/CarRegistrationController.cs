@@ -10,6 +10,7 @@ using XTECH_FRONTEND.IRepositories;
 using XTECH_FRONTEND.Model;
 using XTECH_FRONTEND.Repositories;
 using XTECH_FRONTEND.Services;
+using XTECH_FRONTEND.Services.BackgroundQueue;
 using XTECH_FRONTEND.Services.RedisWorker;
 using XTECH_FRONTEND.Utilities;
 
@@ -30,6 +31,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         private readonly RedisConn redisService;
         private readonly IConfiguration _configuration;
         private readonly IHubContext<RegistrationHub> _hubContext;
+        private readonly IInsertQueue _insertQueue;
         public CarRegistrationController(
             IValidationService validationService,
             IGoogleSheetsService googleSheetsService,
@@ -37,7 +39,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             IZaloService zaloService,
             ILogger<CarRegistrationController> logger,
             IConfiguration configuration,
-            IMongoService mongoService, IHubContext<RegistrationHub> hubContext)
+            IMongoService mongoService, IHubContext<RegistrationHub> hubContext,
+            IInsertQueue insertQueue)
         {
             _validationService = validationService;
             _googleSheetsService = googleSheetsService;
@@ -50,6 +53,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             redisService.Connect();
             _configuration = configuration;
             _hubContext = hubContext;
+            _insertQueue = insertQueue;
         }
         [HttpPost("register-V1")]
         public async Task<ActionResult<CarRegistrationResponse>> RegisterCar([FromBody] CarRegistrationRequest request)
@@ -231,11 +235,30 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
         {
             try
             {
+                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_") + DateTime.Now.ToString("dd_MM_yyyy");
+
+                var data = redisService.Get(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                if (data != null && data.Trim() != "")
+                {
+
+                    var data_detail = JsonConvert.DeserializeObject<RegistrationRecord>(data);
+                    return BadRequest(new CarRegistrationResponse
+                    {
+                        Success = false,
+                        Message = data_detail.PlateNumber + $" đã đăng ký số " + data_detail.QueueNumber + ", Vui lòng đợi 15 phút trước khi gửi lại",
+                        RemainingTimeMinutes = 15
+                    });
+                }
                 var stopwatch = Stopwatch.StartNew();
                 var now = DateTime.Now;
                 var hours = now.Hour;
                 var minutes = now.Minute;
-
+                var adjustedTime = DateTime.Now;
+                if (hours==17 && minutes >= 55)
+                {
+                     adjustedTime = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
+                }
+                
                 // Kiểm tra khoảng 17:55 đến 18:00
 
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
@@ -251,11 +274,10 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     });
                 }
 
-                string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_")+DateTime.Now.ToString("dd_MM_yyyy");
 
-                redisService.Set(cache_name, JsonConvert.SerializeObject(request), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+               
                 var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-
+                
 
                 // Step 4: Create registration record with initial Zalo status
                 var registrationRecord = new RegistrationRecord
@@ -266,17 +288,19 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     Referee = request.Referee.ToUpper(),
                     GPLX = request.GPLX.ToUpper(),
                     QueueNumber = queueNumber,
-                    RegistrationTime = DateTime.Now,
+                    RegistrationTime = adjustedTime,
                     ZaloStatus = "Đang xử lý...",
                     Camp = request.Camp,
                 };
-                var InsertMG = await _mongoService.Insert(registrationRecord);
-                if (InsertMG == 0)
-                {
-                    InsertMG = await _mongoService.Insert(registrationRecord);
-                }
-               
-               
+                redisService.Set15P(cache_name, JsonConvert.SerializeObject(registrationRecord), Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+
+                //var InsertMG = await _mongoService.Insert(registrationRecord);
+                //if (InsertMG == 0)
+                //{
+                //    InsertMG = await _mongoService.Insert(registrationRecord);
+                //}
+
+
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration_FE", registrationRecord);
                
                 stopwatch.Stop(); // Dừng đo thời gian
@@ -297,7 +321,22 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {logMessage}");
                     }
                 }
-          
+
+                 _insertQueue.Enqueue(new InsertJob
+                {
+                    Data = new CarRegistrationResponse
+                    {
+                        Camp = registrationRecord.Camp,
+                        GPLX = registrationRecord.GPLX,
+                        Name = registrationRecord.Name,
+                        PlateNumber = registrationRecord.PlateNumber,
+                        PhoneNumber = registrationRecord.PhoneNumber,
+                        QueueNumber = registrationRecord.QueueNumber,
+                        Referee = registrationRecord.Referee,
+                        RegistrationTime = registrationRecord.RegistrationTime,
+                        ZaloStatus = registrationRecord.ZaloStatus
+                    }
+                });
                 // Return success response
                 return Ok(new CarRegistrationResponse
                 {
@@ -343,19 +382,19 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 $"📞 Hotline hỗ trợ: 1900-1234\n" +
                 $"🌐 Website: https://cargillhanam.com\n\n" +
                 $"Cảm ơn bạn đã sử dụng dịch vụ! ";
-                string url = "https://api-cargillhanam.adavigo.com/api/vehicleInspection/insert";
-                var client = new HttpClient();
-                var request_api = new HttpRequestMessage(HttpMethod.Post, url);
-                request_api.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
-                var response = await client.SendAsync(request_api);
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                }
-                else
-                {
-                    LogHelper.InsertLogTelegram("Insert - lỗi " );
-                }
+                //string url = "https://api-cargillhanam.adavigo.com/api/vehicleInspection/insert";
+                //var client = new HttpClient();
+                //var request_api = new HttpRequestMessage(HttpMethod.Post, url);
+                //request_api.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
+                //var response = await client.SendAsync(request_api);
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    var responseContent = await response.Content.ReadAsStringAsync();
+                //}
+                //else
+                //{
+                //    LogHelper.InsertLogTelegram("Insert - lỗi " );
+                //}
                 LogHelper.InsertLogTelegram(message);
                 return StatusCode(200, "thành công");
             }

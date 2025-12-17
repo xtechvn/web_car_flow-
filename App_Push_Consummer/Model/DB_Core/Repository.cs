@@ -17,7 +17,7 @@ namespace App_Push_Consummer.Model.DB_Core
         {
             try
             {
-                SqlParameter[] objParam_order = new SqlParameter[24];
+                SqlParameter[] objParam_order = new SqlParameter[23];
                 objParam_order[0] = new SqlParameter("@RecordNumber", model.QueueNumber);
                 objParam_order[1] = new SqlParameter("@CustomerName", model.Name);
                 objParam_order[2] = new SqlParameter("@VehicleNumber", model.PlateNumber);
@@ -29,18 +29,18 @@ namespace App_Push_Consummer.Model.DB_Core
                 objParam_order[8] = new SqlParameter("@VehicleStatus", DBNull.Value);
                 objParam_order[9] = new SqlParameter("@LoadType", DBNull.Value);
                 objParam_order[10] = new SqlParameter("@IssueCreateDate", DBNull.Value);
-                objParam_order[12] = new SqlParameter("@IssueUpdatedDate", DBNull.Value);
-                objParam_order[13] = new SqlParameter("@VehicleWeighingType", DBNull.Value);
-                objParam_order[14] = new SqlParameter("@VehicleWeighingTimeComeIn", DBNull.Value);
-                objParam_order[15] = new SqlParameter("@VehicleWeighingTimeComeOut", DBNull.Value);
-                objParam_order[16] = new SqlParameter("@VehicleWeighingTimeComplete", DBNull.Value);
-                objParam_order[17] = new SqlParameter("@TroughType", DBNull.Value);
-                objParam_order[18] = new SqlParameter("@VehicleTroughTimeComeIn", DBNull.Value);
-                objParam_order[19] = new SqlParameter("@VehicleTroughTimeComeOut", DBNull.Value);
-                objParam_order[20] = new SqlParameter("@VehicleTroughWeight", DBNull.Value);
-                objParam_order[21] = new SqlParameter("@VehicleTroughStatus", DBNull.Value);
-                objParam_order[22] = new SqlParameter("@CreatedBy", DBNull.Value);
-                objParam_order[23] = new SqlParameter("@CreatedDate", DBNull.Value);
+                objParam_order[11] = new SqlParameter("@IssueUpdatedDate", DBNull.Value);
+                objParam_order[12] = new SqlParameter("@VehicleWeighingType", DBNull.Value);
+                objParam_order[13] = new SqlParameter("@VehicleWeighingTimeComeIn", DBNull.Value);
+                objParam_order[14] = new SqlParameter("@VehicleWeighingTimeComeOut", DBNull.Value);
+                objParam_order[15] = new SqlParameter("@VehicleWeighingTimeComplete", DBNull.Value);
+                objParam_order[16] = new SqlParameter("@TroughType", DBNull.Value);
+                objParam_order[17] = new SqlParameter("@VehicleTroughTimeComeIn", DBNull.Value);
+                objParam_order[18] = new SqlParameter("@VehicleTroughTimeComeOut", DBNull.Value);
+                objParam_order[19] = new SqlParameter("@VehicleTroughWeight", DBNull.Value);
+                objParam_order[20] = new SqlParameter("@VehicleTroughStatus", DBNull.Value);
+                objParam_order[21] = new SqlParameter("@CreatedBy", DBNull.Value);
+                objParam_order[22] = new SqlParameter("@CreatedDate", DBNull.Value);
               
           
 

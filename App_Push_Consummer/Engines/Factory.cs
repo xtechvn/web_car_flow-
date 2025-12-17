@@ -82,10 +82,10 @@ namespace App_Push_Consummer.Engines
                         model.QueueNumber = item.QueueNumber;
                         model.RegistrationTime = (DateTime)DateUtil.StringToDateTime( item.CreatedTime);
                       var id=  Repository.SaveVehicleInspection(model);
-                        model.Id = id;
-                        await redisService.PublishAsync("ReceiveRegistration", model);
-                        item.Type = 1;
-                        _mongoService.update(item, item._id);
+                        //model.Id = id;
+                        //await redisService.PublishAsync("ReceiveRegistration", model);
+                        //item.Type = 1;
+                        //_mongoService.update(item, item._id);
                     }
                     
                 }

@@ -44,8 +44,22 @@ namespace Entities.ViewModels.Car
     public class SummaryReportSearchModel
     {
         public int LoadType { get; set; }             // Loại xanh/thuong
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-    
+        public string FromDate { get; set; }
+        public DateTime? StartDateFrom
+        {
+            get
+            {
+                return DateUtil.StringToDate(FromDate);
+            }
+        }
+        public string ToDate { get; set; }
+        public DateTime? ToDateFrom
+        {
+            get
+            {
+                return DateUtil.StringToDate(ToDate);
+            }
+        }
+
     }
 }

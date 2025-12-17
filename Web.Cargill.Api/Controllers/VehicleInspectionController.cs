@@ -84,6 +84,7 @@ namespace Web.Cargill.Api.Controllers
                 }
                 else
                 {
+                    LogHelper.InsertLogTelegram("Insert - lỗi :" + request.PlateNumber);
                     return Ok(new
                     {
                         status = (int)ResponseType.ERROR,

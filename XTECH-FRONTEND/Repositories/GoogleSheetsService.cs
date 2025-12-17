@@ -415,7 +415,7 @@ namespace XTECH_FRONTEND.Repositories
                 if (nextNumber == 1)
                 {
                     // Mục tiêu: 18 hôm nay
-                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 18, 29, 30);
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 56, 00);
 
                     // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
                     if (now > expireAt)

@@ -8573,23 +8573,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\trang\\.nuget\\packages\\": {},
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\Web.Cargill.CMS.csproj",
+      "projectUniqueName": "I:\\web_car_flow\\WEB.CMS\\Web.Cargill.CMS.csproj",
       "projectName": "Web.Cargill.CMS",
-      "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\Web.Cargill.CMS.csproj",
-      "packagesPath": "C:\\Users\\trang\\.nuget\\packages\\",
-      "outputPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\WEB.CMS\\obj\\",
+      "projectPath": "I:\\web_car_flow\\WEB.CMS\\Web.Cargill.CMS.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "I:\\web_car_flow\\WEB.CMS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\trang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -8604,17 +8604,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\DAL\\DAL.csproj": {
-              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\DAL\\DAL.csproj"
+            "I:\\web_car_flow\\DAL\\DAL.csproj": {
+              "projectPath": "I:\\web_car_flow\\DAL\\DAL.csproj"
             },
-            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Entities\\Entities.csproj": {
-              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Entities\\Entities.csproj"
+            "I:\\web_car_flow\\Entities\\Entities.csproj": {
+              "projectPath": "I:\\web_car_flow\\Entities\\Entities.csproj"
             },
-            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Repositories\\Repositories.csproj": {
-              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Repositories\\Repositories.csproj"
+            "I:\\web_car_flow\\Repositories\\Repositories.csproj": {
+              "projectPath": "I:\\web_car_flow\\Repositories\\Repositories.csproj"
             },
-            "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Utilities\\Utilities.csproj": {
-              "projectPath": "D:\\Thuc_Tap_VnXpress\\Car\\V2\\web_car_flow-\\Utilities\\Utilities.csproj"
+            "I:\\web_car_flow\\Utilities\\Utilities.csproj": {
+              "projectPath": "I:\\web_car_flow\\Utilities\\Utilities.csproj"
             }
           }
         }
@@ -8629,7 +8629,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -8675,7 +8675,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

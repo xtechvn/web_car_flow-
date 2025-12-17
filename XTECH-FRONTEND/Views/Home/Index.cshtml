@@ -107,6 +107,27 @@
     </div>
     <script type="text/javascript" src="~/libs/jquery/jquery-3.6.0.min.js"></script>
     <script>
+         window.addEventListener('load', function () {
+            // Kiểm tra xem trang đã reload trong phiên này chưa
+            if (!sessionStorage.getItem('hasReloaded')) {
+                // Đánh dấu là đã reload rồi
+                sessionStorage.setItem('hasReloaded', 'true');
+                // Reload lại trang
+                location.reload();
+            }
+        });
+
+        // Chỉ xóa cờ khi người dùng thật sự đóng tab, KHÔNG khi reload
+        window.addEventListener('beforeunload', function (event) {
+            // Nếu người dùng reload trang (F5, Ctrl+R, location.reload)
+            // thì event.persisted = false, nhưng navigationType = 1 => reload
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+                // Không xóa gì cả
+                return;
+            }
+            // Nếu đóng tab hoặc rời khỏi site → xóa cờ
+            sessionStorage.removeItem('hasReloaded');
+        });
         // API Configuration
         const API_BASE_URL = 'https://cargillhanam.com/api'; // Change to your API URL
         const ENDPOINTS = {
@@ -119,7 +140,7 @@
         // Global variables
         let countdownTimer = null;
         let isSubmitting = false;
-
+        let isLocked = false;
         // Utility functions
         function showLoading(show = true) {
             const submitBtn = document.getElementById('submitBtn');
@@ -281,6 +302,7 @@
             const updateCountdown = () => {
                 if (remaining <= 0) {
                     clearInterval(countdownTimer);
+                    isLocked = false;
                     timerSection.style.display = 'none';
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'GỬI ĐĂNG KÝ';
@@ -307,8 +329,8 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
 
-            if (isSubmitting) return;
-
+            if (isSubmitting || isLocked) return;
+             isSubmitting = true;
             const plateNumber = document.getElementById('plateNumber').value.trim();
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
             const referee = document.getElementById('referee').value.trim();
@@ -324,7 +346,7 @@
 
             try {
 
-
+                isSubmitting = true;
                 showLoading(true);
                 const now = new Date();
                 const hours = now.getHours();
@@ -337,6 +359,7 @@
                     setTimeout(() => {
                         startCountdown17_18();
                     }, 1000);
+                    statusMessage.innerHTML = 'Vui lòng đợi 18 giờ rồi thử lại!'
                     errorMessage = 'Vui lòng đợi 18 giờ rồi thử lại!';
                     return;
                 }
@@ -383,8 +406,10 @@
                 }
 
                 showError(errorMessage);
-            } finally {
-                showLoading(false);
+            } 
+            finally {
+                 isSubmitting = false;
+                // showLoading(false);
             }
         }
 
