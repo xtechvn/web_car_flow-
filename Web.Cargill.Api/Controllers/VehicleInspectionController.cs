@@ -104,5 +104,40 @@ namespace Web.Cargill.Api.Controllers
                 });
             }
         }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> Search([FromBody] CartoFactorySearchModel request)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository.SearchVehicleInspection(request);
+
+                if (data == null || data.Count == 0)
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        message = "Không tìm thấy thông tin phù hợp trong dữ liệu.",
+                        data = new List<CartoFactoryModel>()
+                    });
+                }
+
+                return Ok(new
+                {
+                    status = (int)ResponseType.SUCCESS,
+                    message = "Lấy dữ liệu thành công",
+                    data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("Search - VehicleInspectionController API: " + ex);
+                return Ok(new
+                {
+                    status = (int)ResponseType.ERROR,
+                    message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
+                });
+            }
+        }
     }
 }
