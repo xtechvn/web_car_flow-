@@ -156,5 +156,17 @@ namespace Repositories.Repositories
             }
             return null;
         }
+        public async Task<List<CartoFactoryModel>> SearchVehicleInspection(CartoFactorySearchModel searchModel)
+        {
+            try
+            {
+                return await _VehicleInspectionDAL.GetListCartoFactory(searchModel);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("SearchVehicleInspection - VehicleInspectionRepository: " + ex);
+                return null;
+            }
+        }
     }
 }
