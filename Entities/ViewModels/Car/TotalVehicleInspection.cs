@@ -49,7 +49,26 @@ namespace Entities.ViewModels.Car
         public double TongGio { get; set; }
         public double Tan_Moi_Gio { get; set; }
         public double KhungGio { get; set; }
-    } 
+    }
+    public class TotalWeightByWeightGroupModel
+    {
+        public string WeightGroup { get; set; }
+        public int TotalVehicles { get; set; }
+        public double TotalWeightTons { get; set; }
+        public double SanLuong { get; set; }
+        public double TotalProcessMinutes { get; set; }
+        public double SoPhut_Tren_Tan { get; set; }
+        public double SoPhut_Tren_Xe { get; set; }
+    }
+    public class TotalWeightByTroughTypeModel
+    {
+        public string TroughType { get; set; }
+        public int SoXe { get; set; }
+        public double SanLuong { get; set; }
+        public double TongGio { get; set; }
+        public double Tan_Moi_Gio { get; set; }
+    }
+
     public class TotalWeightByHourViewModel
     {
         public Array CompletionHour { get; set; }
