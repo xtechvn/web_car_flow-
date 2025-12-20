@@ -104,37 +104,182 @@ namespace Web.Cargill.Api.Controllers
                 });
             }
         }
-
-        [HttpPost("search")]
-        public async Task<IActionResult> Search([FromBody] CartoFactorySearchModel request)
+        [HttpGet("report/search-by-date")]
+        public async Task<IActionResult> SearchByDate(
+            [FromQuery(Name = "date")] DateTime date)
         {
             try
             {
-                var data = await _vehicleInspectionRepository.SearchVehicleInspection(request);
+                var fromDate = date.Date;
 
-                if (data == null || data.Count == 0)
+                var request = new CartoFactorySearchModel
+                {
+                    RegisterDateOnline = fromDate
+                };
+
+                var data = await _vehicleInspectionRepository
+                    .SearchVehicleInspection(request);
+
+                var result = data?.Select(x => new CartoFactoryResponseDto
+                {
+                    Id = x.Id,
+                    RecordNumber = x.RecordNumber,
+                    CustomerName = x.CustomerName,
+                    VehicleNumber = x.VehicleNumber,
+                    RegisterDateOnline = x.RegisterDateOnline,
+                    DriverName = x.DriverName,
+                    LicenseNumber = x.LicenseNumber,
+                    PhoneNumber = x.PhoneNumber,
+                    VehicleLoad = x.VehicleLoad,
+                    VehicleStatus = x.VehicleStatus,
+                    VehicleStatusName = x.VehicleStatusName,
+                    AudioPath = x.AudioPath
+                }).ToList() ?? new List<CartoFactoryResponseDto>();
+
+                return Ok(new
+                {
+                    status = 1,
+                    message = "Lấy dữ liệu thành công",
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("SearchByDate error: " + ex);
+                return Ok(new
+                {
+                    status = 0,
+                    message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
+                });
+            }
+        }
+
+
+        // =========================
+        // 2️⃣ REPORT SUMMARY (FROM - TO)
+        // =========================
+        [HttpGet("report/summary")]
+        public async Task<IActionResult> GetSummary(
+            [FromQuery(Name = "from_date")] DateTime fromDate,
+            [FromQuery(Name = "to_date")] DateTime toDate)
+        {
+            try
+            {
+                if (fromDate > toDate)
                 {
                     return Ok(new
                     {
-                        status = (int)ResponseType.SUCCESS,
-                        message = "Không tìm thấy thông tin phù hợp trong dữ liệu.",
-                        data = new List<CartoFactoryModel>()
+                        status = 0,
+                        message = "from_date không được lớn hơn to_date"
+                    });
+                }
+
+                var data = await _vehicleInspectionRepository
+                    .CountTotalVehicleInspectionSynthetic(fromDate.Date, toDate.Date);
+
+                if (data == null)
+                {
+                    return Ok(new
+                    {
+                        status = 0,
+                        message = "Không có dữ liệu",
+                        data = (object)null
                     });
                 }
 
                 return Ok(new
                 {
-                    status = (int)ResponseType.SUCCESS,
+                    status = 1,
                     message = "Lấy dữ liệu thành công",
-                    data = data
+                    data
                 });
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("Search - VehicleInspectionController API: " + ex);
+                LogHelper.InsertLogTelegram("GetSummary error: " + ex);
                 return Ok(new
                 {
-                    status = (int)ResponseType.ERROR,
+                    status = 0,
+                    message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
+                });
+            }
+        }
+
+        // =========================
+        // 3️⃣ REPORT BY WEIGHT GROUP (1 DAY)
+        // =========================
+        [HttpGet("report/by-weight-group")]
+        public async Task<IActionResult> GetByWeightGroup(
+            [FromQuery(Name = "date")] DateTime date)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository
+                    .GetTotalWeightByWeightGroup(date.Date);
+
+                if (data == null || !data.Any())
+                {
+                    return Ok(new
+                    {
+                        status = 0,
+                        message = "Không có dữ liệu",
+                        data = new object[] { }
+                    });
+                }
+
+                return Ok(new
+                {
+                    status = 1,
+                    message = "Lấy dữ liệu thành công",
+                    data
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetByWeightGroup error: " + ex);
+                return Ok(new
+                {
+                    status = 0,
+                    message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
+                });
+            }
+        }
+
+        // =========================
+        // 4️⃣ REPORT BY TROUGH (1 DAY)
+        // =========================
+        [HttpGet("report/by-trough")]
+        public async Task<IActionResult> GetByTrough(
+            [FromQuery(Name = "date")] DateTime date)
+        {
+            try
+            {
+                var data = await _vehicleInspectionRepository
+                    .GetTotalWeightByTroughType(date.Date);
+
+                if (data == null || !data.Any())
+                {
+                    return Ok(new
+                    {
+                        status = 0,
+                        message = "Không có dữ liệu",
+                        data = new object[] { }
+                    });
+                }
+
+                return Ok(new
+                {
+                    status = 1,
+                    message = "Lấy dữ liệu thành công",
+                    data
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetByTrough error: " + ex);
+                return Ok(new
+                {
+                    status = 0,
                     message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
                 });
             }

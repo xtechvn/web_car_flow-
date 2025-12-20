@@ -91,9 +91,7 @@ namespace WEB.CMS.Controllers
                 var date_time = date!=null && date !=""? DateUtil.StringToDate(date):null;
             
                 var data = await _vehicleInspectionRepository.GetTotalWeightByWeightGroup(date_time);
-                var datamodel=new TotalWeightByHourViewModel();
-                datamodel.CompletionHour = data.Select(x => x.CompletionHour).ToArray();
-                datamodel.TotalWeightInHour = data.Select(x => x.TotalWeightInHour).ToArray();
+                var datamodel=new TotalWeightByHourViewModel();             
                 datamodel.WeightGroup = data.Select(x => x.WeightGroup).ToArray();
                 datamodel.TotalWeightTons = data.Select(x => x.TotalWeightTons).ToArray();
                 datamodel.TotalProcessMinutes = data.Select(x => x.TotalProcessMinutes).ToArray();

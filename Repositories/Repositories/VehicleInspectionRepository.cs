@@ -130,7 +130,7 @@ namespace Repositories.Repositories
             }
             return null;
         }    
-        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByWeightGroup(DateTime? RegistrationTime)
+        public async Task<List<TotalWeightByWeightGroupModel>> GetTotalWeightByWeightGroup(DateTime? RegistrationTime)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Repositories.Repositories
             }
             return null;
         }    
-        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
+        public async Task<List<TotalWeightByTroughTypeModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
         {
             try
             {
