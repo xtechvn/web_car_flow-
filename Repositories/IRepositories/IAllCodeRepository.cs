@@ -25,5 +25,6 @@ namespace Repositories.IRepositories
 
         Task<long> UpdateAllCode(AllCode model);
         Task<long> InsertAllcode(AllCode model);
+        Task<List<AllCode>> GetListSortByName_LA(string type_name);
     }
 }

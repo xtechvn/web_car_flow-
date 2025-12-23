@@ -3,6 +3,7 @@ using Entities.ViewModels.Car;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repositories.IRepositories;
+using Repositories.Repositories;
 using Utilities.Contants;
 using Web.Cargill.Api.Services;
 
@@ -16,13 +17,16 @@ namespace Web.Cargill.Api.Controllers
         private readonly RedisConn redisService;
         private readonly IConfiguration _configuration;
         private readonly WorkQueueClient _workQueueClient;
-        public VehicleInspectionController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration)
+        private readonly IAllCodeRepository _allCodeRepository;
+
+        public VehicleInspectionController(IVehicleInspectionRepository vehicleInspectionRepository, IConfiguration configuration, IAllCodeRepository allCodeRepository)
         {
             _vehicleInspectionRepository = vehicleInspectionRepository;
             redisService = new RedisConn(configuration);
             redisService.Connect();
             _configuration = configuration;
             _workQueueClient = new WorkQueueClient(configuration);
+            _allCodeRepository = allCodeRepository;
 
         }
         [HttpPost("Insert")]
@@ -290,6 +294,76 @@ namespace Web.Cargill.Api.Controllers
                 {
                     status = 0,
                     message = "Đã xảy ra lỗi, vui lòng liên hệ IT"
+                });
+            }
+        }
+        [HttpGet("get-time-countdown")]
+        public async Task<IActionResult> GetTimeCountdown()
+        {
+            try
+            {
+                var TIME_RESET = await _allCodeRepository.GetListSortByName(AllCodeType.TIME_RESET);
+                if (TIME_RESET == null || TIME_RESET.Count == 0)
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.ERROR,
+                        message = "Chưa cấu hình thời gian đặt lại",
+                    });
+                }
+                return Ok(new
+                {
+                    status = (int)ResponseType.SUCCESS,
+                    message = "Upload audio thành công",
+                    data = TIME_RESET != null && TIME_RESET.Count > 0 && TIME_RESET[0].UpdateTime.HasValue
+                            ? TIME_RESET[0].UpdateTime.Value.ToString("dd/MM/yyyy HH:mm:ss") : ""
+                });
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTimeCountdown - VehicleInspectionController API: " + ex);
+                return Ok(new
+                {
+                    status = (int)ResponseType.ERROR,
+                    message = "đã xẩy ra lỗi vui lòng liên hệ IT",
+                });
+            }
+        }
+        [HttpPost("update-by-plateNumber")]
+        public async Task<IActionResult> UpdateByPlateNumber([FromBody] CamModel request)
+        {
+            try
+            {
+                var update = await _vehicleInspectionRepository.UpdateVehicleInspectionByVehicleNumber(request.bien_so);
+                if (update > 0)
+                {
+                    var detail = await _vehicleInspectionRepository.GetDetailtVehicleInspection(update);
+                    await redisService.Publish_CamAsync("ListCartoFactory_Cam", detail);
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        message = "Cập nhật thành công",
+                    });
+
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.ERROR,
+                        message = "Cập nhật thất bại",
+                    });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateByPlateNumber - VehicleInspectionController API: " + ex);
+                return Ok(new
+                {
+                    status = (int)ResponseType.ERROR,
+                    message = "đã xẩy ra lỗi vui lòng liên hệ IT",
                 });
             }
         }
