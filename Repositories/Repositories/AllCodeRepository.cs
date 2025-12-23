@@ -20,10 +20,11 @@ namespace Repositories.Repositories
     {
         private readonly ILogger<AllCodeRepository> _logger;
         private readonly AllCodeDAL _AllCodeDAL;
+        IOptions<DataBaseConfig> dataBaseConfig;
 
-
-        public AllCodeRepository(IOptions<DataBaseConfig> dataBaseConfig, ILogger<AllCodeRepository> logger)
+        public AllCodeRepository(IOptions<DataBaseConfig> _dataBaseConfig, ILogger<AllCodeRepository> logger)
         {
+            dataBaseConfig = _dataBaseConfig;
             _logger = logger;
             _AllCodeDAL = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
     
@@ -177,6 +178,12 @@ namespace Repositories.Repositories
                 return -1;
             }
             
+        }
+        public async Task<List<AllCode>> GetListSortByName_LA(string type_name)
+        {
+            AllCodeDAL _AllCodeDAL_LA = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+
+            return await _AllCodeDAL_LA.GetListSortByName(type_name);
         }
     }
 }

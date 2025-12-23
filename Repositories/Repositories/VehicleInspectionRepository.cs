@@ -221,5 +221,19 @@ namespace Repositories.Repositories
             }
             return 0;
         }
+        public async Task<int> UpdateVehicleInspectionByVehicleNumber(string VehicleNumber)
+        {
+            try
+            {
+                VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+                return await _VehicleInspectionDAL_LongAn.UpdateVehicleInspectionByVehicleNumber(VehicleNumber);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionRepository: " + ex);
+            }
+            return 0;
+        }
     }
+
 }
