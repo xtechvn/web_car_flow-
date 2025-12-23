@@ -27,6 +27,8 @@ namespace XTECH_FRONTEND.Model
         public string GPLX { get; set; } 
         public string Referee { get; set; } 
         public string Name { get; set; } 
+        public int LocationType { get; set; } 
+
     }
 
     public class RegistrationRecord

@@ -15,8 +15,8 @@ namespace Web.Cargill.Api.Services
         }
         public async Task<bool> SendDailyVehicleReportMail(
     TotalVehicleInspection s,
-    List<TotalWeightByHourModel> byWeightGroup,
-    List<TotalWeightByHourModel> byTrough,
+    List<TotalWeightByWeightGroupModel> byWeightGroup,
+    List<TotalWeightByTroughTypeModel> byTrough,
     DateTime reportDate)
         {
             try
@@ -204,7 +204,7 @@ style='border-collapse:collapse;
 
         }
 
-        private string BuildWeightGroupRows(List<TotalWeightByHourModel> list)
+        private string BuildWeightGroupRows(List<TotalWeightByWeightGroupModel> list)
         {
             if (list == null || !list.Any()) return "";
 
@@ -249,7 +249,7 @@ style='border-collapse:collapse;
             }
         }
 
-        private string BuildTroughRows(List<TotalWeightByHourModel> list)
+        private string BuildTroughRows(List<TotalWeightByTroughTypeModel> list)
         {
             if (list == null || !list.Any()) return "";
 

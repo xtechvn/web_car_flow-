@@ -28,26 +28,27 @@ namespace Web.Cargill.Api.Controllers
         }
 
         [HttpPost("upload-audio")]
-        public async Task<IActionResult> UploadAudio([FromForm] int booking_id, [FromForm] IFormFile file)
+        public async Task<IActionResult> UploadAudio(
+    [FromForm] int booking_id,
+    [FromForm] IFormFile file,
+    [FromForm] int location_type)
         {
             if (file == null || file.Length == 0)
-            {
-                LogHelper.InsertLogTelegram($"UploadAudio ❌ File rỗng hoặc không hợp lệ (booking_id={booking_id})");
                 return BadRequest(new { Status = 1, Msg = "File không hợp lệ." });
-            }
 
             try
             {
-                var booking = _db.VehicleInspection.FirstOrDefault(b => b.Id == booking_id);
-                if (booking == null)
-                {
-                    LogHelper.InsertLogTelegram($"UploadAudio ❌ Không tìm thấy booking_id={booking_id}");
-                    return NotFound(new { Status = 1, Msg = $"Không tìm thấy booking_id = {booking_id}" });
-                }
+                await using var db = GetDbContextByLocation(location_type);
 
-                // Lấy biển số xe, loại bỏ ký tự đặc biệt, khoảng trắng
-                string vehicleNumber = booking.VehicleNumber ?? "unknown";
-                vehicleNumber = new string(vehicleNumber
+                var booking = await db.VehicleInspection
+                    .FirstOrDefaultAsync(x => x.Id == booking_id);
+
+                if (booking == null)
+                    return NotFound(new { Status = 1, Msg = "Không tìm thấy booking." });
+
+                // Clean biển số
+                var vehicleNumber = new string(
+                    (booking.VehicleNumber ?? "unknown")
                     .Where(char.IsLetterOrDigit)
                     .ToArray())
                     .ToLower();
@@ -55,52 +56,74 @@ namespace Web.Cargill.Api.Controllers
                 int recordNumber = booking.RecordNumber ?? 1;
                 string customFileName = $"audio{booking_id}_{vehicleNumber}_{recordNumber}";
 
-                LogHelper.InsertLogTelegram($"UploadAudio ▶️ Bắt đầu upload: booking_id={booking_id}, file={file.FileName}, customFileName={customFileName}");
-
-                // Upload file
-                string audioUrl = await UpLoadHelper.UploadFileOrImage(file, booking_id, 999, customFileName);
+                // Upload audio
+                string? audioUrl = await UpLoadHelper.UploadFileOrImage(
+                    file,
+                    booking_id,
+                    999,
+                    customFileName
+                );
 
                 if (string.IsNullOrEmpty(audioUrl))
-                {
-                    LogHelper.InsertLogTelegram($"UploadAudio ❌ Upload thất bại từ UpLoadHelper (booking_id={booking_id}, file={file.FileName})");
-                    return StatusCode(500, new { Status = 1, Msg = "Upload thất bại từ UpLoadHelper" });
-                }
+                    return StatusCode(500, new { Status = 1, Msg = "Upload audio thất bại." });
 
-                // Cập nhật AudioPath
+                // Update booking
                 booking.AudioPath = audioUrl;
 
-              
-
-                // Thêm record VehicleAudio
-                var newAudio = new VehicleAudio
+                db.VehicleAudio.Add(new VehicleAudio
                 {
                     PlateNumber = booking.VehicleNumber,
                     AudioPath = audioUrl,
                     CreatedAt = DateTime.Now
-                };
+                });
 
-                _db.VehicleAudio.Add(newAudio);
-                await _db.SaveChangesAsync();
+                await db.SaveChangesAsync();
 
-                LogHelper.InsertLogTelegram($"UploadAudio ✅ Lưu DB thành công:  Plate={booking.VehicleNumber} ,url={audioUrl}");
+                // Log async cho đỡ lag
+                //_ = Task.Run(() =>
+                //    LogHelper.InsertLogTelegram(
+                //        $"UploadAudio ✅ booking={booking_id}, url={audioUrl}"
+                //    )
+                //);
 
                 return Ok(new { Status = 0, Url = audioUrl });
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram($"UploadAudio ❌ Exception (booking_id={booking_id}): {ex}");
-                return StatusCode(500, new { Status = 1, Msg = ex.Message });
+                _ = Task.Run(() =>
+                    LogHelper.InsertLogTelegram(
+                        $"UploadAudio ❌ booking={booking_id}, err={ex.Message}"
+                    )
+                );
+
+                return StatusCode(500, new { Status = 1, Msg = "Server error." });
             }
         }
+
+        private AppDbContext GetDbContextByLocation(int locationType)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+
+            var connHaNam = _config["DataBaseConfig:SqlServer:ConnectionString"];
+            var connLongAn = _config["DataBaseConfig:SqlServer:ConnectionString2"];
+
+            var connectionString = (locationType == 2) ? connLongAn : connHaNam;
+
+            optionsBuilder.UseSqlServer(connectionString);
+
+            return new AppDbContext(optionsBuilder.Options);
+        }
+
 
         /// <summary>
         /// Lấy danh sách booking chưa có file Audio (AudioPath == null hoặc rỗng)
         /// </summary>
         [HttpGet("GetListNoAudio")]
-        public async Task<IActionResult> GetListNoAudio()
+        public async Task<IActionResult> GetListNoAudio([FromQuery] int location_type)
         {
             try
             {
+                using var db = GetDbContextByLocation(location_type);
                 // Lấy thời điểm hiện tại
                 var now = DateTime.Now;
 
@@ -122,7 +145,7 @@ namespace Web.Cargill.Api.Controllers
                     toDate = todayCutoff.AddDays(-1);    // 17:55 hôm qua
                 }
 
-                var list = await _db.VehicleInspection
+                var list = await db.VehicleInspection
                     .Where(v =>
                         string.IsNullOrEmpty(v.AudioPath) &&
                         v.RegisterDateOnline >= fromDate &&
@@ -173,7 +196,8 @@ namespace Web.Cargill.Api.Controllers
         public async Task<IActionResult> DownloadZaloAudio(
      [FromForm] int booking_id,
      [FromForm] string link_audio_zalo_ai,
-     CancellationToken ct)
+     CancellationToken ct,
+     [FromForm] int location_type)
         {
             if (string.IsNullOrWhiteSpace(link_audio_zalo_ai))
             {
@@ -184,7 +208,7 @@ namespace Web.Cargill.Api.Controllers
             try
             {
                
-
+                using var db = GetDbContextByLocation(location_type);
                 // 1) Download WAV về MemoryStream
                 var wavStream = await DownloadWavToStreamAsync(link_audio_zalo_ai, maxBytes: 20 * 1024 * 1024, ct);
                 if (wavStream == null || wavStream.Length == 0)
@@ -198,7 +222,7 @@ namespace Web.Cargill.Api.Controllers
                 var mp3Stream = ConvertWavStreamToMp3Stream(wavStream);
 
                 // 3) Lấy thông tin booking để đặt tên file
-                var booking = await _db.VehicleInspection.FirstOrDefaultAsync(b => b.Id == booking_id, ct);
+                var booking = await db.VehicleInspection.FirstOrDefaultAsync(b => b.Id == booking_id, ct);
                 if (booking == null)
                 {
                     LogHelper.InsertLogTelegram($"DownloadZaloAudio ❌ Không tìm thấy booking_id={booking_id}");
@@ -237,9 +261,9 @@ namespace Web.Cargill.Api.Controllers
                     AudioPath = audioUrl,
                     CreatedAt = DateTime.Now
                 };
-                _db.VehicleAudio.Add(newAudio);
+                db.VehicleAudio.Add(newAudio);
 
-                await _db.SaveChangesAsync(ct);
+                await db.SaveChangesAsync(ct);
 
                 LogHelper.InsertLogTelegram($"DownloadZaloAudio ✅ Hoàn tất: booking_id={booking_id}, Plate={booking.VehicleNumber}, Url={audioUrl}");
 

@@ -39,7 +39,7 @@ namespace DAL
                     new SqlParameter("@VehicleWeighingStatus", searchModel.VehicleWeighingStatus==null? DBNull.Value :searchModel.VehicleWeighingStatus),
                     new SqlParameter("@LoadingStatus", searchModel.LoadingStatus==null? DBNull.Value :searchModel.LoadingStatus),
                     new SqlParameter("@VehicleWeighedstatus", searchModel.VehicleWeighedstatus==null? DBNull.Value :searchModel.VehicleWeighedstatus),
-                    new SqlParameter("@RegisterDateOnline", searchModel.RegistrationTime==null? DBNull.Value :searchModel.RegistrationTime),
+                    new SqlParameter("@RegisterDateOnline", searchModel.RegisterDateOnline==null? DBNull.Value :searchModel.RegisterDateOnline),
                 };
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListVehicleInspection, objParam);
                 if (dt != null && dt.Rows.Count > 0)
@@ -255,7 +255,7 @@ namespace DAL
             }
             return null;
         }    
-        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByWeightGroup(DateTime? RegistrationTime)
+        public async Task<List<TotalWeightByWeightGroupModel>> GetTotalWeightByWeightGroup(DateTime? RegistrationTime)
         {
             try
             {
@@ -267,7 +267,7 @@ namespace DAL
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetTotalWeightByWeightGroup, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                   var data = dt.ToList<TotalWeightByHourModel>();
+                   var data = dt.ToList<TotalWeightByWeightGroupModel>();
                     return data;
                 }
             }
@@ -277,7 +277,7 @@ namespace DAL
             }
             return null;
         }    
-        public async Task<List<TotalWeightByHourModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
+        public async Task<List<TotalWeightByTroughTypeModel>> GetTotalWeightByTroughType(DateTime? RegistrationTime)
         {
             try
             {
@@ -289,7 +289,7 @@ namespace DAL
                 var dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetTotalWeightByTroughType, objParam);
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                   var data = dt.ToList<TotalWeightByHourModel>();
+                   var data = dt.ToList<TotalWeightByTroughTypeModel>();
                     return data;
                 }
             }
@@ -299,5 +299,7 @@ namespace DAL
             }
             return null;
         }
+
+
     }
 }
