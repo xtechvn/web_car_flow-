@@ -42,6 +42,7 @@ namespace Entities.ViewModels.Car
         public int Bookingid { get; set; }
         public string text_voice { get; set; }
         public string AudioPath { get; set; }
+        public int LocationType { get; set; }
     }
     public class SummaryReportSearchModel
     {

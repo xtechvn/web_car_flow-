@@ -182,7 +182,7 @@ namespace Repositories.Repositories
                        
                     case 2:
                         {
-                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
+                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
                             return _VehicleInspectionDAL_LongAn.GetAudioPathByVehicleNumber(VehicleNumber);
                         }                   
                     default:
@@ -207,7 +207,7 @@ namespace Repositories.Repositories
                         return _VehicleInspectionDAL.SaveVehicleInspection(model);
                     case 2:
                         {
-                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
+                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
                             return _VehicleInspectionDAL_LongAn.SaveVehicleInspection(model);
                         }
                     default:
