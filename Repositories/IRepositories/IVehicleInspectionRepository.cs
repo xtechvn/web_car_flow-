@@ -22,5 +22,7 @@ namespace Repositories.IRepositories
 
 
         Task<List<CartoFactoryModel>> SearchVehicleInspection(CartoFactorySearchModel searchModel);
+        Task<string> GetAudioPathByVehicleNumberAPI(string VehicleNumber,int LocationType);
+        int SaveVehicleInspectionAPI(RegistrationRecord model);
     }
 }

@@ -31,41 +31,49 @@ namespace Web.Cargill.Api.Controllers
 
             try
             {
-                var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumber(request.PlateNumber);
+                var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumberAPI(request.PlateNumber, request.LocationType);
                 if (!string.IsNullOrEmpty(audio))
                 {
                     request.AudioPath = audio;
                     LogHelper.InsertLogTelegram("sql:" + request.PlateNumber);
                 }
-                var id = _vehicleInspectionRepository.SaveVehicleInspection(request);
+                var id = _vehicleInspectionRepository.SaveVehicleInspectionAPI(request);
                 if (id > 0 && (request.AudioPath == null || request.AudioPath == ""))
                 {
                     request.Id = id;
                     request.Bookingid = id;
                     request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào cân";
-                    await redisService.PublishAsync("Add_ReceiveRegistration" + _configuration["CompanyType"], request);
-                    LogHelper.InsertLogTelegram("Queue :" + request.PlateNumber);
-                    var Queue = _workQueueClient.SyncQueue(request);
-                    if (!Queue)
+                    switch(request.LocationType)
                     {
-                        Queue = _workQueueClient.SyncQueue(request);
+                        case 1:
+                            {
+                                await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
+                                LogHelper.InsertLogTelegram("Queue :" + request.PlateNumber);
+                                var Queue = _workQueueClient.SyncQueue(request);
+                                if (!Queue)
+                                {
+                                    Queue = _workQueueClient.SyncQueue(request);
+                                }
+                            }
+                            break;
+                        case 2:
+                            {
+                                await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
+                                LogHelper.InsertLogTelegram("Queue LA:" + request.PlateNumber);
+                                var Queue = _workQueueClient.SyncQueue(request);
+                                if (!Queue)
+                                {
+                                    Queue = _workQueueClient.SyncQueue(request);
+                                }
+                            }
+                            break;
+                       
+                        default:
+                            break;
                     }
+                  
                
-                    //string url_n8n = "https://n8n.adavigo.com/webhook/text-to-speed";
-                    await redisService.PublishAsync("Add_ReceiveRegistration", request);
-                    //var client = new HttpClient();
-                    //var request_n8n = new HttpRequestMessage(HttpMethod.Post, url_n8n);
-                    //request_n8n.Content = new StringContent(JsonConvert.SerializeObject(request), null, "application/json");
-                    //var response = await client.SendAsync(request_n8n);
-                    //if (response.IsSuccessStatusCode)
-                    //{
-                    //    var responseContent = await response.Content.ReadAsStringAsync();
-
-                    //}
-                    //else
-                    //{
-                    //    LogHelper.InsertLogTelegram("Insert - VehicleInspectionController API: Gửi n8n thất bại:  Id" + id);
-                    //}
+                   
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
