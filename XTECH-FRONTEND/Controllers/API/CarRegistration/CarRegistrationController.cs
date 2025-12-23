@@ -254,11 +254,11 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 var hours = now.Hour;
                 var minutes = now.Minute;
                 var adjustedTime = DateTime.Now;
-                if (hours==17 && minutes >= 55)
+                if (hours == 17 && minutes >= 55)
                 {
-                     adjustedTime = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
+                    adjustedTime = new DateTime(now.Year, now.Month, now.Day, 18, 0, 0);
                 }
-                
+
                 // Kiểm tra khoảng 17:55 đến 18:00
 
                 _logger.LogInformation($"Car registration request received: {request.PhoneNumber} - {request.PlateNumber}");
@@ -275,9 +275,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                 }
 
 
-               
+
                 var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
-                
+
 
                 // Step 4: Create registration record with initial Zalo status
                 var registrationRecord = new RegistrationRecord
@@ -302,9 +302,9 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
 
                 await _hubContext.Clients.All.SendAsync("ReceiveRegistration_FE", registrationRecord);
-               
+
                 stopwatch.Stop(); // Dừng đo thời gian
-                
+
                 if (stopwatch.ElapsedMilliseconds > 1000)
                 {
                     LogHelper.InsertLogTelegram("TG sử lý " + request.PlateNumber + ": " + stopwatch.ElapsedMilliseconds);
@@ -313,7 +313,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     {
                         Directory.CreateDirectory(logDirectory);
                     }
-                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";                  
+                    var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] SLOW: {stopwatch.ElapsedMilliseconds}ms - Plate: {request.PlateNumber}";
                     var logPath = Path.Combine(logDirectory, "slow_requests.log");
                     using (var fs = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                     using (var writer = new StreamWriter(fs))
@@ -322,7 +322,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     }
                 }
 
-                 _insertQueue.Enqueue(new InsertJob
+                _insertQueue.Enqueue(new InsertJob
                 {
                     Data = new CarRegistrationResponse
                     {
@@ -334,7 +334,8 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                         QueueNumber = registrationRecord.QueueNumber,
                         Referee = registrationRecord.Referee,
                         RegistrationTime = registrationRecord.RegistrationTime,
-                        ZaloStatus = registrationRecord.ZaloStatus
+                        ZaloStatus = registrationRecord.ZaloStatus,
+                        LocationType = 1,
                     }
                 });
                 // Return success response
@@ -347,6 +348,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     PlateNumber = registrationRecord.PlateNumber,
                     PhoneNumber = registrationRecord.PhoneNumber,
                     ZaloStatus = "Đang xử lý...",
+                    
 
                 });
             }
