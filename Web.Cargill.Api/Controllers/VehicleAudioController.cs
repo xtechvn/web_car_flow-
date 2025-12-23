@@ -28,7 +28,7 @@ namespace Web.Cargill.Api.Controllers
         }
 
         [HttpPost("upload-audio")]
-        public async Task<IActionResult> UploadAudio([FromForm] int booking_id, [FromForm] IFormFile file, [FromForm] int LocationType)
+        public async Task<IActionResult> UploadAudio([FromForm] int booking_id, [FromForm] IFormFile file, [FromForm] int location_type)
         {
             if (file == null || file.Length == 0)
             {
@@ -38,7 +38,7 @@ namespace Web.Cargill.Api.Controllers
 
             try
             {
-                using var db = GetDbContextByLocation(LocationType);
+                using var db = GetDbContextByLocation(location_type);
                     
                 var booking = db.VehicleInspection.FirstOrDefault(b => b.Id == booking_id);
                 if (booking == null)
@@ -113,11 +113,11 @@ namespace Web.Cargill.Api.Controllers
         /// Lấy danh sách booking chưa có file Audio (AudioPath == null hoặc rỗng)
         /// </summary>
         [HttpGet("GetListNoAudio")]
-        public async Task<IActionResult> GetListNoAudio([FromQuery] int LocationType)
+        public async Task<IActionResult> GetListNoAudio([FromQuery] int location_type)
         {
             try
             {
-                using var db = GetDbContextByLocation(LocationType);
+                using var db = GetDbContextByLocation(location_type);
                 // Lấy thời điểm hiện tại
                 var now = DateTime.Now;
 
@@ -191,7 +191,7 @@ namespace Web.Cargill.Api.Controllers
      [FromForm] int booking_id,
      [FromForm] string link_audio_zalo_ai,
      CancellationToken ct,
-     [FromForm] int LocationType)
+     [FromForm] int location_type)
         {
             if (string.IsNullOrWhiteSpace(link_audio_zalo_ai))
             {
@@ -202,7 +202,7 @@ namespace Web.Cargill.Api.Controllers
             try
             {
                
-                using var db = GetDbContextByLocation(LocationType);
+                using var db = GetDbContextByLocation(location_type);
                 // 1) Download WAV về MemoryStream
                 var wavStream = await DownloadWavToStreamAsync(link_audio_zalo_ai, maxBytes: 20 * 1024 * 1024, ct);
                 if (wavStream == null || wavStream.Length == 0)
