@@ -176,6 +176,7 @@ namespace Repositories.Repositories
             {
                 switch(LocationType)
                 {
+                    case 0:
                     case 1:
                         return _VehicleInspectionDAL.GetAudioPathByVehicleNumber(VehicleNumber);
                        
@@ -183,10 +184,7 @@ namespace Repositories.Repositories
                         {
                             VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
                             return _VehicleInspectionDAL_LongAn.GetAudioPathByVehicleNumber(VehicleNumber);
-                        }
-                    case 3:
-                        VehicleNumber = VehicleNumber + "_3";
-                        break;
+                        }                   
                     default:
                         break;
                 }
@@ -204,6 +202,7 @@ namespace Repositories.Repositories
             {
                 switch(model.LocationType)
                 {
+                    case 0:
                     case 1:
                         return _VehicleInspectionDAL.SaveVehicleInspection(model);
                     case 2:

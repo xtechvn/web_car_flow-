@@ -45,6 +45,7 @@ namespace Web.Cargill.Api.Controllers
                     request.text_voice = "Mời biển số xe " + request.PlateNumber + " vào cân";
                     switch(request.LocationType)
                     {
+                        case 0:
                         case 1:
                             {
                                 await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
