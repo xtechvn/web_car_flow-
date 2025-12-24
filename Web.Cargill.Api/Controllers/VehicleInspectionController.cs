@@ -127,7 +127,7 @@ namespace Web.Cargill.Api.Controllers
 
                 var request = new CartoFactorySearchModel
                 {
-                    RegisterDateOnline = fromDate
+                    RegistrationTime = fromDate
                 };
 
                 var data = await _vehicleInspectionRepository
