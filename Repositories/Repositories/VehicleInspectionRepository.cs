@@ -178,7 +178,11 @@ namespace Repositories.Repositories
                 {
                     case 0:
                     case 1:
-                        return _VehicleInspectionDAL.GetAudioPathByVehicleNumber(VehicleNumber);
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
+                            return _VehicleInspectionDAL.GetAudioPathByVehicleNumber(VehicleNumber);
+                        }
+                       
                        
                     case 2:
                         {
@@ -204,7 +208,11 @@ namespace Repositories.Repositories
                 {
                     case 0:
                     case 1:
-                        return _VehicleInspectionDAL.SaveVehicleInspection(model);
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
+                            return _VehicleInspectionDAL.SaveVehicleInspection(model);
+
+                        }
                     case 2:
                         {
                             VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);

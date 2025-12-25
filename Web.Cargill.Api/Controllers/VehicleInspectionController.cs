@@ -41,6 +41,7 @@ namespace Web.Cargill.Api.Controllers
                     request.AudioPath = audio;
                     LogHelper.InsertLogTelegram("sql:" + request.PlateNumber);
                 }
+                LogHelper.InsertLogTelegram("sql:" + request.PlateNumber+":"+ request.LocationType);
                 var id = _vehicleInspectionRepository.SaveVehicleInspectionAPI(request);
                 if (id > 0 && (request.AudioPath == null || request.AudioPath == ""))
                 {
@@ -63,7 +64,7 @@ namespace Web.Cargill.Api.Controllers
                             break;
                         case 2:
                             {
-                                await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
+                                await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", request);
                                 LogHelper.InsertLogTelegram("Queue LA:" + request.PlateNumber);
                                 var Queue = _workQueueClient.SyncQueue(request);
                                 if (!Queue)
