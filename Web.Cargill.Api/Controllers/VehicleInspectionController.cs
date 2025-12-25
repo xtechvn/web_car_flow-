@@ -53,8 +53,6 @@ namespace Web.Cargill.Api.Controllers
                         case 0:
                         case 1:
                             {
-                                await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
-                                LogHelper.InsertLogTelegram("Queue :" + request.PlateNumber);
                                 var Queue = _workQueueClient.SyncQueue(request);
                                 if (!Queue)
                                 {
@@ -64,8 +62,6 @@ namespace Web.Cargill.Api.Controllers
                             break;
                         case 2:
                             {
-                                await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", request);
-                                LogHelper.InsertLogTelegram("Queue LA:" + request.PlateNumber);
                                 var Queue = _workQueueClient.SyncQueue(request);
                                 if (!Queue)
                                 {
@@ -89,6 +85,28 @@ namespace Web.Cargill.Api.Controllers
                 }
                 if (id > 0)
                 {
+                    switch (request.LocationType)
+                    {
+                        case 0:
+                        case 1:
+                            {
+                                await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
+                                LogHelper.InsertLogTelegram("PublishAsync :" + request.PlateNumber);
+                               
+                            }
+                            break;
+                        case 2:
+                            {
+                                await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", request);
+                                LogHelper.InsertLogTelegram("PublishAsync LA:" + request.PlateNumber);
+                               
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
