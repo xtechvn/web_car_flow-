@@ -85,6 +85,8 @@ namespace Web.Cargill.Api.Controllers
                 }
                 if (id > 0)
                 {
+                    request.Id = id;
+                    request.Bookingid = id;
                     switch (request.LocationType)
                     {
                         case 0:
