@@ -93,14 +93,14 @@ namespace Web.Cargill.Api.Controllers
                         case 1:
                             {
                                 await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
-                                LogHelper.InsertLogTelegram("PublishAsync :" + request.PlateNumber);
+                                LogHelper.InsertLogTelegram("PublishAsync :" + request.PlateNumber +" -id="+ request.Id);
                                
                             }
                             break;
                         case 2:
                             {
                                 await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", request);
-                                LogHelper.InsertLogTelegram("PublishAsync LA:" + request.PlateNumber);
+                                LogHelper.InsertLogTelegram("PublishAsync LA:" + request.PlateNumber + " -id=" + request.Id);
                                
                             }
                             break;
