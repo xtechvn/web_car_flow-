@@ -4,7 +4,7 @@ namespace XTECH_FRONTEND.Services.BackgroundQueue
 {
     public interface IInsertQueue
     {
-        bool Enqueue(InsertJob job);
+        ValueTask EnqueueAsync(InsertJob job);
         ValueTask<InsertJob> DequeueAsync(CancellationToken cancellationToken);
     }
 }

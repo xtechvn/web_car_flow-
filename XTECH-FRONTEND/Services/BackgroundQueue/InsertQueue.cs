@@ -11,10 +11,8 @@ namespace XTECH_FRONTEND.Services.BackgroundQueue
             _queue = Channel.CreateUnbounded<InsertJob>();
         }
 
-        public bool Enqueue(InsertJob job)
-        {
-            return _queue.Writer.TryWrite(job);
-        }
+        public ValueTask EnqueueAsync(InsertJob job)
+            => _queue.Writer.WriteAsync(job);
 
         public ValueTask<InsertJob> DequeueAsync(CancellationToken cancellationToken)
             => _queue.Reader.ReadAsync(cancellationToken);

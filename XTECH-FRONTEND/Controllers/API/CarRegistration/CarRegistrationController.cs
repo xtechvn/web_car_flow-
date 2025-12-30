@@ -322,7 +322,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
                     }
                 }
 
-                _insertQueue.Enqueue(new InsertJob
+                _ = _insertQueue.EnqueueAsync(new InsertJob
                 {
                     Data = new CarRegistrationResponse
                     {
