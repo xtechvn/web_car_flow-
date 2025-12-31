@@ -354,16 +354,16 @@
                 const minutes = now.getMinutes();
 
                 // Kiểm tra khoảng 17:55 đến 18:00
-                if ((hours === 17 && minutes >= 55 )) {
-                    e.preventDefault(); // Ngăn hành động mặc định
-                    e.stopPropagation(); // Ngăn sự kiện lan truyền
-                    setTimeout(() => {
-                        startCountdown17_18();
-                    }, 1000);
-                    statusMessage.innerHTML = 'Vui lòng đợi 18 giờ rồi thử lại!'
-                    errorMessage = 'Vui lòng đợi 18 giờ rồi thử lại!';
-                    return;
-                }
+                //if ((hours === 17 && minutes >= 55 )) {
+                //    e.preventDefault(); // Ngăn hành động mặc định
+                //    e.stopPropagation(); // Ngăn sự kiện lan truyền
+                //    setTimeout(() => {
+                //        startCountdown17_18();
+                //    }, 1000);
+                //    statusMessage.innerHTML = 'Vui lòng đợi 18 giờ rồi thử lại!'
+                //    errorMessage = 'Vui lòng đợi 18 giờ rồi thử lại!';
+                //    return;
+                //}
                 // Call API to register car
                 const response = await registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp);
                 

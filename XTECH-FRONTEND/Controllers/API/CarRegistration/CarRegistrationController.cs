@@ -237,7 +237,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
             {
                 string cache_name = "PlateNumber_" + request.PlateNumber.Replace("-", "_") + DateTime.Now.ToString("dd_MM_yyyy");
 
-                var data = redisService.Get(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 if (data != null && data.Trim() != "")
                 {
 
@@ -276,7 +276,7 @@ namespace XTECH_FRONTEND.Controllers.CarRegistration
 
 
 
-                var queueNumber = await _googleSheetsService.GetDailyQueueCountRedis();
+                var queueNumber = await redisService.GetDailyQueueCountRedis();
 
 
                 // Step 4: Create registration record with initial Zalo status

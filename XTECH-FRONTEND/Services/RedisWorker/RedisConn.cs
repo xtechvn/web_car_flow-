@@ -110,6 +110,42 @@ namespace XTECH_FRONTEND.Services.RedisWorker
             
             db.StringSet(key, value, TimeSpan.FromMinutes(15));
         }
+        public async Task<int> GetDailyQueueCountRedis()
+        {
+            try
+            {
+                
+                var db = _redis.GetDatabase();
+                // Tính effective date dựa trên giờ địa phương (UTC+7)
+                DateTime now = DateTime.Now; // Sử dụng giờ hệ thống (giả định đã cấu hình đúng timezone)
+                string key = $"counter:daily_car_count_Pro";
 
+                long nextNumber = db.StringIncrement(key);
+
+                // Đặt TTL nếu là lần đầu tăng
+                if (nextNumber == 1)
+                {
+                    // Mục tiêu: 18 hôm nay
+                    DateTime expireAt = new DateTime(now.Year, now.Month, now.Day, 17, 56, 00);
+
+                    // Nếu đã quá 18 hôm nay → chuyển sang 18 ngày mai
+                    if (now > expireAt)
+                    {
+                        expireAt = expireAt.AddDays(1);
+                    }
+
+                    TimeSpan ttl = expireAt - now;
+                    db.KeyExpire(key, ttl);
+                }
+                Console.WriteLine($"Số thứ tự tiếp theo: {nextNumber}");
+                return (int)nextNumber;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram( "Error getting daily queue count "+ ex);
+                
+                throw;
+            }
+        }
     }
 }
