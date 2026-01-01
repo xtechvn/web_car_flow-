@@ -273,6 +273,14 @@
             <td>${item.camp}</td>
             <td>
                 <div class="status-dropdown">
+                    <button class="dropdown-toggle "data-type="1" data-options='${jsonString2}'>
+                        ${item.loadingTypeName}
+                    </button>
+                </div>
+
+            </td>
+            <td>
+                <div class="status-dropdown">
                     <button class="dropdown-toggle " data-options='${jsonString}'>
                        Blank
                     </button>
