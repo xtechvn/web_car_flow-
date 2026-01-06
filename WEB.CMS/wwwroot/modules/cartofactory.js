@@ -274,7 +274,7 @@
             <td>
                 <div class="status-dropdown">
                     <button class="dropdown-toggle "data-type="1" data-options='${jsonString2}'>
-                        ${item.loadingTypeName}
+                        
                     </button>
                 </div>
 

@@ -136,7 +136,7 @@ namespace DAL
                 objParam_order[2] = new SqlParameter("@VehicleNumber", model.PlateNumber);
                 objParam_order[3] = new SqlParameter("@RegisterDateOnline", model.RegistrationTime);
                 objParam_order[4] = new SqlParameter("@DriverName", model.GPLX);
-                objParam_order[5] = new SqlParameter("@LicenseNumber", model.Camp);
+                objParam_order[5] = new SqlParameter("@LicenseNumber", SqlDbType.NVarChar, 30){ Value = model.Camp};
                 objParam_order[6] = new SqlParameter("@PhoneNumber", model.PhoneNumber);
                 objParam_order[7] = new SqlParameter("@VehicleLoad", model.Referee);
                 objParam_order[8] = new SqlParameter("@VehicleStatus", (int)VehicleStatus.Blank);
