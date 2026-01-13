@@ -35,6 +35,51 @@ namespace Web.Cargill.Api.Controllers
 
             try
             {
+                string cache_name = "CARGLL_LongAn";
+                var data_list = new List<RegistrationRecord>();
+                var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                if (data != null && data.Trim() != "")
+                {
+                    data_list = JsonConvert.DeserializeObject<List<RegistrationRecord>>(data);
+                    if (data_list != null && data_list.Count> 0)
+                    {
+                        foreach (var item in data_list)
+                        {
+                            var audio_longan = await _vehicleInspectionRepository.GetAudioPathByVehicleNumberAPI(item.PlateNumber, item.LocationType);
+                            if (!string.IsNullOrEmpty(audio_longan))
+                            {
+                                item.AudioPath = audio_longan;
+                            }
+                            var Save_id = _vehicleInspectionRepository.SaveVehicleInspectionAPI(item);
+                            
+                            if (Save_id > 0 && (item.AudioPath == null || item.AudioPath == ""))
+                            {
+                                item.Id = Save_id;
+                                item.Bookingid = Save_id;
+                                item.text_voice = "Mời biển số xe " + item.PlateNumber + " vào cân";
+                                var Queue = _workQueueClient.SyncQueue(item);
+                                if (!Queue)
+                                {
+                                    Queue = _workQueueClient.SyncQueue(item);
+                                }
+                                await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", item);
+                                LogHelper.InsertLogTelegram("PublishAsync LA:" + item.PlateNumber + " -id=" + item.Id);
+
+
+                            }
+                           else
+                            {
+                                item.Id = Save_id;
+                                item.Bookingid = Save_id;
+                                await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", item);
+                                LogHelper.InsertLogTelegram("PublishAsync LA:" + item.PlateNumber + " -id=" + item.Id);
+
+                            }
+                            
+                        }
+                    }
+                    await redisService.DeleteCacheByKeyword(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                }
                 var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumberAPI(request.PlateNumber, request.LocationType);
                 if (!string.IsNullOrEmpty(audio))
                 {
