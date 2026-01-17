@@ -105,7 +105,7 @@ namespace Web.Cargill.Api.Controllers
                                     Queue = _workQueueClient.SyncQueue(request);
                                 }
                                 await redisService.PublishAsync("Add_ReceiveRegistration" + request.LocationType, request);
-                                LogHelper.InsertLogTelegram("PublishAsync :" + request.PlateNumber + " -id=" + request.Id);
+                                LogHelper.InsertLogTelegram("PublishAsync Queue :" + request.PlateNumber + " -id=" + request.Id);
                             }
                             break;
                         case 2:
@@ -124,7 +124,7 @@ namespace Web.Cargill.Api.Controllers
                                 {
                                     await redisService.PublishAsync("Add_ReceiveRegistration_LongAn_DK", request);
                                 }
-                                LogHelper.InsertLogTelegram("PublishAsync LA:" + request.PlateNumber + " -id=" + request.Id);
+                                LogHelper.InsertLogTelegram("PublishAsync Queue LA:" + request.PlateNumber + " -id=" + request.Id);
                             }
                             break;
                        
