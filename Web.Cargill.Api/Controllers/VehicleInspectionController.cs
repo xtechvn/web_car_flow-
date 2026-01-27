@@ -38,7 +38,7 @@ namespace Web.Cargill.Api.Controllers
                 var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET);
                 string cache_name = "CARGLL_LongAn";
                 var data_list = new List<RegistrationRecord>();
-                var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common_longan"]));
                 if (data != null && data.Trim() != "")
                 {
                     data_list = JsonConvert.DeserializeObject<List<RegistrationRecord>>(data);
