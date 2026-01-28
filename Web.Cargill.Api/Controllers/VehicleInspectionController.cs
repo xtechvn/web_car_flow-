@@ -448,11 +448,11 @@ namespace Web.Cargill.Api.Controllers
             }
         }
         [HttpGet("get-time-countdown")]
-        public async Task<IActionResult> GetTimeCountdown()
+        public async Task<IActionResult> GetTimeCountdown(int LocationType=2)
         {
             try
             {
-                var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET);
+                var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET, LocationType);
                 if (TIME_RESET == null || TIME_RESET.Count == 0)
                 {
                     return Ok(new

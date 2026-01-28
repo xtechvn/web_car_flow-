@@ -192,7 +192,7 @@ namespace Repositories.Repositories
                         }
                     case 2:
                         {
-                            AllCodeDAL _AllCodeDAL_LA = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+                            AllCodeDAL _AllCodeDAL_LA = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
 
                             return await _AllCodeDAL_LA.GetListSortByName(type_name);
                         }
@@ -209,7 +209,7 @@ namespace Repositories.Repositories
                     default:
                         break;
                 }
-      
+            return null;
         }
     }
 }
