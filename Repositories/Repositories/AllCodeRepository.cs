@@ -179,11 +179,37 @@ namespace Repositories.Repositories
             }
             
         }
-        public async Task<List<AllCode>> GetListSortByName_LA(string type_name)
+        public async Task<List<AllCode>> GetListSortByName_LA(string type_name,int locationType)
         {
-            AllCodeDAL _AllCodeDAL_LA = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+            switch(locationType)
+                {
+                    case 0:
+                    case 1:
+                        {
+                           //VehicleInspectionDAL _VehicleInspectionDAL = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
+                            return null;
 
-            return await _AllCodeDAL_LA.GetListSortByName(type_name);
+                        }
+                    case 2:
+                        {
+                            AllCodeDAL _AllCodeDAL_LA = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+
+                            return await _AllCodeDAL_LA.GetListSortByName(type_name);
+                        }
+                    case 3:
+                        {
+                            AllCodeDAL _AllCodeDAL_BinhDinh = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDinh);
+                            return await _AllCodeDAL_BinhDinh.GetListSortByName(type_name);
+                        }
+                    case 4:
+                        {
+                            AllCodeDAL _AllCodeDAL_BinhDuong = new AllCodeDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDuong);
+                            return await _AllCodeDAL_BinhDuong.GetListSortByName(type_name);
+                        }
+                    default:
+                        break;
+                }
+      
         }
     }
 }

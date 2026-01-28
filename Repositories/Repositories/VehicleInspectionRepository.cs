@@ -182,13 +182,21 @@ namespace Repositories.Repositories
                             VehicleInspectionDAL _VehicleInspectionDAL = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
                             return _VehicleInspectionDAL.GetAudioPathByVehicleNumber(VehicleNumber);
                         }
-                       
-                       
                     case 2:
                         {
-                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
                             return _VehicleInspectionDAL_LongAn.GetAudioPathByVehicleNumber(VehicleNumber);
                         }                   
+                    case 3:
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL_BinhDinh = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDinh);
+                            return _VehicleInspectionDAL_BinhDinh.GetAudioPathByVehicleNumber(VehicleNumber);
+                        }
+                    case 4:
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL_BinhDuong = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDuong);
+                            return _VehicleInspectionDAL_BinhDuong.GetAudioPathByVehicleNumber(VehicleNumber);
+                        }
                     default:
                         break;
                 }
@@ -215,13 +223,22 @@ namespace Repositories.Repositories
                         }
                     case 2:
                         {
-                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+                            VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
                             return _VehicleInspectionDAL_LongAn.SaveVehicleInspection(model);
+                        }
+                    case 3:
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL_BinhDinh = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDinh);
+                            return _VehicleInspectionDAL_BinhDinh.SaveVehicleInspection(model);
+                        }
+                    case 4:
+                        {
+                            VehicleInspectionDAL _VehicleInspectionDAL_BinhDuong = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_BinhDuong);
+                            return _VehicleInspectionDAL_BinhDuong.SaveVehicleInspection(model);
                         }
                     default:
                         break;
                 }
-                return _VehicleInspectionDAL.SaveVehicleInspection(model);
             }
             catch (Exception ex)
             {
@@ -233,7 +250,7 @@ namespace Repositories.Repositories
         {
             try
             {
-                VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString2);
+                VehicleInspectionDAL _VehicleInspectionDAL_LongAn = new VehicleInspectionDAL(dataBaseConfig.Value.SqlServer.ConnectionString_LongAn);
                 return await _VehicleInspectionDAL_LongAn.UpdateVehicleInspectionByVehicleNumber(VehicleNumber);
             }
             catch (Exception ex)

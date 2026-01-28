@@ -14,7 +14,9 @@ namespace Entities.ConfigModels
     public class DBConfig
     {
         public string ConnectionString { get; set; }
-        public string ConnectionString2 { get; set; }
+        public string ConnectionString_LongAn { get; set; }
+        public string ConnectionString_BinhDinh { get; set; }
+        public string ConnectionString_BinhDuong { get; set; }
     }
 
     public class IPConfig

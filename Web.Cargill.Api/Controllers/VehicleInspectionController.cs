@@ -35,7 +35,7 @@ namespace Web.Cargill.Api.Controllers
 
             try
             {
-                var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET);
+                var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET,request.LocationType);
                 string cache_name = "CARGLL_LongAn";
                 var data_list = new List<RegistrationRecord>();
                 var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common_longan"]));
@@ -127,7 +127,40 @@ namespace Web.Cargill.Api.Controllers
                                 LogHelper.InsertLogTelegram("PublishAsync Queue LA:" + request.PlateNumber + " -id=" + request.Id);
                             }
                             break;
-                       
+                       case 3:{
+                         var Queue = _workQueueClient.SyncQueue(request);
+                                if (!Queue)
+                                {
+                                    Queue = _workQueueClient.SyncQueue(request);
+                                }
+                                if(DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDinh", request);
+
+                                }
+                                else
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDinh_DK", request);
+                                }
+                                LogHelper.InsertLogTelegram("PublishAsync Queue BinhDinh:" + request.PlateNumber + " -id=" + request.Id);
+                       }break;
+                       case 4:{
+                        var Queue = _workQueueClient.SyncQueue(request);
+                                if (!Queue)
+                                {
+                                    Queue = _workQueueClient.SyncQueue(request);
+                                }
+                                if(DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDuong", request);
+
+                                }
+                                else
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDuong_DK", request);
+                                }
+                                LogHelper.InsertLogTelegram("PublishAsync Queue BinhDuong:" + request.PlateNumber + " -id=" + request.Id);
+                       }break;
                         default:
                             break;
                     }
@@ -167,11 +200,40 @@ namespace Web.Cargill.Api.Controllers
                                     await redisService.PublishAsync("Add_ReceiveRegistration_LongAn_DK", request);
 
                                 }
-                                LogHelper.InsertLogTelegram("PublishAsync LA:" + request.PlateNumber + " -id=" + request.Id);
+                                LogHelper.InsertLogTelegram("PublishAsync LongAn:" + request.PlateNumber + " -id=" + request.Id);
                                
                             }
                             break;
+                        case 3:
+                            {
+                                  if (DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDinh", request);
 
+                                }
+                                else
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDinh_DK", request);
+
+                                }
+                                LogHelper.InsertLogTelegram("PublishAsync BinhDinh:" + request.PlateNumber + " -id=" + request.Id);
+                            }
+                            break;
+                        case 4:
+                            {
+                                  if (DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDuong", request);
+
+                                }
+                                else
+                                {
+                                    await redisService.PublishAsync("Add_ReceiveRegistration_BinhDuong_DK", request);
+
+                                }
+                                LogHelper.InsertLogTelegram("PublishAsync BinhDuong:" + request.PlateNumber + " -id=" + request.Id);
+                            }
+                            break;
                         default:
                             break;
                     }

@@ -105,9 +105,17 @@ namespace Web.Cargill.Api.Controllers
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
             var connHaNam = _config["DataBaseConfig:SqlServer:ConnectionString"];
-            var connLongAn = _config["DataBaseConfig:SqlServer:ConnectionString2"];
+            var connLongAn = _config["DataBaseConfig:SqlServer:ConnectionString_LongAn"];
+            var connBinhDinh = _config["DataBaseConfig:SqlServer:ConnectionString_BinhDinh"];
+            var connBinhDuong = _config["DataBaseConfig:SqlServer:ConnectionString_BinhDuong"];
 
-            var connectionString = (locationType == 2) ? connLongAn : connHaNam;
+            var connectionString = locationType switch
+            {
+                2 => connLongAn,
+                3 => connBinhDinh,
+                4 => connBinhDuong,
+                _ => connHaNam
+            };
 
             optionsBuilder.UseSqlServer(connectionString);
 
