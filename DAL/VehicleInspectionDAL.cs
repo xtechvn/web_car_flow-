@@ -317,6 +317,25 @@ namespace DAL
             }
             return 0;
         }
-
+        public List<VehicleInspection> checkVehicleInspectionbyRegisterDateOnline(DateTime? RegisterDateOnline,string VehicleNumber)
+        {
+            try
+            {
+                using (var _DbContext = new EntityDataContext(_connection))
+                {
+                    var list = _DbContext.Set<VehicleInspection>().Where(n => n.RegisterDateOnline == RegisterDateOnline && n.VehicleNumber == VehicleNumber).ToList();
+                    if (list != null)
+                    {
+                        return list;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("checkVehicleInspectionbyRegisterDateOnline - VehicleInspectionDAL. " + ex);
+                return null;
+            }
+        }
     }
 }

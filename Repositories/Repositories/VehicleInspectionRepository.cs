@@ -170,7 +170,7 @@ namespace Repositories.Repositories
                 return null;
             }
         }
-        public Task<string> GetAudioPathByVehicleNumberAPI(string VehicleNumber, int LocationType)
+        public Task<string> GetAudioPathByVehicleNumberAPI(string VehicleNumber, int LocationType=0)
         {
             try
             {
@@ -258,6 +258,19 @@ namespace Repositories.Repositories
                 LogHelper.InsertLogTelegram("SaveVehicleInspection - VehicleInspectionRepository: " + ex);
             }
             return 0;
+        }
+        public List<VehicleInspection> checkVehicleInspectionbyRegisterDateOnline(DateTime? RegisterDateOnline, string VehicleNumber)
+        {
+            try
+            {
+                return _VehicleInspectionDAL.checkVehicleInspectionbyRegisterDateOnline(RegisterDateOnline, VehicleNumber);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("checkVehicleInspectionbyRegisterDateOnline - VehicleInspectionRepository: " + ex);
+                return null;
+
+            }
         }
     }
 
