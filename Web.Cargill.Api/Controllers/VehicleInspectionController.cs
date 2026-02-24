@@ -36,7 +36,7 @@ namespace Web.Cargill.Api.Controllers
             try
             {
                 var TIME_RESET = await _allCodeRepository.GetListSortByName_LA(AllCodeType.TIME_RESET,request.LocationType);
-                LogHelper.InsertLogTelegram("TIME_RESET:" + TIME_RESET[0].UpdateTime);
+                
                 string cache_name = "CARGLL_LongAn";
                 var data_list = new List<RegistrationRecord>();
                 var data = await redisService.GetAsync(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common_longan"]));
@@ -51,6 +51,11 @@ namespace Web.Cargill.Api.Controllers
                             if (!string.IsNullOrEmpty(audio_longan))
                             {
                                 item.AudioPath = audio_longan;
+                            }
+                           var RegisterDateOnline= Utilities.DateUtil.StringToDateTime(item.RegistrationTime.ToString("dd/MM/yyyy HH:mm:ss"));
+                            var check = _vehicleInspectionRepository.checkVehicleInspectionbyRegisterDateOnline(RegisterDateOnline, item.PlateNumber);
+                            if (check != null) {
+                                continue;
                             }
                             var Save_id = _vehicleInspectionRepository.SaveVehicleInspectionAPI(item);
                             

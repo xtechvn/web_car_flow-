@@ -1,4 +1,5 @@
-﻿using Entities.ViewModels.Car;
+﻿using Entities.Models;
+using Entities.ViewModels.Car;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,6 @@ namespace Repositories.IRepositories
         Task<string> GetAudioPathByVehicleNumberAPI(string VehicleNumber,int LocationType);
         int SaveVehicleInspectionAPI(RegistrationRecord model);
         Task<int> UpdateVehicleInspectionByVehicleNumber(string VehicleNumber);
+        List<VehicleInspection> checkVehicleInspectionbyRegisterDateOnline(DateTime? RegisterDateOnline, string VehicleNumber);
     }
 }
