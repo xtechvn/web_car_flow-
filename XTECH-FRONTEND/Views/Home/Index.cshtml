@@ -518,6 +518,8 @@
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes();
+            const lockStart = new Date();
+            lockStart.setHours(17, 55, 0, 0);
             console.log('Current time:', hours, minutes);
             // Kiểm tra khoảng 17:55 đến 18:00
             if (hours === 17 && minutes >= 55 ) {
@@ -527,6 +529,13 @@
                 }, 1000);
 
                 return;
+            }
+            else if(hours < 17 || (hours === 17 && minutes < 55)){
+                const timeUntilLock = lockStart - now;
+                console.log("timeUntilLock:"+timeUntilLock)
+                setTimeout(() => {
+                    startCountdown17_18();
+                }, timeUntilLock);
             }
         });
       
