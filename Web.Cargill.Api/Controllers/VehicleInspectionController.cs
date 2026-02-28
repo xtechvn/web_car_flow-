@@ -85,7 +85,7 @@ namespace Web.Cargill.Api.Controllers
                             
                         }
                     }
-                    await redisService.DeleteCacheByKeyword(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
+                     redisService.clear(cache_name, Convert.ToInt32(_configuration["Redis:Database:db_common"]));
                 }
                 var audio = await _vehicleInspectionRepository.GetAudioPathByVehicleNumberAPI(request.PlateNumber, request.LocationType);
                 if (!string.IsNullOrEmpty(audio))
