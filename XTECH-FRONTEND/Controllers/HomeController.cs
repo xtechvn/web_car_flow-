@@ -17,7 +17,18 @@ namespace XTECH_FRONTEND.Controllers
         // GET: /home/
         public IActionResult Index()
         {
-           return View();           
+            var vnTime = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")
+            );
+            var today = vnTime.Date;
+
+            var lockStart = today.AddHours(17).AddMinutes(55); // 17:55
+            var lockEnd = today.AddHours(18); // 18:00
+            ViewBag.serverTime = vnTime;
+            ViewBag.lockStart = lockStart;
+            ViewBag.lockEnd = lockEnd;
+            return View();           
         }
         public IActionResult ListData()
         {

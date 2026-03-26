@@ -107,441 +107,202 @@
     </div>
     <script type="text/javascript" src="~/libs/jquery/jquery-3.6.0.min.js"></script>
     <script>
-         window.addEventListener('load', function () {
-            // Kiểm tra xem trang đã reload trong phiên này chưa
-            if (!sessionStorage.getItem('hasReloaded')) {
-                // Đánh dấu là đã reload rồi
-                sessionStorage.setItem('hasReloaded', 'true');
-                // Reload lại trang
-                location.reload();
-            }
-        });
+        // ===== SERVER TIME (từ BE) =====
+        const serverTime = new Date('@ViewBag.serverTime.ToString("o")');
+        const lockStart = new Date('@ViewBag.lockStart.ToString("o")');
+        const lockEnd = new Date('@ViewBag.lockEnd.ToString("o")');
 
-        // Chỉ xóa cờ khi người dùng thật sự đóng tab, KHÔNG khi reload
-        window.addEventListener('beforeunload', function (event) {
-            // Nếu người dùng reload trang (F5, Ctrl+R, location.reload)
-            // thì event.persisted = false, nhưng navigationType = 1 => reload
-            if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-                // Không xóa gì cả
-                return;
-            }
-            // Nếu đóng tab hoặc rời khỏi site → xóa cờ
-            sessionStorage.removeItem('hasReloaded');
-        });
+        // ===== REMOVE RELOAD HACK (không cần nữa) =====
+
         // API Configuration
-        const API_BASE_URL = 'https://cargillhanam.com/api'; // Change to your API URL
+        const API_BASE_URL = 'https://cargillhanam.com/api';
         const ENDPOINTS = {
             REGISTER: '/carregistration/registerV2',
-            QUEUE_STATUS: '/carregistration/queue-status',
-            CHECK_ZALO: '/carregistration/check-zalo-user',
             Insert: '/carregistration/insert'
         };
 
-        // Global variables
         let countdownTimer = null;
         let isSubmitting = false;
         let isLocked = false;
-        // Utility functions
+
+        // ===== UI =====
         function showLoading(show = true) {
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMessage = document.getElementById('statusMessage');
+            const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('statusMessage');
 
             if (show) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '🔄 Đang xử lý...';
-                statusMessage.className = 'status-message status-waiting';
-                statusMessage.innerHTML = '⏳ Đang gửi yêu cầu đăng ký...';
+                btn.disabled = true;
+                btn.innerHTML = '🔄 Đang xử lý...';
+                status.className = 'status-message status-waiting';
+                status.innerHTML = '⏳ Đang gửi yêu cầu...';
                 isSubmitting = true;
             } else {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'GỬI ĐĂNG KÝ';
+                btn.disabled = false;
+                btn.innerHTML = 'GỬI ĐĂNG KÝ';
                 isSubmitting = false;
             }
         }
 
-        function showError(message) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.className = 'status-message status-error';
-            statusMessage.innerHTML = `❌ ${message}`;
+        function showError(msg) {
+            const status = document.getElementById('statusMessage');
+            status.className = 'status-message status-error';
+            status.innerHTML = `❌ ${msg}`;
         }
 
-        function showSuccess(message) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.className = 'status-message status-success';
-            statusMessage.innerHTML = `✅ ${message}`;
+        function showSuccess(msg) {
+            const status = document.getElementById('statusMessage');
+            status.className = 'status-message status-success';
+            status.innerHTML = `✅ ${msg}`;
         }
 
-        function formatTime(minutes) {
-            const mins = Math.floor(minutes);
-            const secs = Math.floor((minutes - mins) * 60);
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        function formatTime2(diff) {
+            const m = Math.floor(diff / 60);
+            const s = diff % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
 
-        // API Functions
-        async function makeAPICall(endpoint, method = 'GET', data = null) {
-            try {
-                const config = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                };
-
-                if (data && method !== 'GET') {
-                    config.body = JSON.stringify(data);
-                }
-
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('API Call Error:', error);
-                throw error;
-            }
-        }
-        async function CallAPI(endpoint, method = 'GET', data = null) {
-            try {
-                const config = {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                };
-
-                if (data && method !== 'GET') {
-                    config.body = JSON.stringify(data);
-                }
-
-                const response = await fetch(`${API_URL}${endpoint}`, config);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('API Call Error:', error);
-                throw error;
-            }
-        }
-
-        async function registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp) {
-            return await makeAPICall(ENDPOINTS.REGISTER, 'POST', {
-                plateNumber: plateNumber,
-                phoneNumber: phoneNumber,
-                Name: name,
-                Referee: referee,
-                GPLX: GPLX,
-                Camp: Camp,
+        // ===== API =====
+        async function callAPI(endpoint, method = 'GET', data = null) {
+            const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: data ? JSON.stringify(data) : null
             });
-        }
-        async function registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, QueueNumber, RegistrationTime) {
-            return await makeAPICall(ENDPOINTS.Insert, 'POST', {
-                plateNumber: plateNumber,
-                phoneNumber: phoneNumber,
-                Name: name,
-                Referee: referee,
-                GPLX: GPLX,
-                Camp: Camp,
-                QueueNumber: QueueNumber,
-                RegistrationTime: RegistrationTime,
-                LocationType:1
-            });
+
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
         }
 
-        async function getQueueStatus() {
-            //return await makeAPICall(ENDPOINTS.QUEUE_STATUS);
+        async function registerCar(data) {
+            return callAPI(ENDPOINTS.REGISTER, 'POST', data);
         }
 
-        // UI Update Functions
+        async function insertCar(data) {
+            return callAPI(ENDPOINTS.Insert, 'POST', data);
+        }
+
+        // ===== OUTPUT =====
         function updateOutput(data) {
-            // Update queue number
             document.getElementById('queueNumber').textContent =
-                data.queueNumber ? data.queueNumber.toString().padStart(3, '0') : '---';
+                data.queueNumber?.toString().padStart(3, '0') || '---';
 
-            // Update registration details
             document.getElementById('outputPlate').textContent = data.plateNumber || '---';
             document.getElementById('outputPhone').textContent = data.phoneNumber || '---';
 
             if (data.registrationTime) {
-                const regTime = new Date(data.registrationTime);
-                document.getElementById('outputDate').textContent = regTime.toLocaleDateString('vi-VN');
-                document.getElementById('outputTime').textContent = regTime.toLocaleTimeString('vi-VN');
-            } else {
-                document.getElementById('outputDate').textContent = '---';
-                document.getElementById('outputTime').textContent = '---';
+                const t = new Date(data.registrationTime);
+                document.getElementById('outputDate').textContent = t.toLocaleDateString('vi-VN');
+                document.getElementById('outputTime').textContent = t.toLocaleTimeString('vi-VN');
             }
 
-            const plateNumber = document.getElementById('plateNumber').value.trim();
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const referee = document.getElementById('referee').value.trim();
-            const GPLX = document.getElementById('GPLX').value.trim();
-            const name = document.getElementById('name').value.trim();
-            const Camp = document.getElementById('Camp').value.trim();
-            registerCar_Insert(plateNumber, phoneNumber, name, referee, GPLX, Camp, data.queueNumber, data.registrationTime);
+            insertCar({
+                ...data,
+                LocationType: 1
+            });
         }
 
-        function startCountdown(remainingMinutes) {
-            const timerSection = document.getElementById('timerSection');
-            const countdown = document.getElementById('countdown');
-            const submitBtn = document.getElementById('submitBtn');
+        // ===== LOCK TIME =====
+        function initLockTime() {
+            const now = serverTime;
 
-            timerSection.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'VUI LÒNG ĐỢI...';
+            console.log("Server:", now);
 
-            let remaining = remainingMinutes;
+            if (now >= lockStart && now < lockEnd) {
+                startCountdown17_18(lockEnd);
+                return;
+            }
 
-            const updateCountdown = () => {
-                if (remaining <= 0) {
-                    clearInterval(countdownTimer);
-                    isLocked = false;
-                    timerSection.style.display = 'none';
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'GỬI ĐĂNG KÝ';
+            if (now < lockStart) {
+                setTimeout(() => {
+                    startCountdown17_18(lockEnd);
+                }, lockStart - now);
+            }
+        }
+
+        // ===== COUNTDOWN 17:55 → 18:00 =====
+        function startCountdown17_18(lockEndTime) {
+            const timer = document.getElementById('timerSection');
+            const cd = document.getElementById('countdown');
+            const btn = document.getElementById('submitBtn');
+
+            timer.style.display = 'block';
+            btn.disabled = true;
+            btn.textContent = 'VUI LÒNG ĐỢI...';
+
+            const interval = setInterval(() => {
+                const now = new Date();
+                const diff = Math.floor((lockEndTime - now) / 1000);
+
+                if (diff <= 0) {
+                    clearInterval(interval);
+                    location.reload();
                     return;
                 }
 
-                countdown.textContent = formatTime(remaining);
-                remaining -= 1 / 60; // Decrease by 1 second (1/60 minute)
+                cd.textContent = formatTime2(diff);
+            }, 1000);
+        }
+
+        // ===== SUBMIT =====
+        async function handleSubmit(e) {
+            e.preventDefault();
+            if (isSubmitting) return;
+
+            const data = {
+                plateNumber: plateNumber.value.trim(),
+                phoneNumber: phoneNumber.value.trim(),
+                Name: name.value.trim(),
+                Referee: referee.value.trim(),
+                GPLX: GPLX.value.trim(),
+                Camp: Camp.value.trim()
             };
 
-            updateCountdown(); // Initial call
-            countdownTimer = setInterval(updateCountdown, 1000);
-        }
-
-        function clearCountdown() {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-            }
-            document.getElementById('timerSection').style.display = 'none';
-        }
-
-        // Event Handlers
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-
-            if (isSubmitting || isLocked) return;
-             isSubmitting = true;
-            const plateNumber = document.getElementById('plateNumber').value.trim();
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const referee = document.getElementById('referee').value.trim();
-            const GPLX = document.getElementById('GPLX').value.trim();
-            const name = document.getElementById('name').value.trim();
-            const Camp = document.getElementById('Camp').value.trim();
-
-            // Basic validation
-            if (!plateNumber || !phoneNumber || !referee || !GPLX || !name) {
-                showError('Vui lòng nhập đầy đủ thông tin!');
+            if (!data.plateNumber || !data.phoneNumber || !data.Name) {
+                showError("Thiếu thông tin");
                 return;
             }
 
             try {
-
-                isSubmitting = true;
                 showLoading(true);
-                const now = new Date();
-                const hours = now.getHours();
-                const minutes = now.getMinutes();
 
-                // Kiểm tra khoảng 17:55 đến 18:00
-                //if ((hours === 17 && minutes >= 55 )) {
-                //    e.preventDefault(); // Ngăn hành động mặc định
-                //    e.stopPropagation(); // Ngăn sự kiện lan truyền
-                //    setTimeout(() => {
-                //        startCountdown17_18();
-                //    }, 1000);
-                //    statusMessage.innerHTML = 'Vui lòng đợi 18 giờ rồi thử lại!'
-                //    errorMessage = 'Vui lòng đợi 18 giờ rồi thử lại!';
-                //    return;
-                //}
-                // Call API to register car
-                const response = await registerCar(plateNumber, phoneNumber, name, referee, GPLX, Camp);
-                
+                const res = await registerCar(data);
 
-                if (response.success) {
-                    showSuccess(response.message);
-                    updateOutput(response);
-                    
-                    // Start countdown for next submission (15 minutes)
-                    setTimeout(() => {
-                        startCountdown(15);
-                    }, 1000);
+                if (res.success) {
+                    showSuccess(res.message);
+                    updateOutput(res);
                 } else {
-                    showError(response.message);
-
-                    // If there's remaining time, start countdown
-                    if (response.remainingTimeMinutes) {
-                        startCountdown(response.remainingTimeMinutes);
-                    }
+                    showError(res.message);
                 }
 
-            } catch (error) {
-                console.error('Registration error:', error);
-
-                // Parse specific error messages
-                let errorMessage = 'Có lỗi xảy ra, vui lòng thử lại sau!';
-
-                if (error.message.includes('15 phút') || error.message.includes('đợi')) {
-                    errorMessage = error.message;
-                    // Try to extract remaining time and start countdown
-                    const match = error.message.match(/(\d+)\s*phút/);
-                    if (match) {
-                        const remainingMinutes = parseInt(match[1]);
-                        startCountdown(remainingMinutes);
-                    }
-                } else if (error.message.includes('không đúng định dạng')) {
-                    errorMessage = error.message;
-                } else if (error.message.includes('Rate limit')) {
-                    errorMessage = 'Bạn đang gửi quá nhanh, vui lòng đợi 15 phút!';
-                    startCountdown(15);
-                }
-
-                showError(errorMessage);
-            } 
-            finally {
-                 isSubmitting = false;
-                // showLoading(false);
+            } catch (err) {
+                showError("Lỗi hệ thống");
+            } finally {
+                showLoading(false);
             }
         }
 
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', () => {
 
-        // Initialize app
-        async function initializeApp() {
-            try {
-                // Load current queue status
-                const queueStatus = await getQueueStatus();
-                document.getElementById('queueNumber').textContent =
-                    queueStatus.nextQueueNumber ? queueStatus.nextQueueNumber.toString().padStart(3, '0') : '001';
+            initLockTime();
 
-                console.log('App initialized successfully');
-            } catch (error) {
-                console.error('Error initializing app:', error);
-                // Set default values if API is not available
-                document.getElementById('queueNumber').textContent = '---';
-            }
-        }
+            document.getElementById('carRegistrationForm')
+                .addEventListener('submit', handleSubmit);
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize app
-            initializeApp();
-
-            // Form submission
-            document.getElementById('carRegistrationForm').addEventListener('submit', handleFormSubmit);
-
-            // Phone number blur event
-            //document.getElementById('phoneNumber').addEventListener('blur', handlePhoneBlur);
-
-            // Format input as user types
-            document.getElementById('plateNumber').addEventListener('input', function () {
-                // Auto format plate number: 30a12345 -> 30A-12345
-                let value = this.value.replace(/[^0-9A-Za-z\-]/g, '').toUpperCase(); // <-- Đã thêm '\-' vào regex
-
-                // Logic định dạng tự động
-                if (value.length > 3 && value[3] !== '-' && value.includes('-') == false) {
-                    // Tự động thêm '-' nếu nó chưa có ở vị trí thứ 3 và độ dài lớn hơn 3
-                    value = value.substring(0, 3) + '-' + value.substring(3);
+            // format biển số
+            plateNumber.addEventListener('input', function () {
+                let v = this.value.replace(/[^0-9A-Za-z\-]/g, '').toUpperCase();
+                if (v.length > 3 && !v.includes('-')) {
+                    v = v.slice(0, 3) + '-' + v.slice(3);
                 }
-                this.value = value;
+                this.value = v;
             });
 
-            document.getElementById('phoneNumber').addEventListener('input', function () {
-                // Only allow numbers
+            phoneNumber.addEventListener('input', function () {
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
+
         });
-
-        // Handle page visibility change to refresh countdown
-        document.addEventListener('visibilitychange', function () {
-            if (!document.hidden && countdownTimer) {
-                // Page became visible, refresh countdown status
-                const phoneNumber = document.getElementById('phoneNumber').value.trim();
-                if (phoneNumber) {
-                    checkTimeRestriction(phoneNumber).then(restriction => {
-                        if (!restriction.canSubmit && restriction.remainingMinutes > 0) {
-                            clearCountdown();
-                            startCountdown(restriction.remainingMinutes);
-                        } else {
-                            clearCountdown();
-                        }
-                    }).catch(console.error);
-                }
-            }
-        });
-        function startCountdown17_18() {
-            const timerSection = document.getElementById('timerSection');
-            const countdown = document.getElementById('countdown');
-            const submitBtn = document.getElementById('submitBtn');
-
-            timerSection.style.display = 'block';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'VUI LÒNG ĐỢI...';
-            const now = new Date();
-            let target = new Date();
-            target.setHours(18, 0, 0, 0);
-            let remaining = Math.floor((target - now) / 1000);
-
-            const updateCountdown = () => {
-                if (remaining <= 0) {
-                    clearInterval(countdownTimer);
-                    timerSection.style.display = 'none';
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'GỬI ĐĂNG KÝ';
-                    return;
-                }
-
-                countdown.textContent = formatTime2(remaining);
-                remaining -= 1; // Decrease by 1 second (1/60 minute)
-            };
-
-            updateCountdown(); // Initial call
-            countdownTimer = setInterval(updateCountdown, 1000);
-        }
-        function formatTime2(diff) {
-            const mins = Math.floor(diff / 60);
-            const secs = diff % 60;
-            console.log(diff)
-            console.log(mins)
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        $(document).ready(function () {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const lockStart = new Date();
-            lockStart.setHours(17, 55, 0, 0);
-            console.log('Current time:', hours, minutes);
-            // Kiểm tra khoảng 17:55 đến 18:00
-            if (hours === 17 && minutes >= 55 ) {
-
-                setTimeout(() => {
-                    startCountdown17_18();
-                }, 1000);
-
-                return;
-            }
-            else if(hours < 17 || (hours === 17 && minutes < 55)){
-                const timeUntilLock = lockStart - now;
-                console.log("timeUntilLock:"+timeUntilLock)
-                setTimeout(() => {
-                    startCountdown17_18();
-                }, timeUntilLock);
-            }
-        });
-      
-   
-  
     </script>
-
 </body>
 </html>
