@@ -23,7 +23,7 @@ namespace XTECH_FRONTEND.Controllers
             );
             var today = vnTime.Date;
 
-            var lockStart = today.AddHours(17).AddMinutes(55); // 17:55
+            var lockStart = today.AddHours(17).AddMinutes(30); // 17:55
             var lockEnd = today.AddHours(18); // 18:00
             ViewBag.serverTime = vnTime;
             ViewBag.lockStart = lockStart;
