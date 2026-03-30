@@ -196,7 +196,7 @@ namespace Web.Cargill.Api.Controllers
                             break;
                         case 2:
                             {
-                                if (DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                if (DateTime.Now.TimeOfDay <= ((DateTime)TIME_RESET[0].UpdateTime).TimeOfDay)
                                 {
                                     await redisService.PublishAsync("Add_ReceiveRegistration_LongAn", request);
 
@@ -212,7 +212,7 @@ namespace Web.Cargill.Api.Controllers
                             break;
                         case 3:
                             {
-                                  if (DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                if (DateTime.Now.TimeOfDay <= ((DateTime)TIME_RESET[0].UpdateTime).TimeOfDay)
                                 {
                                     await redisService.PublishAsync("Add_ReceiveRegistration_BinhDinh", request);
 
@@ -227,7 +227,7 @@ namespace Web.Cargill.Api.Controllers
                             break;
                         case 4:
                             {
-                                  if (DateTime.Now <= TIME_RESET[0].UpdateTime)
+                                if (DateTime.Now.TimeOfDay <= ((DateTime)TIME_RESET[0].UpdateTime).TimeOfDay)
                                 {
                                     await redisService.PublishAsync("Add_ReceiveRegistration_BinhDuong", request);
 
