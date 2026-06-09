@@ -30,9 +30,15 @@
 
         <div class="form-group">
             <div class="date-picker">
-                <input type="date" id="date_time_Car" max="@date.ToString("yyyy-MM-dd")" onchange="_detail_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")" style="min-width:100px; max-width:150px;">
+                <input type="date" id="date_from" max="@date.ToString("yyyy-MM-dd")" onchange="_detail_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")" style="min-width:100px; max-width:150px;">
             </div>
-            <label for="plant">Ngày</label>
+            <label for="plant">Từ ngày</label>
+        </div>
+        <div class="form-group">
+            <div class="date-picker">
+                <input type="date" id="date_to" max="@date.ToString("yyyy-MM-dd")" onchange="_detail_summary_report.Seach()" value="@date.ToString("yyyy-MM-dd")" style="min-width:100px; max-width:150px;">
+            </div>
+            <label for="plant">Đến ngày</label>
         </div>
 
         <div class="form-group">
@@ -47,7 +53,11 @@
             </select>
             <label for="xenang">Thời gian</label>
         </div>
-
+        <div class="form-group">
+            <a class="btn-search btn-default settings-btn" type="button" onclick="_detail_summary_report.Export()" id="btnExport" style="height: 38px; display: flex; align-items: center; padding: 0 16px; border-radius: 8px; border: 1px solid #d0d5dd; background: #fff; font-size: 14px; color: #444; margin-right: 15px;">
+                 Xuất báo cáo
+            </a>
+        </div>
         @*<div class="form-group">
             <select id="xenang">
                 <option selected="">All</option>

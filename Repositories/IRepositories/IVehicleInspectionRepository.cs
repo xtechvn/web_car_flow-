@@ -27,5 +27,6 @@ namespace Repositories.IRepositories
         int SaveVehicleInspectionAPI(RegistrationRecord model);
         Task<int> UpdateVehicleInspectionByVehicleNumber(string VehicleNumber);
         List<VehicleInspection> checkVehicleInspectionbyRegisterDateOnline(DateTime? RegisterDateOnline, string VehicleNumber);
+        Task<string> ExportSummaryReport(List<CartoFactoryModel> data, string FilePath);
     }
 }
