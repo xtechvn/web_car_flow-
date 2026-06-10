@@ -32,6 +32,14 @@ var _detail_summary_report = {
 
 
     GetDailyStatistics: function (model) {
+        $('#Grid-DailyStatistics').html(`
+        <div style="text-align:center;padding:50px;">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+            <div style="margin-top:10px">
+                Đang tải dữ liệu...
+            </div>
+        </div>
+    `);
         $.ajax({
             url: "/SummaryReport/DailyStatistics",
             type: "post",
