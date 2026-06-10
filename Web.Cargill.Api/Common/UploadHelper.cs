@@ -39,7 +39,7 @@ namespace B2B.Utilities.Common
             {
                 var validAudioExtensions = new[] { ".mp3", ".wav", ".m4a", ".mpga" };
                 var extension = Path.GetExtension(file.FileName).ToLower();
-                if (extension == ".mpga") extension = ".mp3";
+                if (extension == ".mpga"|| extension == "") extension = ".mp3";
 
                 // Dùng custom file name nếu có
                 string fileName = !string.IsNullOrEmpty(customFileName)
